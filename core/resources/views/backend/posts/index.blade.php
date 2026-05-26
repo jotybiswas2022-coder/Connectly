@@ -1001,23 +1001,43 @@
     .btn-close:hover { opacity: 1; background-color: var(--danger-bg); }
 
     /* ── Responsive ── */
+    @media (max-width: 992px) {
+        .posts-page { padding: 24px 18px 40px; }
+        .search-wrap { max-width: 320px; }
+        .user-email { display: none; }
+        thead th, tbody td { padding: 12px 14px; }
+        .content-preview { max-width: 240px; }
+    }
     @media (max-width: 768px) {
         .posts-page { padding: 20px 14px 36px; }
         .page-header h1 { font-size: 1.35rem; }
         .page-header h1::before { height: 22px; }
-        .card-toolbar { padding: 14px 16px; }
+        .page-header { flex-direction: column; gap: 12px; }
+        .card-toolbar { padding: 14px 16px; flex-wrap: wrap; gap: 10px; }
         .search-wrap { max-width: 100%; }
-        thead th, tbody td { padding: 12px 12px; }
+        thead th, tbody td { padding: 10px 10px; }
         .user-cell { gap: 8px; }
-        .avatar { width: 32px; height: 32px; font-size: .7rem; border-radius: 8px; }
-        .content-preview { max-width: 180px; }
-        .post-thumb { width: 36px; height: 36px; }
+        .avatar { width: 30px; height: 30px; font-size: .65rem; border-radius: 7px; }
+        .content-preview { max-width: 140px; }
+        .post-thumb { width: 32px; height: 32px; }
         .stats-cell { gap: 6px; }
         .table-footer { flex-direction: column; align-items: flex-start; padding: 14px 16px; }
         .stats-strip { gap: 8px; }
         .stat-pill { padding: 8px 14px; font-size: .75rem; }
         .detail-grid { grid-template-columns: 1fr; gap: 4px 0; }
         .detail-label { padding-top: 8px; }
+        .btn-icon { width: 38px; height: 38px; } /* bigger touch target */
+    }
+    @media (max-width: 480px) {
+        .posts-page { padding: 14px 10px 28px; }
+        .page-header h1 { font-size: 1.15rem; }
+        .stat-pill { padding: 6px 10px; font-size: .7rem; }
+        thead th { font-size: .65rem; padding: 8px 6px; }
+        tbody td { padding: 8px 6px; }
+        thead th:nth-child(6), tbody td:nth-child(6) { display: none; } /* hide stats on tiny */
+        thead th:nth-child(5), tbody td:nth-child(5) { display: none; } /* hide status on tiny */
+        .content-preview { max-width: 120px; }
+        .btn-icon { width: 36px; height: 36px; }
     }
 
     /* ── Scrollbar ── */

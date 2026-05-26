@@ -15,7 +15,7 @@
         <div class="row g-4">
             <!-- Left Column: Profile Card -->
             <div class="col-xl-4">
-                <div class="chatbox-profile-card chatbox-profile-sticky connectly-profile-card">
+                <div class="chatbox-profile-card chatbox-profile-sticky connectly-profile-card connectly-profile-card-sticky">
                     <!-- Avatar Section -->
                     <div class="chatbox-profile-avatar-section connectly-profile-avatar-section">
                         @if ($user->avatar_path)
@@ -345,52 +345,16 @@
         to { opacity: 1; transform: translateY(0); }
     }
 
-    /* Desktop layout: constrain page height, only posts scroll */
+    /* Desktop: profile card stays sticky while posts scroll naturally */
     @media (min-width: 1200px) {
-        .connectly-profile-page,
-        .chatbox-profile-page {
-            height: 100%;
-            overflow: hidden;
-            display: flex;
-            flex-direction: column;
-            padding-bottom: 0;
+        .chatbox-profile-sticky,
+        .connectly-profile-card-sticky {
+            position: sticky;
+            top: 1rem;
         }
 
-        .connectly-profile-page > .container,
-        .chatbox-profile-page > .container {
-            flex: 1;
-            min-height: 0;
-            overflow: hidden;
-            display: flex;
-            flex-direction: column;
-            padding-bottom: 0;
-        }
-
-        .connectly-profile-page > .container > .row,
-        .chatbox-profile-page > .container > .row {
-            flex: 1 !important;
-            min-height: 0;
-            overflow: hidden;
-        }
-
-        .connectly-profile-page .col-xl-8,
-        .chatbox-profile-page .col-xl-8 {
-            height: 100% !important;
-            display: flex;
-            flex-direction: column;
-            overflow: hidden;
-        }
-
-        .connectly-profile-posts-header,
-        .chatbox-profile-posts-header {
-            flex-shrink: 0;
-        }
-
-        .connectly-profile-posts-container,
-        .chatbox-profile-posts-container {
-            flex: 1;
-            min-height: 0;
-            overflow-y: auto;
+        .connectly-profile-posts-container {
+            padding-bottom: 1rem;
         }
     }
 

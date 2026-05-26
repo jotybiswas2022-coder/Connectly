@@ -972,21 +972,40 @@
         }
         .btn-close:hover { opacity: 1; background-color: var(--danger-bg); }
 
-        /* ── Responsive ── */
-        @media (max-width: 768px) {
-            .inbox-page { padding: 20px 14px 36px; }
-            .page-header h1 { font-size: 1.35rem; }
-            .page-header h1::before { height: 22px; }
-            .card-toolbar { padding: 14px 16px; }
-            .search-wrap { max-width: 100%; }
-            thead th, tbody td { padding: 12px 12px; }
-            .user-cell { gap: 8px; }
-            .avatar { width: 32px; height: 32px; font-size: .7rem; border-radius: 8px; }
-            .msg-preview { max-width: 200px; }
-            .table-footer { flex-direction: column; align-items: flex-start; padding: 14px 16px; }
-            .stats-strip { gap: 8px; }
-            .stat-pill { padding: 8px 14px; font-size: .75rem; }
-        }
+    /* ── Responsive ── */
+    @media (max-width: 992px) {
+        .inbox-page { padding: 24px 18px 40px; }
+        .search-wrap { max-width: 320px; }
+        .user-email { display: none; }
+        thead th, tbody td { padding: 12px 14px; }
+        .msg-preview { max-width: 280px; }
+    }
+    @media (max-width: 768px) {
+        .inbox-page { padding: 20px 14px 36px; }
+        .page-header h1 { font-size: 1.35rem; }
+        .page-header h1::before { height: 22px; }
+        .page-header { flex-direction: column; gap: 12px; }
+        .card-toolbar { padding: 14px 16px; flex-wrap: wrap; gap: 10px; }
+        .search-wrap { max-width: 100%; }
+        thead th, tbody td { padding: 10px 10px; }
+        .user-cell { gap: 8px; }
+        .avatar { width: 30px; height: 30px; font-size: .65rem; border-radius: 7px; }
+        .msg-preview { max-width: 160px; }
+        .table-footer { flex-direction: column; align-items: flex-start; padding: 14px 16px; }
+        .stats-strip { gap: 8px; }
+        .stat-pill { padding: 8px 14px; font-size: .75rem; }
+        .btn-icon { width: 38px; height: 38px; }
+    }
+    @media (max-width: 480px) {
+        .inbox-page { padding: 14px 10px 28px; }
+        .page-header h1 { font-size: 1.15rem; }
+        .stat-pill { padding: 6px 10px; font-size: .7rem; }
+        thead th { font-size: .65rem; padding: 8px 6px; }
+        tbody td { padding: 8px 6px; }
+        .msg-preview { max-width: 120px; }
+        .btn-icon { width: 36px; height: 36px; }
+        thead th:nth-child(3), tbody td:nth-child(3) { display: none; } /* hide receiver on tiny */
+    }
 
         /* ── Scrollbar ── */
         ::-webkit-scrollbar { width: 6px; height: 6px; }

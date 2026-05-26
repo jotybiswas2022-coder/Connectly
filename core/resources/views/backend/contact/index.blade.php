@@ -193,12 +193,25 @@
 .empty-icon { font-size: 40px; color: var(--csub); margin-bottom: 8px; display: block; }
 .empty-title { font-weight: 600; font-size: 16px; color: var(--cmuted); }
 .empty-sub { font-size: 13px; color: var(--csub); }
+@media (max-width: 992px) {
+    .contact-page { padding: 20px 22px; }
+    .contact-table td, .contact-table th { padding: 12px 14px; font-size: 13px; }
+}
 @media (max-width: 768px) {
     .contact-page { padding: 16px; }
     .contact-table td, .contact-table th { padding: 10px 12px; font-size: 13px; }
     .contact-header { padding: 14px 16px; }
     .contact-header-title { font-size: 16px; }
     .contact-modal-body { padding: 18px; }
+    .contact-table th:nth-child(5), .contact-table td:nth-child(5),
+    .contact-table th:nth-child(6), .contact-table td:nth-child(6) { display: none; } /* hide date + time */
+    .btn-view-msg { padding: 5px 10px; font-size: 12px; }
+}
+@media (max-width: 480px) {
+    .contact-page { padding: 12px; }
+    .contact-table td, .contact-table th { padding: 8px 8px; font-size: 12px; }
+    .contact-header-inner { flex-direction: column; align-items: flex-start; gap: 8px; }
+    .contact-header-badge { font-size: 12px; padding: 6px 12px; }
 }
 </style>
 

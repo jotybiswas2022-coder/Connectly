@@ -96,6 +96,7 @@
                                 {{ $requester->name }}
                             </a>
                             <span class="connectly-fr-email">{{ $requester->email }}</span>
+                            <div class="connectly-fr-id-badge">#{{ $requester->id }}</div>
                             <span class="connectly-fr-label connectly-fr-label-request">
                                 <i class="bi bi-person-plus"></i> Wants to connect
                             </span>
@@ -147,6 +148,7 @@
                                 {{ $sentTo->name }}
                             </a>
                             <span class="connectly-fr-email">{{ $sentTo->email }}</span>
+                            <div class="connectly-fr-id-badge">#{{ $sentTo->id }}</div>
                             <span class="connectly-fr-label connectly-fr-label-sent">
                                 <i class="bi bi-hourglass-split"></i> Request sent
                             </span>
@@ -180,7 +182,8 @@
                                     {{ $friend->name }}
                                 </a>
                                 <span class="connectly-fr-email">{{ $friend->email }}</span>
-                                <span class="connectly-fr-label connectly-fr-label-friend">
+                                <div class="connectly-fr-id-badge">#{{ $friend->id }}</div>
+                            <span class="connectly-fr-label connectly-fr-label-friend">
                                     <i class="bi bi-check-circle-fill"></i> Connected
                                 </span>
                             </div>
@@ -786,6 +789,20 @@
     margin-top: 4px;
     padding: 2px 8px;
     border-radius: 6px;
+}
+
+.connectly-fr-id-badge {
+    display: inline-flex;
+    align-items: center;
+    font-size: 0.68rem;
+    font-weight: 700;
+    color: #94A3B8;
+    background: rgba(148, 163, 184, 0.08);
+    padding: 2px 8px;
+    border-radius: 6px;
+    margin-top: 4px;
+    letter-spacing: 0.3px;
+    border: 1px solid rgba(148, 163, 184, 0.1);
 }
 
 .connectly-fr-label-request {

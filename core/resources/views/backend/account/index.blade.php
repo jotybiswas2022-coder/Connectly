@@ -372,6 +372,12 @@
     to { opacity: 1; transform: translateY(0); }
 }
 
+@media (max-width: 768px) {
+    .account-page { padding: 24px 20px 40px; }
+    .acc-card { padding: 32px 28px; }
+    .acc-profile { gap: 28px; }
+    .acc-avatar-ring { width: 110px; height: 110px; }
+}
 @media (max-width: 640px) {
     .account-page { padding: 20px 16px 36px; }
     .page-header h1 { font-size: 1.35rem; }
@@ -382,6 +388,7 @@
     .acc-name { text-align: center; font-size: 1.25rem; }
     .acc-detail-item:hover { transform: none; }
     .acc-actions { justify-content: center; }
+    .acc-btn { width: 100%; justify-content: center; }
 }
 
 ::-webkit-scrollbar { width: 6px; }

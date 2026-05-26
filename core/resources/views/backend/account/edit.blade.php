@@ -413,13 +413,18 @@
     to { opacity: 1; transform: translateY(0); }
 }
 
+@media (max-width: 768px) {
+    .acc-edit-page { padding: 24px 20px 40px; }
+    .ae-card { padding: 28px 24px; }
+    .ae-form-grid { gap: 16px; }
+}
 @media (max-width: 640px) {
     .acc-edit-page { padding: 20px 16px 36px; }
     .page-header h1 { font-size: 1.35rem; }
     .ae-card { padding: 24px 18px; }
     .ae-form-grid { grid-template-columns: 1fr; }
     .ae-submit-wrap { flex-direction: column-reverse; }
-    .ae-btn { justify-content: center; }
+    .ae-btn { justify-content: center; width: 100%; }
     .ae-file-wrap { justify-content: center; }
 }
 

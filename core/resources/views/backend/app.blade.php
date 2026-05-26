@@ -68,6 +68,14 @@ main.content-area {
 }
 
 /* ─── Responsive ─── */
+@media (max-width: 992px) {
+    body {
+        grid-template-columns: 200px 1fr;
+    }
+    main.content-area {
+        max-height: calc(100vh - 57px);
+    }
+}
 @media (max-width: 768px) {
     body {
         grid-template-columns: 1fr;
