@@ -63,7 +63,7 @@
     {{-- Stat Cards --}}
     <div class="db-stats">
         <div class="db-stat-card" style="--accent:#2563EB;--accent-bg:rgba(37,99,235,0.1);">
-            <div class="db-stat-icon"><i class="bi bi-shield-account"></i></div>
+            <div class="db-stat-icon"><i class="bi bi-person-badge"></i></div>
             <div class="db-stat-info">
                 <span class="db-stat-value">{{ $accountsCount }}</span>
                 <span class="db-stat-label">Total Admins</span>
