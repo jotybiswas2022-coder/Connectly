@@ -3,11 +3,7 @@
 @section('content')
 
 @if (session('success'))
-<div class="alert-toast" id="successToast">
-    <span class="toast-icon">✓</span>
-    <span>{{ session('success') }}</span>
-    <button class="toast-close" onclick="this.parentElement.remove()">×</button>
-</div>
+    <input type="hidden" id="sessionSuccess" value="{{ session('success') }}">
 @endif
 
 <div class="inbox-page">
@@ -147,8 +143,9 @@
                             {{-- Delete --}}
                             <form method="POST"
                                   action="{{ route('messages.destroy', $message->id) }}"
-                                  class="d-inline-block"
-                                  onsubmit="return confirm('Delete this message?');">
+                                  class="d-inline-block delete-form"
+                                  data-title="Delete Message?"
+                                  data-text="This action cannot be undone.">
 
                                 @csrf
                                 @method('DELETE')
@@ -192,9 +189,56 @@
 <script>
     document.addEventListener('DOMContentLoaded', function () {
 
-    // Auto-dismiss success toast
-    var toast = document.getElementById('successToast');
-    if (toast) setTimeout(function(){ toast.style.opacity='0'; toast.style.transition='opacity .4s'; setTimeout(function(){ toast.remove(); }, 400); }, 3500);
+    // SweetAlert2 — Success Toast
+    var sessionSuccess = document.getElementById('sessionSuccess');
+    if (sessionSuccess) {
+        Swal.fire({
+            toast: true,
+            position: 'top-end',
+            icon: 'success',
+            title: sessionSuccess.value,
+            showConfirmButton: false,
+            timer: 3500,
+            timerProgressBar: true,
+            background: '#ecfdf5',
+            color: '#065f46',
+            iconColor: '#10b981',
+            didOpen: (toast) => {
+                toast.addEventListener('mouseenter', Swal.stopTimer);
+                toast.addEventListener('mouseleave', Swal.resumeTimer);
+            }
+        });
+    }
+
+    // SweetAlert2 — Delete confirmation
+    document.querySelectorAll('.delete-form').forEach(function(form) {
+        form.addEventListener('submit', function(e) {
+            e.preventDefault();
+            var f = this;
+            Swal.fire({
+                title: f.dataset.title || 'Are you sure?',
+                text: f.dataset.text || 'This action cannot be undone.',
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#ef4444',
+                cancelButtonColor: '#64748b',
+                confirmButtonText: 'Yes, delete it!',
+                cancelButtonText: 'Cancel',
+                reverseButtons: true,
+                background: '#fff',
+                backdrop: 'rgba(0,0,0,0.4)',
+                customClass: {
+                    popup: 'swal-custom-popup',
+                    confirmButton: 'swal-confirm-btn',
+                    cancelButton: 'swal-cancel-btn'
+                }
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    f.submit();
+                }
+            });
+        });
+    });
 
     // View modal
     document.querySelectorAll('.btn-view-message').forEach(function(btn){

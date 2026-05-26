@@ -3,11 +3,7 @@
 @section('content')
 
 @if (session('success'))
-    <div class="alert alert-success alert-dismissible fade show mx-3 mt-3 shadow-sm" role="alert">
-        <i class="bi bi-check-circle me-1"></i>
-        {{ session('success') }}
-        <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
-    </div>
+    <input type="hidden" id="sessionSuccess" value="{{ session('success') }}">
 @endif
 
 <div class="container-fluid" style="height: calc(100vh - 80px); overflow-y: auto; padding: 20px 0;">
@@ -202,5 +198,29 @@
     }
 }
 </style>
+
+<script>
+document.addEventListener('DOMContentLoaded', function () {
+    var sessionSuccess = document.getElementById('sessionSuccess');
+    if (sessionSuccess) {
+        Swal.fire({
+            icon: 'success',
+            title: 'Success!',
+            text: sessionSuccess.value,
+            toast: true,
+            position: 'top-end',
+            showConfirmButton: false,
+            timer: 4000,
+            timerProgressBar: true,
+            background: '#fff',
+            iconColor: '#2563EB',
+            didOpen: (toast) => {
+                toast.addEventListener('mouseenter', Swal.stopTimer);
+                toast.addEventListener('mouseleave', Swal.resumeTimer);
+            }
+        });
+    }
+});
+</script>
 
 @endsection
