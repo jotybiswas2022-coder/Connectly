@@ -10,37 +10,35 @@ use Illuminate\Support\Str;
             <span>Admin Dashboard</span>
         </a>
 
-        <button class="nav-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarTopNav">
+        <button class="nav-toggler" type="button" onclick="document.getElementById('navbarTopNav').classList.toggle('show')">
             <span class="navbar-toggler-icon"></span>
         </button>
 
-        <div class="collapse navbar-collapse" id="navbarTopNav">
-            <div class="top-nav-links">
-                <a class="nav-link-custom {{ request()->is('/') ? 'active' : '' }}" href="/">
-                    <i class="bi bi-house-door"></i> Home
-                </a>
+        <div class="top-nav-links" id="navbarTopNav">
+            <a class="nav-link-custom {{ request()->is('/') ? 'active' : '' }}" href="/">
+                <i class="bi bi-house-door"></i> Home
+            </a>
 
-                @auth
-                    @if(auth()->user()->is_admin == 1)
-                        <a class="nav-link-custom {{ Str::startsWith(request()->path(), 'admin') ? 'active' : '' }}" href="/admin">
-                            <i class="bi bi-speedometer2"></i> Admin Panel
-                        </a>
-                    @endif
-                    <form action="{{ route('logout') }}" method="POST" class="d-inline">
-                        @csrf
-                        <button type="submit" class="nav-link-btn logout-btn">
-                            <i class="bi bi-box-arrow-right"></i> Logout
-                        </button>
-                    </form>
-                @else
-                    <a class="nav-link-custom {{ request()->is('login') ? 'active' : '' }}" href="/login">
-                        <i class="bi bi-person-circle"></i> Login
+            @auth
+                @if(auth()->user()->is_admin == 1)
+                    <a class="nav-link-custom {{ Str::startsWith(request()->path(), 'admin') ? 'active' : '' }}" href="/admin">
+                        <i class="bi bi-speedometer2"></i> Admin Panel
                     </a>
-                    <a class="nav-link-custom signup-link" href="/register">
-                        <i class="bi bi-person-plus"></i> Signup
-                    </a>
-                @endauth
-            </div>
+                @endif
+                <form action="{{ route('logout') }}" method="POST" class="d-inline">
+                    @csrf
+                    <button type="submit" class="nav-link-btn logout-btn">
+                        <i class="bi bi-box-arrow-right"></i> Logout
+                    </button>
+                </form>
+            @else
+                <a class="nav-link-custom {{ request()->is('login') ? 'active' : '' }}" href="/login">
+                    <i class="bi bi-person-circle"></i> Login
+                </a>
+                <a class="nav-link-custom signup-link" href="/register">
+                    <i class="bi bi-person-plus"></i> Signup
+                </a>
+            @endauth
         </div>
     </div>
 </nav>
@@ -264,7 +262,23 @@ use Illuminate\Support\Str;
 /* ─── Responsive ─── */
 @media (max-width: 768px) {
     .nav-toggler { display: block; }
-    .top-nav-links { flex-direction: column; align-items: stretch; padding: 8px 0; gap: 2px; }
+    .top-nav-links {
+        display: none;
+        flex-direction: column;
+        align-items: stretch;
+        padding: 8px 0;
+        gap: 2px;
+        position: absolute;
+        top: 100%;
+        left: 0;
+        right: 0;
+        background: #0f172a;
+        border-bottom: 1px solid rgba(255,255,255,0.06);
+        z-index: 99;
+    }
+    .top-nav-links.show {
+        display: flex;
+    }
     .sidebar { width: 100%; min-width: 100%; max-height: none; flex-direction: row; flex-wrap: wrap; }
     .sidebar-brand { display: none; }
     .sidebar-menu { display: flex; flex-wrap: wrap; padding: 8px; gap: 4px; }

@@ -200,9 +200,9 @@
             showConfirmButton: false,
             timer: 3500,
             timerProgressBar: true,
-            background: '#ecfdf5',
-            color: '#065f46',
-            iconColor: '#10b981',
+            background: '#1e293b',
+            color: '#4ade80',
+            iconColor: '#22c55e',
             didOpen: (toast) => {
                 toast.addEventListener('mouseenter', Swal.stopTimer);
                 toast.addEventListener('mouseleave', Swal.resumeTimer);
@@ -225,13 +225,8 @@
                 confirmButtonText: 'Yes, delete it!',
                 cancelButtonText: 'Cancel',
                 reverseButtons: true,
-                background: '#fff',
-                backdrop: 'rgba(0,0,0,0.4)',
-                customClass: {
-                    popup: 'swal-custom-popup',
-                    confirmButton: 'swal-confirm-btn',
-                    cancelButton: 'swal-cancel-btn'
-                }
+                background: '#1e293b',
+                backdrop: 'rgba(0,0,0,0.7)'
             }).then((result) => {
                 if (result.isConfirmed) {
                     f.submit();
@@ -355,53 +350,41 @@
       </form>
     </div>
   </div>
-</div>
-
-<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
-    <style>
+</div>    <style>
         :root {
-            --primary: #6366f1;
-            --primary-light: #818cf8;
-            --primary-dark: #4f46e5;
-            --primary-bg: #eef2ff;
+            --primary: #2563EB;
+            --primary-light: #60A5FA;
+            --primary-dark: #1E40AF;
+            --primary-bg: rgba(37,99,235,0.12);
             --success: #10b981;
-            --success-bg: #ecfdf5;
+            --success-bg: rgba(16,185,129,0.12);
             --danger: #ef4444;
-            --danger-bg: #fef2f2;
+            --danger-bg: rgba(239,68,68,0.12);
             --warning: #f59e0b;
             --info: #06b6d4;
-            --info-bg: #ecfeff;
+            --info-bg: rgba(6,182,212,0.12);
             --edit: #f59e0b;
-            --edit-bg: #fffbeb;
-            --bg: #f1f5f9;
-            --card: #ffffff;
-            --border: #e2e8f0;
-            --border-light: #f1f5f9;
-            --text: #1e293b;
-            --text-secondary: #64748b;
-            --text-muted: #94a3b8;
+            --edit-bg: rgba(245,158,11,0.12);
+            --bg: #0f172a;
+            --card: rgba(255,255,255,0.04);
+            --border: rgba(255,255,255,0.08);
+            --border-light: rgba(255,255,255,0.04);
+            --text: #f1f5f9;
+            --text-secondary: #94a3b8;
+            --text-muted: #64748b;
             --mono: 'JetBrains Mono', monospace;
             --font: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
-            --shadow-sm: 0 1px 2px rgba(0,0,0,.04);
-            --shadow: 0 1px 3px rgba(0,0,0,.06), 0 1px 2px rgba(0,0,0,.04);
-            --shadow-md: 0 4px 6px -1px rgba(0,0,0,.07), 0 2px 4px -2px rgba(0,0,0,.05);
-            --shadow-lg: 0 10px 15px -3px rgba(0,0,0,.08), 0 4px 6px -4px rgba(0,0,0,.04);
-            --shadow-xl: 0 20px 25px -5px rgba(0,0,0,.08), 0 8px 10px -6px rgba(0,0,0,.04);
+            --shadow-sm: 0 1px 2px rgba(0,0,0,.1);
+            --shadow: 0 1px 3px rgba(0,0,0,.12), 0 1px 2px rgba(0,0,0,.1);
+            --shadow-md: 0 4px 6px -1px rgba(0,0,0,.15), 0 2px 4px -2px rgba(0,0,0,.12);
+            --shadow-lg: 0 10px 15px -3px rgba(0,0,0,.2), 0 4px 6px -4px rgba(0,0,0,.15);
+            --shadow-xl: 0 20px 25px -5px rgba(0,0,0,.25), 0 8px 10px -6px rgba(0,0,0,.2);
             --radius: 12px;
             --radius-sm: 8px;
             --radius-xs: 6px;
         }
 
         * { margin: 0; padding: 0; box-sizing: border-box; }
-
-        body {
-            font-family: var(--font);
-            background: var(--bg);
-            color: var(--text);
-            min-height: 100vh;
-            -webkit-font-smoothing: antialiased;
-        }
 
         /* ── Toast ── */
         .alert-toast {
@@ -524,6 +507,8 @@
         /* ── Inbox Card ── */
         .inbox-card {
             background: var(--card);
+            backdrop-filter: blur(16px) saturate(180%);
+            -webkit-backdrop-filter: blur(16px) saturate(180%);
             border: 1px solid var(--border);
             border-radius: var(--radius);
             box-shadow: var(--shadow-md);
@@ -536,14 +521,14 @@
             display: flex;
             align-items: center;
             justify-content: space-between;
+            background: linear-gradient(180deg, rgba(255,255,255,0.06) 0%, transparent 100%);
             border-bottom: 1px solid var(--border-light);
-            background: linear-gradient(180deg, #fafbfc 0%, var(--card) 100%);
         }
         .search-wrap {
             display: flex;
             align-items: center;
             gap: 0;
-            background: var(--bg);
+            background: rgba(0,0,0,0.25);
             border: 1.5px solid var(--border);
             border-radius: 50px;
             padding: 0 4px 0 16px;
@@ -554,7 +539,7 @@
         .search-wrap:focus-within {
             border-color: var(--primary);
             box-shadow: 0 0 0 4px var(--primary-bg);
-            background: #fff;
+            background: rgba(0,0,0,0.35);
         }
         .search-wrap svg {
             flex-shrink: 0;
@@ -619,7 +604,7 @@
             font-size: .85rem;
         }
         thead {
-            background: linear-gradient(180deg, #f8fafc, #f1f5f9);
+            background: linear-gradient(180deg, rgba(255,255,255,0.06), rgba(255,255,255,0.02));
             position: sticky;
             top: 0;
             z-index: 2;
@@ -632,7 +617,7 @@
             text-transform: uppercase;
             letter-spacing: .06em;
             color: var(--text-secondary);
-            border-bottom: 2px solid var(--border);
+            border-bottom: 1px solid var(--border);
             white-space: nowrap;
             user-select: none;
         }
@@ -640,7 +625,7 @@
             border-bottom: 1px solid var(--border-light);
             transition: background .15s;
         }
-        tbody tr:hover { background: #f8fafc; }
+        tbody tr:hover { background: rgba(255,255,255,0.04); }
         tbody tr:last-child { border-bottom: none; }
         tbody td {
             padding: 14px 18px;
@@ -653,7 +638,7 @@
             align-items: center;
             justify-content: center;
             width: 30px; height: 30px;
-            background: var(--bg);
+            background: rgba(0,0,0,0.2);
             border: 1px solid var(--border);
             border-radius: var(--radius-xs);
             font-weight: 600;
@@ -727,7 +712,7 @@
             align-items: center;
             gap: 5px;
             padding: 5px 12px;
-            background: var(--bg);
+            background: rgba(0,0,0,0.2);
             border: 1px solid var(--border);
             border-radius: 50px;
             font-size: .72rem;
@@ -782,7 +767,7 @@
             border-top: 1px solid var(--border-light);
             font-size: .8rem;
             color: var(--text-secondary);
-            background: linear-gradient(180deg, var(--card) 0%, #fafbfc 100%);
+            background: linear-gradient(180deg, transparent 0%, rgba(255,255,255,0.02) 100%);
             flex-wrap: wrap;
             gap: 12px;
         }
@@ -840,7 +825,7 @@
         }
         .empty-state svg {
             margin-bottom: 16px;
-            color: var(--border);
+            color: rgba(255,255,255,0.08);
         }
         .empty-state p {
             font-size: .9rem;
@@ -850,15 +835,23 @@
 
         /* ── Modal Overrides ── */
         .modal-content {
+            background: #1e293b;
             border: 1px solid var(--border);
             border-radius: 16px;
             box-shadow: var(--shadow-xl);
             overflow: hidden;
         }
+        .modal-content .form-control {
+            background: rgba(0,0,0,0.2);
+            color: var(--text);
+        }
+        .modal-content .form-control::placeholder {
+            color: var(--text-muted);
+        }
         .modal-header {
             padding: 20px 24px;
             border-bottom: 1px solid var(--border-light);
-            background: linear-gradient(180deg, #fafbfc, var(--card));
+            background: linear-gradient(180deg, rgba(255,255,255,0.06), transparent);
         }
         .modal-title {
             font-size: .95rem;
@@ -871,7 +864,7 @@
         .modal-footer {
             padding: 16px 24px;
             border-top: 1px solid var(--border-light);
-            background: #fafbfc;
+            background: rgba(0,0,0,0.15);
             gap: 10px;
         }
         .modal-body .form-label {
@@ -924,7 +917,7 @@
         }
         .msg-body-block {
             grid-column: 1 / -1;
-            background: var(--bg);
+            background: rgba(0,0,0,0.2);
             border: 1px solid var(--border);
             border-radius: var(--radius-sm);
             padding: 18px 20px;
@@ -962,11 +955,11 @@
             color: #fff;
             cursor: pointer;
             transition: all .2s;
-            box-shadow: 0 2px 8px rgba(99,102,241,.25);
-            font-family: var(--font);
-        }
-        .btn-primary-custom:hover {
-            background: linear-gradient(135deg, var(--primary-dark), #4338ca);
+        box-shadow: 0 2px 8px rgba(37,99,235,.25);
+        font-family: var(--font);
+    }
+    .btn-primary-custom:hover {
+        background: linear-gradient(135deg, var(--primary-dark), #1e3a8a);
             transform: translateY(-1px);
             box-shadow: 0 4px 12px rgba(99,102,241,.35);
         }

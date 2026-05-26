@@ -18,14 +18,29 @@
         <div class="db-header-bg"></div>
         <div class="db-header-content">
             <div class="db-header-left">
-                <div class="db-greeting">
-                    <span class="db-greeting-dot"></span>
-                    Welcome back
+                {{-- Admin Logo/Avatar --}}
+                <div class="db-admin-logo">
+                    @if(isset($account) && $account->image)
+                        <img src="{{ config('app.storage_url') }}{{ $account->image }}"
+                             alt="{{ $account->name ?? 'Admin' }}"
+                             class="db-admin-logo-img">
+                    @else
+                        <div class="db-admin-logo-fallback">
+                            {{ isset($account->name) ? strtoupper(substr($account->name, 0, 1)) : 'A' }}
+                        </div>
+                    @endif
+                    <div class="db-admin-logo-dot"></div>
                 </div>
-                <h1 class="db-header-title">
-                    Hello, <span class="db-header-name">{{ $account->name ?? 'Admin' }}</span>
-                </h1>
-                <p class="db-header-sub">Here's what's happening with Connectly today.</p>
+                <div>
+                    <div class="db-greeting">
+                        <span class="db-greeting-dot"></span>
+                        Welcome back
+                    </div>
+                    <h1 class="db-header-title">
+                        Hello, <span class="db-header-name">{{ $account->name ?? 'Admin' }}</span>
+                    </h1>
+                    <p class="db-header-sub">Here's what's happening with Connectly today.</p>
+                </div>
             </div>
             <div class="db-header-right">
                 <div class="db-header-stat">
@@ -290,6 +305,62 @@
     position:absolute; bottom:0; left:0; right:0; height:1px;
     background:linear-gradient(90deg,transparent,rgba(37,99,235,0.2),transparent);
 }
+.db-header-left {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+}
+
+/* ── Admin Logo ── */
+.db-admin-logo {
+    position: relative;
+    flex-shrink: 0;
+}
+.db-admin-logo-img {
+    width: 64px;
+    height: 64px;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 2px solid rgba(37,99,235,0.3);
+    box-shadow: 0 4px 16px rgba(37,99,235,0.2);
+    transition: all 0.3s ease;
+}
+.db-admin-logo-img:hover {
+    border-color: rgba(96,165,250,0.6);
+    box-shadow: 0 6px 24px rgba(37,99,235,0.3);
+    transform: scale(1.05);
+}
+.db-admin-logo-fallback {
+    width: 64px;
+    height: 64px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, var(--clr-primary), var(--clr-dark));
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: #fff;
+    border: 2px solid rgba(37,99,235,0.3);
+    box-shadow: 0 4px 16px rgba(37,99,235,0.2);
+    transition: all 0.3s ease;
+}
+.db-admin-logo-fallback:hover {
+    transform: scale(1.05);
+    border-color: rgba(96,165,250,0.6);
+}
+.db-admin-logo-dot {
+    position: absolute;
+    bottom: 2px;
+    right: 2px;
+    width: 14px;
+    height: 14px;
+    background: #22c55e;
+    border: 2.5px solid var(--clr-bg);
+    border-radius: 50%;
+    animation: dbPulse 2s ease-in-out infinite;
+}
+
 .db-header-content {
     position:relative; z-index:1;
     display:flex; align-items:center; justify-content:space-between; gap:24px; flex-wrap:wrap;
