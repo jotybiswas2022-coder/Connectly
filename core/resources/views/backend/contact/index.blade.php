@@ -6,7 +6,7 @@
     <input type="hidden" id="sessionSuccess" value="{{ session('success') }}">
 @endif
 
-<div class="container-fluid" style="height: calc(100vh - 80px); overflow-y: auto; padding: 20px 0;">
+<div class="contact-page">
 
     <!-- Header -->
     <div class="contact-header mx-3 mt-3 mb-3">
@@ -126,6 +126,10 @@
 </div>
 
 <style>
+.contact-page{
+    padding: 20px 24px;
+    height: 100%;
+}
 .contact-header{
     background:#fff;
     border-radius:14px;

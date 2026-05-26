@@ -2,189 +2,274 @@
 use Illuminate\Support\Str;
 @endphp
 
-<!-- Top Bar -->
-<nav class="navbar navbar-expand-lg shadow-sm py-2" style="background: #ffffff;">
-    <div class="container-fluid">
-        <!-- Brand -->
-        <a class="navbar-brand d-flex align-items-center fw-bold fs-5 text-dark" href="/admin" style="padding-left: 12px;">
-            <i class="bi bi-speedometer2 me-2 fs-3 text-primary"></i>
-            <span style="margin-left: 4px;">Welcome to Admin Dashboard</span>
+<!-- Top Navbar -->
+<nav class="top-navbar">
+    <div class="top-nav-inner">
+        <a class="top-nav-brand" href="/admin">
+            <i class="bi bi-speedometer2"></i>
+            <span>Admin Dashboard</span>
         </a>
 
-        <!-- Toggler -->
-        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarTopNav">
+        <button class="nav-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarTopNav">
             <span class="navbar-toggler-icon"></span>
         </button>
 
-        <!-- Top Nav Links -->
         <div class="collapse navbar-collapse" id="navbarTopNav">
-            <ul class="navbar-nav ms-auto gap-3 align-items-center">
-                <li class="nav-item">
-                    <a class="nav-link top-nav-link {{ request()->is('/') ? 'active-link' : '' }}" href="/">
-                        <i class="bi bi-house-door me-1"></i> Home
-                    </a>
-                </li>
+            <div class="top-nav-links">
+                <a class="nav-link-custom {{ request()->is('/') ? 'active' : '' }}" href="/">
+                    <i class="bi bi-house-door"></i> Home
+                </a>
 
                 @auth
                     @if(auth()->user()->is_admin == 1)
-                        <li class="nav-item">
-                            <a class="nav-link top-nav-link {{ Str::startsWith(request()->path(), 'admin') ? 'active-link' : '' }}" href="/admin">
-                                <i class="bi bi-speedometer2 me-1"></i> Admin Panel
-                            </a>
-                        </li>
+                        <a class="nav-link-custom {{ Str::startsWith(request()->path(), 'admin') ? 'active' : '' }}" href="/admin">
+                            <i class="bi bi-speedometer2"></i> Admin Panel
+                        </a>
                     @endif
-                    <li class="nav-item">
-                        <form action="{{ route('logout') }}" method="POST" class="d-inline">
-                            @csrf
-                            <button type="submit" class="nav-link btn btn-link text-danger fw-semibold">
-                                <i class="bi bi-box-arrow-right me-1"></i> Logout
-                            </button>
-                        </form>
-                    </li>
+                    <form action="{{ route('logout') }}" method="POST" class="d-inline">
+                        @csrf
+                        <button type="submit" class="nav-link-btn logout-btn">
+                            <i class="bi bi-box-arrow-right"></i> Logout
+                        </button>
+                    </form>
                 @else
-                    <li class="nav-item">
-                        <a class="nav-link top-nav-link {{ request()->is('login') ? 'active-link' : '' }}" href="/login">
-                            <i class="bi bi-person-circle me-1"></i> Login
-                        </a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link signup-btn px-3 py-1 rounded text-white" href="/register">
-                            <i class="bi bi-person-plus me-1"></i> Signup
-                        </a>
-                    </li>
+                    <a class="nav-link-custom {{ request()->is('login') ? 'active' : '' }}" href="/login">
+                        <i class="bi bi-person-circle"></i> Login
+                    </a>
+                    <a class="nav-link-custom signup-link" href="/register">
+                        <i class="bi bi-person-plus"></i> Signup
+                    </a>
                 @endauth
-            </ul>
+            </div>
         </div>
     </div>
 </nav>
 
-<!-- Sidebar + Content -->
-<div class="row m-0" style="min-height: calc(100vh - 64px);">
-    <!-- Sidebar -->
-    <div class="col-md-3 p-0">
-    <div class="sidebar">
-        <ul class="sidebar-menu">
-            <li>
-                <a href="{{ url('/admin/account') }}"
-                class="{{ request()->is('admin/account') ? 'active' : '' }}">
-                    <i class="bi bi-person-circle"></i>
-                    <span>Account</span>
-                </a>
-            </li>
-             <li>
-                <a href="{{ url('/admin/posts') }}"
-                class="{{ request()->is('admin/posts') ? 'active' : '' }}">
-                    <i class="bi bi-file-earmark-text"></i>
-                    <span>Posts</span>
-                </a>
-            </li>
-            <li>
-                <a href="{{ url('/admin/messages') }}"
-                class="{{ request()->is('admin/messages') ? 'active' : '' }}">
-                    <i class="bi bi-chat-dots"></i>
-                    <span>Messages</span>
-                </a>
-            </li>
-            <li>
-                <a href="{{ url('/admin/contact') }}"
-                class="{{ request()->is('admin/contact') ? 'active' : '' }}">
-                    <i class="bi bi-envelope-fill"></i> 
-                    <span>Contact</span>
-                </a>
-            </li>
-        </ul>
+<!-- Sidebar -->
+<aside class="sidebar">
+    <div class="sidebar-brand">
+        <i class="bi bi-layout-sidebar"></i>
+        <span>Navigation</span>
     </div>
-</div>
+    <ul class="sidebar-menu">
+        <li>
+            <a href="{{ url('/admin/account') }}"
+               class="{{ request()->is('admin/account') ? 'active' : '' }}">
+                <i class="bi bi-person-circle"></i>
+                <span>Account</span>
+            </a>
+        </li>
+        <li>
+            <a href="{{ url('/admin/posts') }}"
+               class="{{ request()->is('admin/posts') ? 'active' : '' }}">
+                <i class="bi bi-file-earmark-text"></i>
+                <span>Posts</span>
+            </a>
+        </li>
+        <li>
+            <a href="{{ url('/admin/messages') }}"
+               class="{{ request()->is('admin/messages') ? 'active' : '' }}">
+                <i class="bi bi-chat-dots"></i>
+                <span>Messages</span>
+            </a>
+        </li>
+        <li>
+            <a href="{{ url('/admin/contact') }}"
+               class="{{ request()->is('admin/contact') ? 'active' : '' }}">
+                <i class="bi bi-envelope-fill"></i>
+                <span>Contact</span>
+            </a>
+        </li>
+    </ul>
+    <div class="sidebar-footer">
+        <span class="sidebar-version">Connectly v1.0</span>
+    </div>
+</aside>
 
-    <!-- Content -->
-    <div class="col-md-9 p-4">
 <style>
-/* Top navbar */
-.navbar .top-nav-link { 
-    font-weight:500; 
-    color:#343a40; 
-    transition: color .3s, transform .3s, border-bottom .3s; 
-    position: relative;
-}
-.navbar .top-nav-link:hover { 
-    color:#6366f1; 
-    transform:translateY(-1px);
-}
-.navbar .top-nav-link.active-link::after {
-    content:""; 
-    display:block; 
-    height:2px; 
-    background:#6366f1; 
-    border-radius:1px;
-    position:absolute; 
-    bottom:0; 
-    left:0; 
-    width:100%;
-}
-
-/* Brand */
-.navbar-brand i { font-size:1.4rem; }
-
-/* Signup button */
-.signup-btn { 
-    background: linear-gradient(135deg,#6366f1,#8b5cf6); 
-    transition: all 0.3s; 
-}
-.signup-btn:hover { opacity:.9; transform:translateY(-1px); }
-
-/* Sidebar */
-.sidebar {
-    background: #fefefe;
-    min-height: calc(100vh - 64px);
+/* ─── Top Navbar (Dark Theme) ─── */
+.top-navbar {
+    background: linear-gradient(135deg, #0f172a 0%, #131e3a 100%);
+    border-bottom: 1px solid rgba(255,255,255,0.06);
+    padding: 10px 24px;
     position: sticky;
     top: 0;
-    box-shadow: 4px 0 20px rgba(0,0,0,0.08);
-    padding-top: 20px;
-    border-right: 1px solid #e3e6f0;
-    overflow: hidden;
+    z-index: 100;
 }
-.col-md-9.p-4 {
-    max-height: calc(100vh - 64px);
+.top-nav-inner {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    max-width: 100%;
+    gap: 16px;
+}
+.top-nav-brand {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    color: #f1f5f9;
+    font-weight: 700;
+    font-size: 1rem;
+    text-decoration: none;
+    letter-spacing: -0.3px;
+}
+.top-nav-brand i {
+    font-size: 1.3rem;
+    color: #60A5FA;
+}
+.nav-toggler {
+    display: none;
+    background: transparent;
+    border: none;
+    color: #94a3b8;
+    font-size: 1.3rem;
+    padding: 4px;
+    cursor: pointer;
+}
+.nav-toggler:focus { outline: none; }
+
+.top-nav-links {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+}
+.nav-link-custom {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 7px 14px;
+    color: #94a3b8;
+    font-weight: 500;
+    font-size: 0.85rem;
+    text-decoration: none;
+    border-radius: 8px;
+    transition: all 0.2s ease;
+}
+.nav-link-custom:hover {
+    color: #60A5FA;
+    background: rgba(37,99,235,0.08);
+}
+.nav-link-custom.active {
+    color: #60A5FA;
+    background: rgba(37,99,235,0.12);
+}
+.nav-link-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 7px 14px;
+    color: #f87171;
+    font-weight: 600;
+    font-size: 0.85rem;
+    background: transparent;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    font-family: inherit;
+}
+.nav-link-btn:hover {
+    background: rgba(248,113,113,0.1);
+    color: #ef4444;
+}
+.signup-link {
+    background: linear-gradient(135deg, #2563EB, #1E40AF);
+    color: #fff !important;
+    padding: 7px 18px;
+}
+.signup-link:hover {
+    background: linear-gradient(135deg, #1E40AF, #1e3a8a);
+    transform: translateY(-1px);
+    box-shadow: 0 4px 12px rgba(37,99,235,0.3);
+}
+
+/* ─── Sidebar (Dark Theme) ─── */
+.sidebar {
+    width: 250px;
+    min-width: 250px;
+    background: linear-gradient(180deg, #0a0f1e 0%, #0f172a 100%);
+    border-right: 1px solid rgba(255,255,255,0.05);
+    display: flex;
+    flex-direction: column;
     overflow-y: auto;
+    max-height: calc(100vh - 57px);
 }
-.row.m-0 {
-    min-height: calc(100vh - 64px);
-    overflow: hidden;
+.sidebar-brand {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 20px 20px 16px;
+    color: #64748b;
+    font-size: 0.75rem;
+    font-weight: 700;
+    letter-spacing: 0.8px;
+    text-transform: uppercase;
+    border-bottom: 1px solid rgba(255,255,255,0.04);
+}
+.sidebar-brand i {
+    font-size: 0.9rem;
+    color: #475569;
 }
 .sidebar-menu {
     list-style: none;
-    padding: 0;
+    padding: 12px 10px;
     margin: 0;
+    flex: 1;
 }
-.sidebar-menu li { margin-bottom: 8px; }
+.sidebar-menu li { margin-bottom: 2px; }
 .sidebar-menu a {
     display: flex;
     align-items: center;
-    gap: 14px;
-    color: #4b4b4b;
-    padding: 12px 22px;
+    gap: 12px;
+    color: #94a3b8;
+    padding: 10px 14px;
     font-weight: 500;
-    border-left: 4px solid transparent;
-    border-radius: 6px;
-    transition: all 0.25s ease;
+    font-size: 0.88rem;
+    border-radius: 10px;
+    transition: all 0.2s ease;
+    text-decoration: none;
 }
-.sidebar-menu a i { font-size: 18px; }
+.sidebar-menu a i {
+    font-size: 1.05rem;
+    width: 20px;
+    text-align: center;
+    flex-shrink: 0;
+}
 .sidebar-menu a:hover {
-    background: rgba(99,102,241,0.1);
-    color: #6366f1;
-    border-left: 4px solid #6366f1;
+    background: rgba(37,99,235,0.1);
+    color: #60A5FA;
 }
 .sidebar-menu a.active {
-    background: rgba(99,102,241,0.15);
-    color: #6366f1;
-    border-left: 4px solid #6366f1;
+    background: linear-gradient(135deg, rgba(37,99,235,0.15), rgba(37,99,235,0.05));
+    color: #60A5FA;
+    border: 1px solid rgba(37,99,235,0.12);
+    box-shadow: 0 2px 8px rgba(37,99,235,0.08);
+}
+.sidebar-footer {
+    padding: 14px 20px;
+    border-top: 1px solid rgba(255,255,255,0.04);
+}
+.sidebar-version {
+    font-size: 0.65rem;
+    color: rgba(148,163,184,0.35);
+    letter-spacing: 1px;
+    text-transform: uppercase;
 }
 
-/* Responsive tweaks */
+/* ─── Scrollbar ─── */
+.sidebar::-webkit-scrollbar { width: 4px; }
+.sidebar::-webkit-scrollbar-track { background: transparent; }
+.sidebar::-webkit-scrollbar-thumb { background: rgba(148,163,184,0.12); border-radius: 10px; }
+
+/* ─── Responsive ─── */
 @media (max-width: 768px) {
-    .sidebar { min-height: auto; padding-top: 0; position: static; }
-    .navbar-nav { text-align: center; }
-    .col-md-9.p-4 { max-height: none; overflow: visible; }
-    .row.m-0 { min-height: auto; overflow: visible; }
+    .nav-toggler { display: block; }
+    .top-nav-links { flex-direction: column; align-items: stretch; padding: 8px 0; gap: 2px; }
+    .sidebar { width: 100%; min-width: 100%; max-height: none; flex-direction: row; flex-wrap: wrap; }
+    .sidebar-brand { display: none; }
+    .sidebar-menu { display: flex; flex-wrap: wrap; padding: 8px; gap: 4px; }
+    .sidebar-menu li { margin-bottom: 0; }
+    .sidebar-menu a { font-size: 0.82rem; padding: 8px 12px; }
+    .sidebar-footer { display: none; }
 }
 </style>

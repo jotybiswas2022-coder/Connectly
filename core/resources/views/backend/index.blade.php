@@ -61,7 +61,7 @@
             <div class="db-stat-icon"><i class="bi bi-envelope-open"></i></div>
             <div class="db-stat-info">
                 <span class="db-stat-value">{{ $contactsCount }}</span>
-                <span class="db-stat-label">Total Messages</span>
+                <span class="db-stat-label">Total Contact Messages</span>
             </div>
             <div class="db-stat-trend up">
                 <i class="bi bi-arrow-up-short"></i> Inbox
