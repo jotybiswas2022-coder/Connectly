@@ -13,7 +13,7 @@ $isFriendsOrSearch = request()->routeIs('friends') || request()->routeIs('search
 <!-- Top Bar -->
 <nav class="navbar navbar-expand-lg chatbox-top-navbar py-2">
     <div class="container-fluid">
-        <a class="navbar-brand chatbox-brand-link d-flex align-items-center gap-2 fw-bold fs-5" href="/">
+        <a class="navbar-brand chatbox-brand-link d-flex align-items-center gap-2" href="/">
             <div class="chatbox-brand-icon-wrap">
                 <i class="bi bi-diagram-3-fill chatbox-brand-icon"></i>
             </div>
@@ -29,9 +29,9 @@ $isFriendsOrSearch = request()->routeIs('friends') || request()->routeIs('search
             </div>
         </button>
 
-        <div class="collapse navbar-collapse d-flex flex-wrap flex-lg-nowrap align-items-center position-relative" id="navbarTopNav">
+        <div class="collapse navbar-collapse" id="navbarTopNav">
             <!-- Center: main navigation items -->
-            <ul class="navbar-nav justify-content-center gap-1 gap-lg-2 mx-auto">
+            <ul class="navbar-nav justify-content-center gap-1 gap-lg-2 mx-auto chatbox-mobile-nav-items">
                 <li class="nav-item">
                     <a class="nav-link chatbox-navlink-top {{ request()->is('/') ? 'active-navlink-chatbox' : '' }}" href="/">
                         <i class="bi bi-house-door"></i>
@@ -107,7 +107,7 @@ $isFriendsOrSearch = request()->routeIs('friends') || request()->routeIs('search
             </ul>
 
             <!-- Right: auth actions (login/signup or logout) -->
-            <ul class="navbar-nav align-items-center gap-2 flex-shrink-0 chatbox-auth-right me-3 mt-2 mt-lg-0">
+            <ul class="navbar-nav align-items-center gap-2 flex-shrink-0 chatbox-auth-right">
                 @auth
                 <li class="nav-item">
                     <form action="{{ route('logout') }}" method="POST" class="d-inline">
@@ -1354,6 +1354,16 @@ body.chatbox-message-active {
 
 /* ===== RESPONSIVE: Mobile Topbar ===== */
 
+/* Mobile nav items: full width inside collapse */
+.chatbox-mobile-nav-items {
+    width: 100%;
+}
+@media (min-width: 992px) {
+    .chatbox-mobile-nav-items {
+        width: auto;
+    }
+}
+
 @media (max-width: 991.98px) {
     .chatbox-top-navbar .navbar-collapse {
         background: rgba(255, 255, 255, 0.98);
@@ -1915,11 +1925,14 @@ body.chatbox-message-active {
         position: fixed !important;
         left: 0 !important;
         right: 0 !important;
-        top: var(--chatbox-navbar-height) !important;
+        top: 0 !important;
+        padding-top: var(--chatbox-navbar-height, 68px);
         border-radius: 0;
         border: none;
         border-bottom: 1px solid #e5e7eb;
         box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+        max-height: 100vh;
+        overflow-y: auto;
     }
 }
 
@@ -1933,12 +1946,6 @@ body.chatbox-message-active {
     margin-top: 0 !important;
   }
 }
-@media (max-width: 991.98px) {
-  .chatbox-auth-right {
-    margin-top: 0.5rem !important;
-  }
-}
-
 /* Utility Classes */
 .chatbox-text-primary {
     color: #2563EB;
