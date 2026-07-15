@@ -314,10 +314,10 @@
             <div class="cl-footer-col">
                 <h4 class="cl-footer-col-title">Legal</h4>
                 <ul class="cl-footer-col-links">
-                    <li><a href="#">Privacy Policy</a></li>
-                    <li><a href="#">Terms of Service</a></li>
-                    <li><a href="#">Cookie Policy</a></li>
-                    <li><a href="#">GDPR</a></li>
+                    <li><a href="/privacy">Privacy Policy</a></li>
+                    <li><a href="/terms">Terms of Service</a></li>
+                    <li><a href="/cookies">Cookie Policy</a></li>
+                    <li><a href="/gdpr">GDPR</a></li>
                 </ul>
             </div>
 

@@ -16,6 +16,12 @@ Route::controller(SiteController::class)->group(function () {
     Route::get('/contact', 'contact')->name('contact.page');
 });
 
+// Legal pages
+Route::view('/privacy', 'frontend.legal.privacy')->name('privacy');
+Route::view('/terms', 'frontend.legal.terms')->name('terms');
+Route::view('/cookies', 'frontend.legal.cookies')->name('cookies');
+Route::view('/gdpr', 'frontend.legal.gdpr')->name('gdpr');
+
 // Contact form submission route
 Route::post('/contact', [UserController::class, 'contact'])->name('contact');
 
