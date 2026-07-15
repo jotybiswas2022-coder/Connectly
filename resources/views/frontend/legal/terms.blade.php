@@ -175,18 +175,6 @@
                 <li><a href="/gdpr">GDPR</a></li>
             </ul>
         </div>
-        <div class="cl-footer-col cl-footer-newsletter-col">
-            <h4 class="cl-footer-col-title">Stay Updated</h4>
-            <p class="cl-footer-newsletter-desc">Get the latest updates and news delivered to your inbox.</p>
-            <form class="cl-footer-newsletter-form" onsubmit="event.preventDefault(); alert('Newsletter coming soon!');">
-                <div class="cl-footer-newsletter-wrap">
-                    <input type="email" placeholder="Enter your email" class="cl-footer-newsletter-input" required>
-                    <button type="submit" class="cl-footer-newsletter-btn">
-                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
-                    </button>
-                </div>
-            </form>
-        </div>
     </div>
     <div class="cl-footer-bottom">
         <div class="cl-footer-bottom-inner">
