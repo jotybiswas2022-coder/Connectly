@@ -20,9 +20,13 @@ $isFriendsOrSearch = request()->routeIs('friends') || request()->routeIs('search
             <span class="chatbox-brand-text">Connectly</span>
         </a>
 
-        <button class="navbar-toggler chatbox-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarTopNav"
+        <button class="navbar-toggler chatbox-toggler collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#navbarTopNav"
                 aria-controls="navbarTopNav" aria-expanded="false" aria-label="Toggle navigation">
-            <span class="navbar-toggler-icon"></span>
+            <div class="chatbox-toggler-icon-wrap">
+                <span class="chatbox-toggler-bar"></span>
+                <span class="chatbox-toggler-bar"></span>
+                <span class="chatbox-toggler-bar"></span>
+            </div>
         </button>
 
         <div class="collapse navbar-collapse d-flex flex-wrap flex-lg-nowrap align-items-center position-relative" id="navbarTopNav">
@@ -542,6 +546,15 @@ body {
     padding-right: 1.25rem;
 }
 
+/* Smooth collapse slide animation */
+.chatbox-top-navbar .navbar-collapse {
+    transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.chatbox-top-navbar .navbar-collapse.collapsing {
+    transition-duration: 0.35s;
+}
+
 @keyframes chatbox-navbar-slide-down {
     from {
         transform: translateY(-100%);
@@ -633,6 +646,8 @@ body {
     border-radius: var(--radius-sm);
     background: transparent;
     transition: all 0.3s ease;
+    position: relative;
+    z-index: 5;
 }
 
 .chatbox-toggler:hover {
@@ -641,10 +656,39 @@ body {
 
 .chatbox-toggler:focus {
     box-shadow: none;
+    outline: none;
 }
 
-.chatbox-toggler .navbar-toggler-icon {
-    background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 30 30'%3e%3cpath stroke='rgba(37,99,235,0.7)' stroke-linecap='round' stroke-miterlimit='10' stroke-width='2' d='M4 7h22M4 15h22M4 23h22'/%3e%3c/svg%3e");
+.chatbox-toggler-icon-wrap {
+    width: 22px;
+    height: 18px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    align-items: center;
+    position: relative;
+}
+
+.chatbox-toggler-bar {
+    display: block;
+    width: 100%;
+    height: 2.5px;
+    border-radius: 3px;
+    background: #2563EB;
+    transition: all 0.35s cubic-bezier(0.4, 0, 0.2, 1);
+    transform-origin: center;
+}
+
+/* Hamburger to X animation */
+.chatbox-toggler:not(.collapsed) .chatbox-toggler-bar:nth-child(1) {
+    transform: translateY(7.75px) rotate(45deg);
+}
+.chatbox-toggler:not(.collapsed) .chatbox-toggler-bar:nth-child(2) {
+    opacity: 0;
+    transform: scaleX(0);
+}
+.chatbox-toggler:not(.collapsed) .chatbox-toggler-bar:nth-child(3) {
+    transform: translateY(-7.75px) rotate(-45deg);
 }
 
 /* ===== NAV LINKS ===== */
@@ -1308,42 +1352,56 @@ body.chatbox-message-active {
     margin: 0;
 }
 
-/* Responsive Design */
+/* ===== RESPONSIVE: Mobile Topbar ===== */
+
 @media (max-width: 991.98px) {
+    .chatbox-top-navbar .navbar-collapse {
+        background: rgba(255, 255, 255, 0.98);
+        backdrop-filter: blur(24px) saturate(180%);
+        -webkit-backdrop-filter: blur(24px) saturate(180%);
+        border-radius: 0 0 20px 20px;
+        padding: 0.75rem 1.25rem 1.25rem;
+        box-shadow: 0 12px 40px rgba(15, 23, 42, 0.1);
+        max-height: 85vh;
+        max-height: 85dvh;
+        overflow-y: auto;
+        -webkit-overflow-scrolling: touch;
+        border-bottom: 1px solid var(--clr-border);
+    }
+
     .chatbox-top-navbar .navbar-nav {
         text-align: center;
-        padding-top: 0.5rem;
+        padding-top: 0.25rem;
         padding-bottom: 0.5rem;
-    }    .chatbox-top-navbar .navbar-collapse {
-            background: rgba(255, 255, 255, 0.98);
-            backdrop-filter: blur(20px);
-            -webkit-backdrop-filter: blur(20px);
-            border-radius: 0 0 16px 16px;
-            padding: 0.5rem 1rem;
-            box-shadow: 0 8px 30px rgba(0, 0, 0, 0.08);
-            max-height: 80vh;
-            max-height: 80dvh;
-            overflow-y: auto;
-            -webkit-overflow-scrolling: touch;
-        }
+        gap: 2px;
+    }
+
     .navbar .chatbox-navlink-top {
-        padding: 10px 16px;
+        padding: 12px 16px;
         font-size: 0.9rem;
         justify-content: center;
         width: 100%;
+        border-radius: 10px;
     }
+
+    /* Active link in mobile menu - subtle, no gradient */
     .navbar .active-navlink-chatbox {
+        background: #eff6ff !important;
+        color: var(--clr-primary) !important;
         box-shadow: none;
     }
-    .chatbox-signup-button {
-        width: 100%;
-        justify-content: center !important;
-        padding: 10px 20px !important;
+    .navbar .active-navlink-chatbox i,
+    .navbar .active-navlink-chatbox span {
+        color: var(--clr-primary) !important;
     }
+
+    /* Mobile nav section separator via border-top on auth */
     .chatbox-auth-right {
         flex-direction: row;
         gap: 8px;
-        margin-top: 0.5rem;
+        margin-top: 0;
+        padding-top: 12px;
+        border-top: 1px solid #eef2f8;
     }
     .chatbox-auth-right .nav-item {
         flex: 1;
@@ -1351,6 +1409,26 @@ body.chatbox-message-active {
     .chatbox-auth-right .nav-link {
         justify-content: center;
         width: 100%;
+        border-radius: 10px;
+    }
+    .chatbox-signup-button {
+        width: 100%;
+        justify-content: center !important;
+        padding: 12px 20px !important;
+        font-size: 0.9rem;
+    }
+
+    /* Notification bell in mobile */
+    .chatbox-notif-bell span.d-none.d-lg-inline {
+        display: inline !important;
+    }
+    .chatbox-notif-badge {
+        top: 2px;
+        right: 2px;
+        min-width: 16px;
+        height: 16px;
+        font-size: 8px;
+        border-width: 1.5px;
     }
 }
 
@@ -1401,31 +1479,62 @@ body.chatbox-message-active {
 
 @media (max-width: 480px) {
     .chatbox-top-navbar {
-        min-height: 60px;
+        min-height: 56px;
     }
     .chatbox-top-navbar .container-fluid {
         padding-left: 0.75rem;
         padding-right: 0.75rem;
     }
+    .chatbox-brand-link {
+        gap: 8px;
+    }
     .chatbox-brand-text {
-        font-size: 1.1rem;
+        font-size: 1.05rem;
     }
     .chatbox-brand-icon-wrap {
         width: 32px;
         height: 32px;
     }
     .chatbox-brand-icon {
-        font-size: 1.05rem;
+        font-size: 1rem;
     }
-    .chatbox-signup-button {
-        font-size: 0.8rem;
-        padding: 8px 14px !important;
+
+    .chatbox-toggler {
+        padding: 6px;
     }
+    .chatbox-toggler-icon-wrap {
+        width: 18px;
+        height: 14px;
+    }
+    .chatbox-toggler-bar {
+        height: 2px;
+    }
+    .chatbox-toggler:not(.collapsed) .chatbox-toggler-bar:nth-child(1) {
+        transform: translateY(6px) rotate(45deg);
+    }
+    .chatbox-toggler:not(.collapsed) .chatbox-toggler-bar:nth-child(3) {
+        transform: translateY(-6px) rotate(-45deg);
+    }
+
     .navbar .chatbox-navlink-top {
         font-size: 0.82rem;
-        padding: 8px 12px;
-        gap: 4px;
+        padding: 10px 12px;
+        gap: 6px;
     }
+    .chatbox-signup-button {
+        font-size: 0.82rem;
+        padding: 10px 16px !important;
+    }
+    .chatbox-auth-right {
+        padding-top: 10px;
+        gap: 6px;
+    }
+
+    /* Tighter collapse spacing */
+    .chatbox-top-navbar .navbar-collapse {
+        padding: 0.5rem 0.75rem 1rem;
+    }
+
     .chatbox-search-wrapper {
         padding-top: 12px;
         padding-left: 0.75rem !important;
@@ -1447,8 +1556,11 @@ body.chatbox-message-active {
 }
 
 @media (max-width: 375px) {
+    .chatbox-top-navbar {
+        min-height: 52px;
+    }
     .chatbox-brand-text {
-        font-size: 1rem;
+        font-size: 0.95rem;
     }
     .chatbox-brand-icon-wrap {
         width: 28px;
@@ -1457,25 +1569,74 @@ body.chatbox-message-active {
     .chatbox-brand-icon {
         font-size: 0.9rem;
     }
+    .chatbox-brand-link {
+        gap: 6px;
+    }
+    .chatbox-toggler-icon-wrap {
+        width: 16px;
+        height: 12px;
+    }
+    .chatbox-toggler:not(.collapsed) .chatbox-toggler-bar:nth-child(1) {
+        transform: translateY(5px) rotate(45deg);
+    }
+    .chatbox-toggler:not(.collapsed) .chatbox-toggler-bar:nth-child(3) {
+        transform: translateY(-5px) rotate(-45deg);
+    }
     .navbar .chatbox-navlink-top {
         font-size: 0.78rem;
-        padding: 6px 10px;
+        padding: 8px 10px;
     }
     .chatbox-signup-button {
-        font-size: 0.75rem;
-        padding: 6px 12px !important;
+        font-size: 0.78rem;
+        padding: 8px 12px !important;
     }
     .chatbox-top-navbar .navbar-collapse {
-        padding: 0.25rem 0.5rem;
+        padding: 0.25rem 0.5rem 0.75rem;
     }
 }
 
+/* ===== Safe Area Padding for Notched Phones ===== */
+@supports (padding-top: env(safe-area-inset-top)) {
+    .chatbox-top-navbar {
+        padding-top: env(safe-area-inset-top) !important;
+    }
+    .chatbox-top-navbar .container-fluid {
+        padding-left: calc(1.25rem + env(safe-area-inset-left));
+        padding-right: calc(1.25rem + env(safe-area-inset-right));
+    }
+    @media (max-width: 480px) {
+        .chatbox-top-navbar .container-fluid {
+            padding-left: calc(0.75rem + env(safe-area-inset-left));
+            padding-right: calc(0.75rem + env(safe-area-inset-right));
+        }
+    }
+}
+
+@supports (padding-top: constant(safe-area-inset-top)) {
+    .chatbox-top-navbar {
+        padding-top: constant(safe-area-inset-top) !important;
+    }
+    .chatbox-top-navbar .container-fluid {
+        padding-left: calc(1.25rem + constant(safe-area-inset-left));
+        padding-right: calc(1.25rem + constant(safe-area-inset-right));
+    }
+    @media (max-width: 480px) {
+        .chatbox-top-navbar .container-fluid {
+            padding-left: calc(0.75rem + constant(safe-area-inset-left));
+            padding-right: calc(0.75rem + constant(safe-area-inset-right));
+        }
+    }
+}
+
+/* ===== Reduced Motion ===== */
 @media (prefers-reduced-motion: reduce) {
     .chatbox-top-navbar,
     .chatbox-sidebar-container,
     .chatbox-user-list-item,
     .chatbox-brand-link,
-    .chatbox-brand-icon-wrap {
+    .chatbox-brand-icon-wrap,
+    .chatbox-toggler-bar,
+    .chatbox-top-navbar .navbar-collapse {
         animation: none !important;
         transition: none !important;
     }
