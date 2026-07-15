@@ -255,19 +255,97 @@
 
     {{-- ========== FOOTER ========== --}}
     <footer class="cl-footer">
+        {{-- Top accent line --}}
+        <div class="cl-footer-accent"></div>
+
         <div class="cl-footer-inner">
-            <div class="cl-footer-brand">
-                <div class="cl-footer-icon">
-                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+            {{-- Column 1: Brand --}}
+            <div class="cl-footer-col cl-footer-brand-col">
+                <div class="cl-footer-brand">
+                    <div class="cl-footer-icon">
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+                    </div>
+                    <span class="cl-footer-brand-text">Connectly</span>
                 </div>
-                <span>Connectly</span>
+                <p class="cl-footer-desc">
+                    A modern social platform for real conversations, meaningful connections, 
+                    and seamless communication.
+                </p>
+                {{-- Social Icons --}}
+                <div class="cl-footer-social">
+                    <a href="#" class="cl-footer-social-link" aria-label="Twitter">
+                        <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg>
+                    </a>
+                    <a href="#" class="cl-footer-social-link" aria-label="GitHub">
+                        <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M12 0C5.374 0 0 5.373 0 12c0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23A11.509 11.509 0 0112 5.803c1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576C20.566 21.797 24 17.3 24 12c0-6.627-5.373-12-12-12z"/></svg>
+                    </a>
+                    <a href="#" class="cl-footer-social-link" aria-label="LinkedIn">
+                        <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433c-1.144 0-2.063-.926-2.063-2.065 0-1.138.92-2.063 2.063-2.063 1.14 0 2.064.925 2.064 2.063 0 1.139-.925 2.065-2.064 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"/></svg>
+                    </a>
+                    <a href="#" class="cl-footer-social-link" aria-label="Instagram">
+                        <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zM12 0C8.741 0 8.333.014 7.053.072 2.695.272.273 2.69.073 7.052.014 8.333 0 8.741 0 12c0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98C8.333 23.986 8.741 24 12 24c3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98C15.668.014 15.259 0 12 0zm0 5.838a6.162 6.162 0 100 12.324 6.162 6.162 0 000-12.324zM12 16a4 4 0 110-8 4 4 0 010 8zm6.406-11.845a1.44 1.44 0 100 2.881 1.44 1.44 0 000-2.881z"/></svg>
+                    </a>
+                </div>
             </div>
-            <div class="cl-footer-links">
-                <a href="#">Privacy</a>
-                <a href="#">Terms</a>
-                <a href="/contact">Contact</a>
+
+            {{-- Column 2: Product --}}
+            <div class="cl-footer-col">
+                <h4 class="cl-footer-col-title">Product</h4>
+                <ul class="cl-footer-col-links">
+                    <li><a href="{{ auth()->check() ? route('message', auth()->id()) : '/login' }}">Messages</a></li>
+                    <li><a href="/feed">Feed</a></li>
+                    <li><a href="{{ auth()->check() ? route('profile.show', auth()->id()) : '/login' }}">Profile</a></li>
+                    <li><a href="{{ route('friends') }}">Friends</a></li>
+                </ul>
             </div>
-            <p class="cl-footer-copy">&copy; {{ date('Y') }} Connectly. All rights reserved.</p>
+
+            {{-- Column 3: Company --}}
+            <div class="cl-footer-col">
+                <h4 class="cl-footer-col-title">Company</h4>
+                <ul class="cl-footer-col-links">
+                    <li><a href="#about">About</a></li>
+                    <li><a href="/contact">Contact</a></li>
+                    <li><a href="#features">Features</a></li>
+                    <li><a href="#">Blog</a></li>
+                </ul>
+            </div>
+
+            {{-- Column 4: Legal --}}
+            <div class="cl-footer-col">
+                <h4 class="cl-footer-col-title">Legal</h4>
+                <ul class="cl-footer-col-links">
+                    <li><a href="#">Privacy Policy</a></li>
+                    <li><a href="#">Terms of Service</a></li>
+                    <li><a href="#">Cookie Policy</a></li>
+                    <li><a href="#">GDPR</a></li>
+                </ul>
+            </div>
+
+            {{-- Column 5: Newsletter --}}
+            <div class="cl-footer-col cl-footer-newsletter-col">
+                <h4 class="cl-footer-col-title">Stay Updated</h4>
+                <p class="cl-footer-newsletter-desc">Get the latest updates and news delivered to your inbox.</p>
+                <form class="cl-footer-newsletter-form" onsubmit="event.preventDefault(); alert('Newsletter coming soon!');">
+                    <div class="cl-footer-newsletter-wrap">
+                        <input type="email" placeholder="Enter your email" class="cl-footer-newsletter-input" required>
+                        <button type="submit" class="cl-footer-newsletter-btn">
+                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+
+        {{-- Bottom bar --}}
+        <div class="cl-footer-bottom">
+            <div class="cl-footer-bottom-inner">
+                <p class="cl-footer-copy">&copy; {{ date('Y') }} Connectly. All rights reserved.</p>
+                <p class="cl-footer-made-with">
+                    Made with 
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="#ef4444" stroke="none"><path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/></svg>
+                    by Connectly Team
+                </p>
+            </div>
         </div>
     </footer>
 </div>
@@ -992,60 +1070,309 @@
 }
 
 /* ================================================================
-   F O O T E R
+   F O O T E R  —  Modern Multi-Column Design
    ================================================================ */
 .cl-footer {
-    padding: 32px 24px;
     background: #0B1120;
-    border-top: 1px solid rgba(255,255,255,0.04);
+    position: relative;
+    overflow: hidden;
 }
+
+/* Accent gradient line at top */
+.cl-footer-accent {
+    height: 3px;
+    background: linear-gradient(90deg, var(--clr-primary), var(--clr-light), var(--clr-dark), var(--clr-primary));
+    background-size: 300% 100%;
+    animation: clFooterAccentMove 6s ease-in-out infinite;
+}
+@keyframes clFooterAccentMove {
+    0%, 100% { background-position: 0% 50%; }
+    50% { background-position: 100% 50%; }
+}
+
+/* Main grid */
 .cl-footer-inner {
     max-width: 1100px;
     margin: 0 auto;
+    padding: 56px 24px 40px;
+    display: grid;
+    grid-template-columns: 1.5fr 1fr 1fr 1fr 1.2fr;
+    gap: 36px 28px;
+    position: relative;
+    z-index: 1;
+}
+
+/* Subtle background glow */
+.cl-footer::before {
+    content: '';
+    position: absolute;
+    width: 600px;
+    height: 600px;
+    border-radius: 50%;
+    background: radial-gradient(circle, rgba(37,99,235,0.06), transparent 70%);
+    bottom: -300px;
+    right: -200px;
+    pointer-events: none;
+}
+.cl-footer::after {
+    content: '';
+    position: absolute;
+    width: 400px;
+    height: 400px;
+    border-radius: 50%;
+    background: radial-gradient(circle, rgba(96,165,250,0.04), transparent 70%);
+    top: -150px;
+    left: -150px;
+    pointer-events: none;
+}
+
+/* ===== COLUMNS ===== */
+.cl-footer-col {
+    min-width: 0;
+}
+
+/* Brand Column */
+.cl-footer-brand-col {
     display: flex;
-    align-items: center;
-    justify-content: space-between;
-    flex-wrap: wrap;
-    gap: 16px;
+    flex-direction: column;
+    gap: 18px;
 }
 .cl-footer-brand {
     display: flex;
     align-items: center;
-    gap: 10px;
-    font-size: 1rem;
-    font-weight: 700;
-    color: #fff;
+    gap: 12px;
 }
 .cl-footer-icon {
-    width: 34px;
-    height: 34px;
-    border-radius: 10px;
+    width: 40px;
+    height: 40px;
+    border-radius: 12px;
     background: linear-gradient(135deg, var(--clr-primary), var(--clr-dark));
     display: flex;
     align-items: center;
     justify-content: center;
     color: #fff;
+    flex-shrink: 0;
+    box-shadow: 0 4px 14px rgba(37,99,235,0.3);
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
 }
-.cl-footer-icon svg { width: 18px; height: 18px; }
-.cl-footer-links {
-    display: flex;
-    gap: 24px;
+.cl-footer-brand:hover .cl-footer-icon {
+    transform: rotate(-8deg) scale(1.08);
+    box-shadow: 0 6px 20px rgba(37,99,235,0.45);
 }
-.cl-footer-links a {
+.cl-footer-icon svg { width: 20px; height: 20px; }
+.cl-footer-brand-text {
+    font-size: 1.3rem;
+    font-weight: 800;
+    background: linear-gradient(135deg, #60A5FA, #2563EB);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    letter-spacing: -0.5px;
+}
+.cl-footer-desc {
     font-size: 0.85rem;
     color: rgba(255,255,255,0.4);
-    text-decoration: none;
-    transition: color 0.25s;
+    line-height: 1.7;
+    margin: 0;
+    max-width: 320px;
 }
-.cl-footer-links a:hover {
+
+/* Social Icons */
+.cl-footer-social {
+    display: flex;
+    gap: 10px;
+    margin-top: 4px;
+}
+.cl-footer-social-link {
+    width: 36px;
+    height: 36px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 10px;
+    background: rgba(255,255,255,0.04);
+    border: 1px solid rgba(255,255,255,0.06);
+    color: rgba(255,255,255,0.5);
+    text-decoration: none;
+    transition: all 0.3s cubic-bezier(.16,1,.3,1);
+}
+.cl-footer-social-link:hover {
+    background: rgba(37,99,235,0.15);
+    border-color: rgba(37,99,235,0.25);
     color: var(--clr-light);
+    transform: translateY(-3px) scale(1.08);
+    box-shadow: 0 6px 16px rgba(37,99,235,0.15);
+}
+.cl-footer-social-link svg {
+    display: block;
+}
+
+/* Column Titles */
+.cl-footer-col-title {
+    font-size: 0.82rem;
+    font-weight: 700;
+    color: #fff;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    margin-bottom: 18px;
+    position: relative;
+    padding-bottom: 10px;
+}
+.cl-footer-col-title::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 24px;
+    height: 2px;
+    background: linear-gradient(90deg, var(--clr-primary), var(--clr-light));
+    border-radius: 2px;
+    transition: width 0.3s ease;
+}
+.cl-footer-col:hover .cl-footer-col-title::after {
+    width: 36px;
+}
+
+/* Column Link Lists */
+.cl-footer-col-links {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+.cl-footer-col-links li {
+    line-height: 1;
+}
+.cl-footer-col-links a {
+    font-size: 0.85rem;
+    color: rgba(255,255,255,0.45);
+    text-decoration: none;
+    transition: all 0.25s ease;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+}
+.cl-footer-col-links a::before {
+    content: '›';
+    font-size: 1.05rem;
+    color: var(--clr-primary);
+    opacity: 0;
+    transform: translateX(-6px);
+    transition: all 0.25s ease;
+}
+.cl-footer-col-links a:hover {
+    color: var(--clr-light);
+    transform: translateX(4px);
+}
+.cl-footer-col-links a:hover::before {
+    opacity: 1;
+    transform: translateX(0);
+}
+
+/* ===== NEWSLETTER ===== */
+.cl-footer-newsletter-col {
+    grid-column: auto;
+}
+.cl-footer-newsletter-desc {
+    font-size: 0.82rem;
+    color: rgba(255,255,255,0.4);
+    line-height: 1.6;
+    margin: 0 0 14px;
+}
+.cl-footer-newsletter-form {
+    margin: 0;
+}
+.cl-footer-newsletter-wrap {
+    display: flex;
+    gap: 6px;
+    background: rgba(255,255,255,0.04);
+    border: 1px solid rgba(255,255,255,0.08);
+    border-radius: 12px;
+    padding: 4px;
+    transition: all 0.3s ease;
+}
+.cl-footer-newsletter-wrap:focus-within {
+    border-color: rgba(37,99,235,0.35);
+    background: rgba(37,99,235,0.04);
+    box-shadow: 0 0 0 3px rgba(37,99,235,0.08);
+}
+.cl-footer-newsletter-input {
+    flex: 1;
+    background: transparent;
+    border: none;
+    outline: none;
+    padding: 10px 14px;
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+    font-size: 0.85rem;
+    color: rgba(255,255,255,0.85);
+    min-width: 0;
+}
+.cl-footer-newsletter-input::placeholder {
+    color: rgba(255,255,255,0.25);
+}
+.cl-footer-newsletter-btn {
+    width: 40px;
+    height: 40px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: linear-gradient(135deg, var(--clr-primary), var(--clr-dark));
+    border: none;
+    border-radius: 9px;
+    color: #fff;
+    cursor: pointer;
+    transition: all 0.3s cubic-bezier(.16,1,.3,1);
+    flex-shrink: 0;
+}
+.cl-footer-newsletter-btn:hover {
+    transform: scale(1.06);
+    box-shadow: 0 4px 14px rgba(37,99,235,0.35);
+}
+.cl-footer-newsletter-btn:active {
+    transform: scale(0.95);
+}
+.cl-footer-newsletter-btn svg {
+    display: block;
+}
+
+/* ===== BOTTOM BAR ===== */
+.cl-footer-bottom {
+    border-top: 1px solid rgba(255,255,255,0.04);
+    padding: 20px 24px;
+}
+.cl-footer-bottom-inner {
+    max-width: 1100px;
+    margin: 0 auto;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 16px;
 }
 .cl-footer-copy {
-    width: 100%;
-    text-align: center;
     font-size: 0.78rem;
     color: rgba(255,255,255,0.25);
     margin: 0;
+}
+.cl-footer-made-with {
+    font-size: 0.78rem;
+    color: rgba(255,255,255,0.25);
+    margin: 0;
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+}
+.cl-footer-made-with svg {
+    display: block;
+    animation: clHeartBeat 1.5s ease-in-out infinite;
+}
+@keyframes clHeartBeat {
+    0%, 100% { transform: scale(1); }
+    15% { transform: scale(1.25); }
+    30% { transform: scale(1); }
+    45% { transform: scale(1.15); }
+    60% { transform: scale(1); }
 }
 
 /* ================================================================
@@ -1109,10 +1436,28 @@
         font-size: 1.8rem;
     }
     .cl-scroll-indicator { display: none; }
+    
+    /* Footer: go to 2 columns */
     .cl-footer-inner {
+        grid-template-columns: 1fr 1fr;
+        gap: 32px 24px;
+        padding: 40px 20px 32px;
+    }
+    .cl-footer-newsletter-col {
+        grid-column: 1 / -1;
+        max-width: 420px;
+    }
+    .cl-footer-brand-col {
+        grid-column: 1 / -1;
+    }
+    .cl-footer-desc {
+        max-width: 100%;
+    }
+    .cl-footer-bottom-inner {
         flex-direction: column;
         text-align: center;
     }
+
     .cl-about {
         padding: 80px 20px;
     }
@@ -1241,20 +1586,57 @@
         font-size: 0.95rem;
     }
 
-    .cl-footer {
-        padding: 24px 16px;
-    }
     .cl-footer-inner {
-        gap: 12px;
+        grid-template-columns: 1fr 1fr;
+        gap: 28px 20px;
+        padding: 36px 16px 28px;
+    }
+    .cl-footer-brand-col {
+        grid-column: 1 / -1;
+        text-align: center;
+        align-items: center;
+    }
+    .cl-footer-brand {
+        justify-content: center;
+    }
+    .cl-footer-desc {
+        text-align: center;
+        max-width: 100%;
+        font-size: 0.82rem;
+    }
+    .cl-footer-social {
+        justify-content: center;
+    }
+    .cl-footer-col-title {
+        text-align: center;
+    }
+    .cl-footer-col-links {
+        align-items: center;
+    }
+    .cl-footer-col-links a::before {
+        display: none;
+    }
+    .cl-footer-newsletter-col {
+        grid-column: 1 / -1;
+        max-width: 100%;
+        text-align: center;
+    }
+    .cl-footer-newsletter-desc {
+        text-align: center;
+    }
+    .cl-footer-bottom {
+        padding: 16px;
+    }
+    .cl-footer-bottom-inner {
+        flex-direction: column;
+        text-align: center;
+        gap: 8px;
     }
     .cl-footer-copy {
         font-size: 0.72rem;
     }
-    .cl-footer-links {
-        gap: 16px;
-    }
-    .cl-footer-links a {
-        font-size: 0.8rem;
+    .cl-footer-made-with {
+        font-size: 0.72rem;
     }
 }
 
@@ -1301,6 +1683,48 @@
     }
     .cl-cta-title {
         font-size: 1.3rem;
+    }
+
+    /* Footer */
+    .cl-footer-inner {
+        grid-template-columns: 1fr;
+        gap: 24px;
+        padding: 28px 12px 24px;
+    }
+    .cl-footer-col {
+        text-align: center;
+    }
+    .cl-footer-col-title::after {
+        left: 50% !important;
+        transform: translateX(-50%);
+    }
+    .cl-footer-col-links {
+        align-items: center;
+    }
+    .cl-footer-col-links a::before {
+        display: none;
+    }
+    .cl-footer-brand-text {
+        font-size: 1.1rem;
+    }
+    .cl-footer-icon {
+        width: 34px;
+        height: 34px;
+    }
+    .cl-footer-icon svg {
+        width: 16px;
+        height: 16px;
+    }
+    .cl-footer-newsletter-input {
+        padding: 8px 12px;
+        font-size: 0.8rem;
+    }
+    .cl-footer-newsletter-btn {
+        width: 36px;
+        height: 36px;
+    }
+    .cl-footer-bottom {
+        padding: 14px 12px;
     }
 }
 
