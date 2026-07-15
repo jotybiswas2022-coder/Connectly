@@ -194,25 +194,6 @@
                         </button>
                     </form>
 
-                    {{-- Social Login --}}
-                    <div class="cl-divider"><span>Or continue with</span></div>
-
-                    <div class="cl-social-row">
-                        <button type="button" class="cl-social-btn cl-social-google" onclick="Swal.fire({icon:'info',title:'Coming Soon',text:'Google login coming soon!',background:'#1e293b',color:'#f1f5f9',confirmButtonColor:'#2563EB'})">
-                            <svg viewBox="0 0 24 24" width="20" height="20">
-                                <path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92a5.06 5.06 0 0 1-2.2 3.32v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.1z"/>
-                                <path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/>
-                                <path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z"/>
-                                <path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"/>
-                            </svg>
-                            Google
-                        </button>
-                        <button type="button" class="cl-social-btn cl-social-github" onclick="Swal.fire({icon:'info',title:'Coming Soon',text:'GitHub login coming soon!',background:'#1e293b',color:'#f1f5f9',confirmButtonColor:'#2563EB'})">
-                            <i class="bi bi-github"></i>
-                            GitHub
-                        </button>
-                    </div>
-
                     {{-- Sign Up Link --}}
                     <div class="cl-signup-row">
                         <span>Don't have an account?</span>
@@ -541,60 +522,65 @@ document.addEventListener('DOMContentLoaded', function() {
 .cl-bubble {
     position: fixed;
     background: rgba(255,255,255,0.03);
-    backdrop-filter: blur(12px);
-    -webkit-backdrop-filter: blur(12px);
+    backdrop-filter: blur(16px);
+    -webkit-backdrop-filter: blur(16px);
     border: 1px solid rgba(255,255,255,0.06);
-    border-radius: 16px;
-    padding: 12px 16px;
+    border-radius: 18px;
+    padding: 14px 20px;
     display: flex;
     align-items: center;
     gap: 10px;
     z-index: 2;
     pointer-events: none;
     animation: cl-bubble-float 6s ease-in-out infinite;
+    box-shadow: 0 8px 32px rgba(0,0,0,0.2);
 }
 .cl-bubble-1 {
-    top: 15%; left: 8%;
+    top: 12%; left: 6%;
     animation-delay: 0s;
 }
 .cl-bubble-2 {
-    bottom: 22%; left: 10%;
+    bottom: 25%; left: 8%;
     animation-delay: 2s;
     animation-duration: 7s;
 }
 .cl-bubble-3 {
-    top: 40%; right: 6%;
+    top: 35%; right: 5%;
     animation-delay: 4s;
     animation-duration: 8s;
 }
 @keyframes cl-bubble-float {
-    0%,100% { transform: translateY(0); }
-    50% { transform: translateY(-12px); }
+    0%,100% { transform: translateY(0) rotate(0deg); }
+    33% { transform: translateY(-14px) rotate(1deg); }
+    66% { transform: translateY(-6px) rotate(-1deg); }
 }
-.cl-bubble-inner { display:flex; gap:6px; }
+.cl-bubble-inner { display:flex; gap:8px; }
 .cl-bubble-dot {
-    width:8px;height:8px;border-radius:50%;
+    width:10px;height:10px;border-radius:50%;
     background:var(--clr);
     animation: cl-bubble-dot-pulse 2s ease-in-out infinite;
+    box-shadow: 0 0 12px var(--clr);
 }
 .cl-bubble-dot:nth-child(2) { animation-delay:0.3s; }
 .cl-bubble-dot:nth-child(3) { animation-delay:0.6s; }
 @keyframes cl-bubble-dot-pulse {
     0%,100% { transform:scale(1); opacity:0.6; }
-    50% { transform:scale(1.3); opacity:1; }
+    50% { transform:scale(1.4); opacity:1; }
 }
 .cl-bubble-avatar {
-    width:28px;height:28px;border-radius:50%;
+    width:32px;height:32px;border-radius:50%;
     background:linear-gradient(135deg,var(--clr-primary),var(--clr-light));
     flex-shrink:0;
+    box-shadow: 0 4px 12px rgba(37,99,235,0.3);
 }
-.cl-bubble-lines { display:flex; flex-direction:column; gap:5px; }
+.cl-bubble-lines { display:flex; flex-direction:column; gap:6px; }
 .cl-bubble-line {
-    width:80px;height:5px;border-radius:3px;
+    width:80px;height:6px;border-radius:3px;
     background:rgba(255,255,255,0.1);
 }
 .cl-bubble-3 {
-    gap:8px; font-size:13px; color:var(--clr-text-secondary); font-weight:500;
+    gap:10px; font-size:13px; color:var(--clr-text-secondary); font-weight:500;
+    padding: 12px 18px;
 }
 .cl-bubble-3 svg { flex-shrink:0; }
 
@@ -776,22 +762,50 @@ document.addEventListener('DOMContentLoaded', function() {
     opacity: 1;
     transform: translateY(0) scale(1);
 }
+
+/* Animated gradient border overlay */
 .cl-login-card::before {
+    content: '';
+    position: absolute;
+    inset: -1px;
+    border-radius: 24px;
+    padding: 1px;
+    background: linear-gradient(135deg, rgba(37,99,235,0.3), rgba(96,165,250,0.1), rgba(37,99,235,0.05), rgba(96,165,250,0.2));
+    background-size: 300% 300%;
+    -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+    -webkit-mask-composite: xor;
+    mask-composite: exclude;
+    animation: cl-border-glow 6s ease-in-out infinite;
+    pointer-events: none;
+    z-index: 0;
+    opacity: 0.6;
+    transition: opacity 0.4s ease;
+}
+.cl-login-card:hover::before {
+    opacity: 1;
+}
+
+@keyframes cl-border-glow {
+    0%,100% { background-position: 0% 50%; }
+    50% { background-position: 100% 50%; }
+}
+
+.cl-login-card::after {
     content: '';
     position: absolute;
     top: var(--mouse-y);
     left: var(--mouse-x);
     transform: translate(-50%,-50%);
-    width: 400px; height: 400px;
-    background: radial-gradient(circle, rgba(37,99,235,0.06), transparent 70%);
+    width: 500px; height: 500px;
+    background: radial-gradient(circle, rgba(37,99,235,0.08), transparent 70%);
     border-radius: 50%;
     pointer-events: none;
     z-index: 0;
     transition: all 0.3s ease;
 }
 .cl-login-card:hover {
-    border-color: rgba(37,99,235,0.12);
-    box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+    border-color: rgba(37,99,235,0.15);
+    box-shadow: 0 20px 60px rgba(0,0,0,0.3), 0 0 40px rgba(37,99,235,0.05);
     transform: translateY(-2px);
 }
 
@@ -1055,60 +1069,6 @@ document.addEventListener('DOMContentLoaded', function() {
     to { transform: rotate(360deg); }
 }
 
-/* ===================== DIVIDER ===================== */
-.cl-divider {
-    display: flex;
-    align-items: center;
-    margin: 24px 0;
-}
-.cl-divider::before,
-.cl-divider::after {
-    content: '';
-    flex: 1;
-    height: 1px;
-    background: rgba(255,255,255,0.06);
-}
-.cl-divider span {
-    padding: 0 16px;
-    font-size: 0.8rem;
-    color: var(--clr-text-secondary);
-    font-weight: 500;
-}
-
-/* ===================== SOCIAL BUTTONS ===================== */
-.cl-social-row {
-    display: flex;
-    gap: 12px;
-    margin-bottom: 24px;
-}
-.cl-social-btn {
-    flex: 1;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 8px;
-    padding: 12px 16px;
-    background: rgba(255,255,255,0.04);
-    border: 1px solid rgba(255,255,255,0.08);
-    border-radius: 12px;
-    font-family: var(--font);
-    font-size: 0.85rem;
-    font-weight: 600;
-    color: var(--clr-text-secondary);
-    cursor: pointer;
-    transition: all 0.3s ease;
-}
-.cl-social-btn:hover {
-    background: rgba(255,255,255,0.08);
-    border-color: rgba(255,255,255,0.12);
-    color: var(--clr-text);
-    transform: translateY(-1px);
-}
-.cl-social-btn i,
-.cl-social-btn svg {
-    font-size: 1.2rem;
-}
-
 /* ===================== SIGN UP ROW ===================== */
 .cl-signup-row {
     text-align: center;
@@ -1201,68 +1161,105 @@ document.addEventListener('DOMContentLoaded', function() {
     .cl-card-title { font-size: 1.4rem; }
     .cl-brand-tagline { margin-bottom: 24px; }
     .cl-brand-stats { margin-bottom: 24px; }
-}
-@media (max-width: 480px) {
+}@media (max-width: 480px) {
     .cl-login-page {
         min-height: auto;
-        padding: 20px 0;
+        padding: 12px 0;
     }
     .cl-login-wrapper {
-        padding: 16px 12px;
-        gap: 24px;
+        padding: 12px 10px;
+        gap: 20px;
     }
-    .cl-login-card { padding: 24px 18px; border-radius: 20px; }
-    .cl-social-row { flex-direction: column; gap: 8px; }
+    .cl-login-card { padding: 22px 16px; border-radius: 18px; }
+    .cl-login-card::before { border-radius: 18px; }
     .cl-options-row { flex-direction: column; gap: 12px; align-items: flex-start; }
-    .cl-brand-name { font-size: 1.6rem; }
-    .cl-brand-icon-wrap { width: 40px; height: 40px; font-size: 1.2rem; border-radius: 12px; }
-    .cl-card-icon { width: 48px; height: 48px; font-size: 1.2rem; border-radius: 14px; }
-    .cl-input { padding: 12px 40px 12px 40px; font-size: 0.9rem; }
-    .cl-submit-btn { padding: 13px 20px; font-size: 0.95rem; }
-    .cl-card-title { font-size: 1.3rem; }
+    .cl-brand-name { font-size: 1.5rem; }
+    .cl-brand-icon-wrap { width: 38px; height: 38px; font-size: 1.1rem; border-radius: 11px; }
+    .cl-brand-tagline { font-size: 1rem; margin-bottom: 24px; }
+    .cl-brand-stats { padding: 14px 16px; margin-bottom: 24px; gap: 12px; }
+    .cl-stat-num { font-size: 1.2rem; }
+    .cl-stat-label { font-size: 0.65rem; }
+    .cl-stat-divider { height: 30px; }
+    .cl-feature-list { flex-direction: row; flex-wrap: wrap; justify-content: center; gap: 8px; }
+    .cl-feature-item { font-size: 0.8rem; }
+    .cl-card-icon { width: 46px; height: 46px; font-size: 1.15rem; border-radius: 13px; margin-bottom: 14px; }
+    .cl-card-title { font-size: 1.25rem; }
     .cl-card-subtitle { font-size: 0.82rem; }
-    .cl-card-header { margin-bottom: 24px; }
-    .cl-card-footer { flex-direction: column; text-align: center; gap: 4px; }
+    .cl-card-header { margin-bottom: 22px; }
+    .cl-input-group { margin-bottom: 16px; }
+    .cl-input { padding: 12px 40px 12px 40px; font-size: 0.88rem; }
+    .cl-input-label { font-size: 0.8rem; }
+    .cl-submit-btn { padding: 13px 20px; font-size: 0.92rem; }
+    .cl-card-footer { flex-direction: column; text-align: center; gap: 4px; margin-top: 20px; padding-top: 16px; }
     .cl-checkbox-label { font-size: 0.8rem; }
     .cl-forgot-link { font-size: 0.8rem; }
     .cl-signup-row { font-size: 0.82rem; }
-    .cl-social-btn { font-size: 0.8rem; padding: 10px 14px; }
-    .cl-orb-1 { width: 300px; height: 300px; }
-    .cl-orb-2 { width: 250px; height: 250px; }
-    .cl-orb-3 { display: none; }
-    .cl-orb-4 { display: none; }
-    .cl-grid-overlay { background-size: 30px 30px; }
+    .cl-options-row { margin-bottom: 20px; }
+    .cl-orb-1 { width: 250px; height: 250px; top: -100px; left: -80px; }
+    .cl-orb-2 { width: 200px; height: 200px; bottom: -80px; right: -60px; }
+    .cl-orb-3, .cl-orb-4 { display: none; }
+    .cl-particles { display: none; }
+    .cl-grid-overlay { background-size: 30px 30px; mask-image: none; -webkit-mask-image: none; }
 }
 @media (max-width: 375px) {
-    .cl-login-card { padding: 20px 14px; border-radius: 16px; }
-    .cl-card-title { font-size: 1.15rem; }
-    .cl-brand-name { font-size: 1.35rem; }
-    .cl-brand-icon-wrap { width: 36px; height: 36px; font-size: 1rem; border-radius: 10px; }
-    .cl-card-icon { width: 42px; height: 42px; font-size: 1.1rem; }
-    .cl-input { padding: 10px 36px 10px 36px; font-size: 0.85rem; }
-    .cl-submit-btn { padding: 12px 18px; font-size: 0.9rem; }
-    .cl-input-icon { left: 10px; font-size: 0.9rem; }
-    .cl-pw-toggle { right: 8px; font-size: 1rem; }
-    .cl-card-footer span { font-size: 0.72rem; }
+    .cl-login-wrapper { padding: 10px 8px; gap: 16px; }
+    .cl-login-card { padding: 18px 12px; border-radius: 16px; }
+    .cl-login-card::before { border-radius: 16px; }
+    .cl-card-title { font-size: 1.1rem; }
+    .cl-card-subtitle { font-size: 0.78rem; }
+    .cl-brand-name { font-size: 1.3rem; }
+    .cl-brand-icon-wrap { width: 34px; height: 34px; font-size: 1rem; border-radius: 10px; }
+    .cl-card-icon { width: 40px; height: 40px; font-size: 1rem; }
+    .cl-input { padding: 10px 34px 10px 34px; font-size: 0.84rem; border-radius: 10px; }
+    .cl-input-icon { left: 10px; font-size: 0.85rem; }
+    .cl-input-label { font-size: 0.78rem; margin-bottom: 6px; }
+    .cl-submit-btn { padding: 11px 16px; font-size: 0.88rem; border-radius: 10px; }
+    .cl-checkbox-label { font-size: 0.78rem; }
+    .cl-checkbox-mark { width: 16px; height: 16px; }
+    .cl-forgot-link { font-size: 0.78rem; }
+    .cl-pw-toggle { right: 8px; font-size: 0.95rem; }
+    .cl-signup-row { font-size: 0.78rem; }
+    .cl-card-footer span { font-size: 0.7rem; }
+    .cl-card-footer { margin-top: 16px; padding-top: 14px; }
+    .cl-bubble { display: none; }
 }
 @media (max-height: 600px) and (orientation: landscape) {
     .cl-login-wrapper {
         min-height: auto;
-        padding: 16px;
-        gap: 20px;
+        padding: 12px;
+        gap: 16px;
     }
-    .cl-brand-section { max-width: 300px; }
-    .cl-login-card-wrapper { max-width: 360px; }
-    .cl-login-card { padding: 20px 18px; }
+    .cl-brand-section { max-width: 280px; }
+    .cl-login-card-wrapper { max-width: 340px; }
+    .cl-login-card { padding: 16px 16px; border-radius: 18px; }
+    .cl-login-card::before { border-radius: 18px; }
     .cl-brand-stats { display: none; }
     .cl-feature-list { display: none; }
-    .cl-card-header { margin-bottom: 16px; }
-    .cl-card-icon { width: 40px; height: 40px; font-size: 1rem; margin-bottom: 10px; }
-    .cl-card-title { font-size: 1.2rem; }
+    .cl-card-header { margin-bottom: 14px; }
+    .cl-card-icon { width: 36px; height: 36px; font-size: 0.9rem; margin-bottom: 8px; }
+    .cl-card-title { font-size: 1.1rem; margin-bottom: 4px; }
+    .cl-card-subtitle { font-size: 0.78rem; }
+    .cl-input-group { margin-bottom: 12px; }
+    .cl-input { padding: 10px 36px 10px 36px; font-size: 0.85rem; }
+    .cl-submit-btn { padding: 10px 16px; font-size: 0.88rem; }
     .cl-bubble { display: none; }
-    .cl-orb-1 { width: 200px; height: 200px; }
-    .cl-orb-2 { width: 180px; height: 180px; }
+    .cl-orb-1 { width: 160px; height: 160px; }
+    .cl-orb-2 { width: 140px; height: 140px; }
     .cl-orb-3, .cl-orb-4 { display: none; }
+    .cl-particles { display: none; }
+    .cl-options-row { margin-bottom: 16px; }
+    .cl-checkbox-label { font-size: 0.78rem; }
+    .cl-signup-row { font-size: 0.8rem; }
+}
+@media (max-width: 320px) {
+    .cl-login-card { padding: 14px 10px; }
+    .cl-card-title { font-size: 1rem; }
+    .cl-input { padding: 9px 30px 9px 30px; font-size: 0.8rem; }
+    .cl-input-icon { left: 8px; font-size: 0.8rem; }
+    .cl-submit-btn { padding: 10px 14px; font-size: 0.84rem; }
+    .cl-brand-name { font-size: 1.1rem; }
+    .cl-brand-icon-wrap { width: 30px; height: 30px; font-size: 0.9rem; }
+    .cl-brand-badge { font-size: 0.7rem; padding: 4px 10px; }
 }
 @media (prefers-reduced-motion: reduce) {
     .cl-login-page *,
@@ -1274,6 +1271,7 @@ document.addEventListener('DOMContentLoaded', function() {
     }
     .cl-bubble, .cl-particles { display: none; }
     .cl-login-card { opacity: 1; transform: none; }
+    .cl-login-card::before { animation: none; opacity: 0.3; }
     .cl-brand-content { opacity: 1; transform: none; }
 }
 
