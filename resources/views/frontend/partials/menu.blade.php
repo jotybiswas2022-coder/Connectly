@@ -8,6 +8,7 @@ $isLandingPage = request()->is('/') || request()->is('contact');
 $isProfilePage = request()->routeIs('profile.show');
 $isFeedOrProfile = request()->is('feed') || request()->routeIs('profile.show');
 $isFriendsOrSearch = request()->routeIs('friends') || request()->routeIs('search');
+$isLegalPage = in_array(request()->path(), ['privacy', 'terms', 'cookies', 'gdpr']);
 @endphp
 
 <!-- Top Bar -->
@@ -143,7 +144,7 @@ $isFriendsOrSearch = request()->routeIs('friends') || request()->routeIs('search
 
 <!-- Sidebar + Content -->
 <div class="row m-0 chatbox-main-layout-row {{ $isLandingPage ? 'chatbox-layout-landing' : '' }} {{ $isFeedOrProfile ? 'chatbox-layout-feed-profile' : '' }} {{ $isChatPage ? 'chatbox-layout-message' : '' }}">
-    @unless($isLandingPage || $isFeedOrProfile || $isFriendsOrSearch)
+    @unless($isLandingPage || $isFeedOrProfile || $isFriendsOrSearch || $isLegalPage)
     <div class="col-md-3 p-0">
         <div class="chatbox-sidebar-container">
 
