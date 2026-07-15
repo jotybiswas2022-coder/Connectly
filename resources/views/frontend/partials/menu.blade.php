@@ -222,7 +222,7 @@ $isLegalPage = in_array(request()->path(), ['privacy', 'terms', 'cookies', 'gdpr
     @endunless
 
     <!-- Content -->
-    <div class="{{ $isLandingPage || $isFeedOrProfile || $isFriendsOrSearch ? 'col-12' : 'col-md-9' }} p-0 {{ $isChatPage ? 'chatbox-chat-page-column' : 'chatbox-content-area' }}">
+    <div class="{{ $isLandingPage || $isFeedOrProfile || $isFriendsOrSearch || $isLegalPage ? 'col-12' : 'col-md-9' }} p-0 {{ $isChatPage ? 'chatbox-chat-page-column' : 'chatbox-content-area' }}">
         @yield('content')
     </div>
 </div>
