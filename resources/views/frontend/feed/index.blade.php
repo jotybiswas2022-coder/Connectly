@@ -2186,61 +2186,7 @@ document.addEventListener('change', function(e) {
 });
 </script>
 
-{{-- ===== IMAGE LIGHTBOX MODAL (single instance) ===== --}}
-<div class="modal fade" id="imageLightboxModal" tabindex="-1" aria-hidden="true">
-    <div class="modal-dialog modal-dialog-centered modal-xl">
-        <div class="modal-content" style="background:transparent !important;border:none !important;box-shadow:none !important;">
-            <div class="modal-body text-center p-0" style="position:relative;">
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close" style="position:absolute;top:10px;right:10px;z-index:10;filter:invert(1);opacity:0.8;"></button>
-                <img id="lightboxImage" src="" alt="Full size image" class="img-fluid rounded" style="max-height:90vh;box-shadow:0 20px 80px rgba(0,0,0,0.4);border-radius:12px;">
-            </div>
-        </div>
-    </div>
-</div>
-
-<script>
-// ============================================================
-// IMAGE LIGHTBOX
-// ============================================================
-function openImageModal(src) {
-    const modal = document.getElementById('imageLightboxModal');
-    const img = document.getElementById('lightboxImage');
-    if (modal && img) {
-        img.src = src;
-        const bsModal = new bootstrap.Modal(modal);
-        bsModal.show();
-    }
-}
-
-// ============================================================
-// EDIT MODAL IMAGE PREVIEW (delegated, defined once)
-// ============================================================
-document.addEventListener('change', function(e) {
-    if (e.target.matches('.connectly-edit-image-input')) {
-        const containerId = e.target.dataset.previewContainer;
-        const container = document.getElementById(containerId);
-        if (!container) return;
-
-        container.innerHTML = '';
-        const files = Array.from(e.target.files || []);
-        if (files.length === 0) return;
-
-        files.forEach((file, index) => {
-            const reader = new FileReader();
-            const item = document.createElement('div');
-            item.className = 'connectly-edit-preview-item';
-            item.style.animation = 'previewItemIn 0.25s ease backwards';
-            item.style.animationDelay = (index * 0.05) + 's';
-
-            reader.onload = function(ev) {
-                item.innerHTML = `<img src="${ev.target.result}" alt="New image ${index + 1}">`;
-            };
-            reader.readAsDataURL(file);
-            container.appendChild(item);
-        });
-    }
-});
-</script>
+{{-- Edit modal image preview is delegated globally --}}
 
 @if (session('open_modal'))
 <script>
