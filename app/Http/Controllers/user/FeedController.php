@@ -119,7 +119,7 @@ class FeedController extends Controller
         $validated = $request->validate([
             'content' => 'nullable|string|max:600',
             'images' => 'sometimes|nullable|array',
-            'images.*' => 'image|mimes:jpeg,png,jpg,gif,webp|max:5120',
+            'images.*' => 'image|mimes:jpeg,png,jpg,gif,webp|max:10240',
         ]);
 
         $content = isset($validated['content']) ? trim((string) $validated['content']) : '';
@@ -157,7 +157,7 @@ class FeedController extends Controller
         $validator = Validator::make($request->all(), [
             'edit_content' => 'nullable|string|max:600',
             'edit_images' => 'sometimes|nullable|array',
-            'edit_images.*' => 'image|mimes:jpeg,png,jpg,gif,webp|max:5120',
+            'edit_images.*' => 'image|mimes:jpeg,png,jpg,gif,webp|max:10240',
             'remove_images' => 'nullable|array',
             'remove_images.*' => 'string',
         ]);
@@ -290,7 +290,7 @@ class FeedController extends Controller
     {
         $validator = Validator::make($request->all(), [
             'comment' => 'nullable|string|max:500',
-            'comment_image' => 'sometimes|nullable|image|mimes:jpeg,png,jpg,gif,webp|max:5120',
+            'comment_image' => 'sometimes|nullable|image|mimes:jpeg,png,jpg,gif,webp|max:10240',
             'parent_id' => 'nullable|integer|exists:post_comments,id',
         ]);
 
