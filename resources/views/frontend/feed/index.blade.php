@@ -206,48 +206,49 @@
 
 /* ----- CSS Variables ----- */
 :root {
-    --feed-bg: #f0f4ff;
-    --feed-bg-alt: #faf5ff;
-    --feed-bg-dark: #e8edf5;
+    --feed-bg: #f5f5f7;
+    --feed-bg-alt: #fafbfc;
     --feed-surface: #ffffff;
-    --feed-surface-hover: #f8faff;
-    --feed-border: #e2e8f0;
-    --feed-border-focus: #2563EB;
-    --feed-text: #0b1121;
-    --feed-text-secondary: #1e293b;
-    --feed-muted: #64748b;
-    --feed-muted-light: #94a3b8;
-    --feed-primary: #2563EB;
-    --feed-primary-light: #60A5FA;
-    --feed-primary-dark: #1D4ED8;
-    --feed-primary-subtle: rgba(37,99,235,0.08);
-    --feed-purple: #7C3AED;
-    --feed-purple-light: #A78BFA;
-    --feed-cyan: #06b6d4;
-    --feed-rose: #f43f5e;
-    --feed-amber: #f59e0b;
-    --feed-emerald: #10b981;
+    --feed-surface-hover: #f8f9fa;
+    --feed-border: #e5e7eb;
+    --feed-border-light: #f0f0f2;
+    --feed-border-focus: #0071e3;
+    --feed-text: #1d1d1f;
+    --feed-text-secondary: #424245;
+    --feed-muted: #86868b;
+    --feed-muted-light: #aeaeb2;
+    --feed-primary: #0071e3;
+    --feed-primary-light: #40a9ff;
+    --feed-primary-dark: #0058b3;
+    --feed-primary-subtle: rgba(0,113,227,0.06);
+    --feed-purple: #8b5cf6;
+    --feed-purple-light: #a78bfa;
+    --feed-cyan: #22d3ee;
+    --feed-rose: #fb7185;
+    --feed-amber: #fbbf24;
+    --feed-emerald: #34d399;
     --feed-success: #059669;
     --feed-warning: #d97706;
     --feed-danger: #dc2626;
-    --feed-input-bg: #f1f5f9;
-    --feed-input-border: #cbd5e1;
-    --feed-radius: 20px;
-    --feed-radius-sm: 12px;
-    --feed-radius-xs: 8px;
-    --feed-shadow-sm: 0 1px 2px rgba(0,0,0,0.04), 0 1px 1px rgba(0,0,0,0.02);
-    --feed-shadow-md: 0 4px 6px -1px rgba(0,0,0,0.05), 0 2px 4px -1px rgba(0,0,0,0.03), 0 0 0 1px rgba(0,0,0,0.01);
-    --feed-shadow-lg: 0 10px 25px -3px rgba(0,0,0,0.06), 0 4px 10px -2px rgba(0,0,0,0.04);
-    --feed-shadow-xl: 0 20px 50px -8px rgba(0,0,0,0.08), 0 10px 20px -6px rgba(0,0,0,0.04);
-    --feed-shadow-glow: 0 8px 32px rgba(37,99,235,0.08), 0 2px 8px rgba(37,99,235,0.04);
-    --feed-transition: 0.3s cubic-bezier(.16,1,.3,1);
-    --feed-bounce: 0.5s cubic-bezier(.34,1.56,.64,1);
+    --feed-input-bg: #f5f5f7;
+    --feed-input-border: #d2d2d7;
+    --feed-radius: 24px;
+    --feed-radius-sm: 14px;
+    --feed-radius-xs: 10px;
+    --feed-radius-pill: 9999px;
+    --feed-shadow-sm: 0 1px 2px rgba(0,0,0,0.03);
+    --feed-shadow-md: 0 2px 8px rgba(0,0,0,0.04);
+    --feed-shadow-lg: 0 8px 24px rgba(0,0,0,0.05);
+    --feed-shadow-xl: 0 12px 40px rgba(0,0,0,0.06);
+    --feed-shadow-glow: 0 4px 16px rgba(0,113,227,0.08);
+    --feed-transition: 0.25s cubic-bezier(.4,0,.2,1);
+    --feed-spring: 0.5s cubic-bezier(.34,1.56,.64,1);
 }
 
 /* ----- Page Layout ----- */
 .connectly-feed-page {
     min-height: 100vh;
-    background: linear-gradient(135deg, var(--feed-bg) 0%, var(--feed-bg-alt) 50%, #fdf4ff 100%);
+    background: var(--feed-bg);
     position: relative;
     z-index: 1;
 }
@@ -394,13 +395,13 @@
 }
 
 .connectly-mobile-search-inner {
-    background: rgba(255,255,255,0.85);
-    backdrop-filter: blur(16px) saturate(200%);
-    -webkit-backdrop-filter: blur(16px) saturate(200%);
+    background: rgba(255,255,255,0.92);
+    backdrop-filter: blur(20px) saturate(180%);
+    -webkit-backdrop-filter: blur(20px) saturate(180%);
     border-radius: var(--feed-radius);
-    border: 1px solid rgba(226,232,240,0.8);
-    padding: 0.85rem 1rem;
-    box-shadow: 0 4px 20px rgba(0,0,0,0.06), 0 1px 3px rgba(0,0,0,0.03);
+    border: 1px solid var(--feed-border);
+    padding: 0.8rem 1rem;
+    box-shadow: var(--feed-shadow-md);
     animation: mobileSearchSlideDown 0.4s ease-out;
 }
 
@@ -418,36 +419,16 @@
     background: var(--feed-surface);
     border-radius: var(--feed-radius);
     border: 1px solid var(--feed-border);
-    padding: 1.5rem;
+    padding: 1.75rem;
     position: relative;
-    overflow: hidden;
     transition: all var(--feed-transition);
     animation: feedCardSlideUp 0.5s ease-out;
-    box-shadow: var(--feed-shadow-md);
-}
-
-/* Premium gradient top accent bar */
-.connectly-composer-card::before {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: 0;
-    right: 0;
-    height: 3px;
-    background: linear-gradient(90deg, var(--feed-primary), var(--feed-purple), var(--feed-primary-light));
-    background-size: 200% 100%;
-    animation: feedAccentBar 4s ease-in-out infinite;
-}
-
-@keyframes feedAccentBar {
-    0%,100% { background-position: 0% 50%; }
-    50% { background-position: 100% 50%; }
+    box-shadow: var(--feed-shadow-sm);
 }
 
 .connectly-composer-card:hover {
-    box-shadow: var(--feed-shadow-lg);
-    transform: translateY(-2px);
-    border-color: rgba(37,99,235,0.15);
+    box-shadow: var(--feed-shadow-md);
+    border-color: var(--feed-border-focus);
 }
 
 .connectly-composer-name {
@@ -462,27 +443,25 @@
 
 /* ===== AVATAR ===== */
 .connectly-feed-avatar {
-    width: 46px;
-    height: 46px;
+    width: 48px;
+    height: 48px;
     border-radius: 50%;
     display: flex;
     align-items: center;
     justify-content: center;
-    font-weight: 700;
+    font-weight: 600;
     font-size: 1.1rem;
     color: #ffffff;
-    background: linear-gradient(135deg, var(--feed-primary) 0%, var(--feed-primary-dark) 100%);
+    background: var(--feed-primary);
     flex-shrink: 0;
-    box-shadow: 0 3px 10px rgba(37, 99, 235, 0.25);
 }
 
 .connectly-feed-avatar-alt {
-    background: linear-gradient(135deg, #94a3b8 0%, #64748b 100%);
+    background: var(--feed-muted-light);
 }
 
 .connectly-feed-avatar-image {
     object-fit: cover;
-    border: 2px solid rgba(37,99,235,0.15);
     background: var(--feed-surface);
 }
 
@@ -490,18 +469,20 @@
 .connectly-feed-textarea {
     border-radius: var(--feed-radius-sm);
     border: 1.5px solid var(--feed-input-border);
-    padding: 0.9rem 1rem;
+    padding: 1rem 1.1rem;
     resize: none;
     font-size: 0.9rem;
     background: var(--feed-input-bg);
     color: var(--feed-text);
-    transition: all var(--feed-transition);
+    transition: border-color var(--feed-transition), box-shadow var(--feed-transition);
+    line-height: 1.6;
 }
 
 .connectly-feed-textarea:focus {
     border-color: var(--feed-primary);
-    box-shadow: 0 0 0 4px rgba(37,99,235,0.1);
-    background: #ffffff;
+    box-shadow: 0 0 0 3px rgba(0,113,227,0.1);
+    background: var(--feed-surface);
+    outline: none;
 }
 
 .connectly-feed-textarea::placeholder {
@@ -656,35 +637,22 @@
 
 /* ===== POST BUTTON ===== */
 .connectly-feed-post-btn {
-    background: linear-gradient(135deg, var(--feed-primary), var(--feed-primary-dark));
+    background: var(--feed-primary);
     color: #fff;
-    border-radius: var(--feed-radius-sm);
+    border-radius: var(--feed-radius-pill);
     font-weight: 600;
     font-size: 0.85rem;
-    padding: 0.6rem 1.5rem;
+    padding: 0.65rem 1.75rem;
     border: none;
     transition: all var(--feed-transition);
-    box-shadow: 0 4px 14px rgba(37,99,235,0.25);
     position: relative;
-    overflow: hidden;
-}
-
-.connectly-feed-post-btn::after {
-    content: '';
-    position: absolute;
-    inset: 0;
-    background: linear-gradient(135deg, transparent 40%, rgba(255,255,255,0.15));
-    pointer-events: none;
+    cursor: pointer;
+    -webkit-font-smoothing: antialiased;
 }
 
 .connectly-feed-post-btn:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 8px 24px rgba(37,99,235,0.35);
+    background: var(--feed-primary-dark);
     color: #fff;
-}
-
-.connectly-feed-post-btn:active {
-    transform: translateY(0);
 }
 
 /* ===== POST CARD ===== */
@@ -822,16 +790,11 @@
     background: var(--feed-surface);
     border-radius: var(--feed-radius);
     border: 1px solid var(--feed-border);
-    padding: 1.3rem;
+    padding: 1.5rem;
     position: relative;
-    overflow: hidden;
     animation: feedCardSlideUp 0.6s ease-out;
     box-shadow: var(--feed-shadow-sm);
     transition: all var(--feed-transition);
-}
-
-.connectly-side-card:hover {
-    box-shadow: var(--feed-shadow-md);
 }
 
 .connectly-side-sticky {
@@ -859,7 +822,7 @@
     align-items: center;
     background: var(--feed-input-bg);
     border: 1.5px solid var(--feed-input-border);
-    border-radius: var(--feed-radius-sm);
+    border-radius: var(--feed-radius-pill);
     padding: 0.1rem;
     transition: all var(--feed-transition);
 }
@@ -867,14 +830,14 @@
 .connectly-search-group:focus-within {
     border-color: var(--feed-primary);
     background: var(--feed-surface);
-    box-shadow: 0 0 0 3px rgba(37,99,235,0.1);
+    box-shadow: 0 0 0 3px rgba(0,113,227,0.1);
 }
 
 .connectly-search-group-icon {
     position: absolute;
-    left: 12px;
+    left: 14px;
     color: var(--feed-muted-light);
-    font-size: 0.9rem;
+    font-size: 0.85rem;
     pointer-events: none;
     transition: color 0.25s ease;
 }
@@ -887,11 +850,11 @@
     flex: 1;
     border: none;
     outline: none;
-    padding: 0.7rem 2.8rem 0.7rem 2.2rem;
-    font-size: 0.85rem;
+    padding: 0.65rem 2.8rem 0.65rem 2.3rem;
+    font-size: 0.88rem;
     color: var(--feed-text);
     background: transparent;
-    border-radius: 8px;
+    border-radius: var(--feed-radius-pill);
 }
 
 .connectly-search-input::placeholder {
@@ -900,27 +863,26 @@
 
 .connectly-search-btn {
     position: absolute;
-    right: 4px;
-    width: 34px;
-    height: 34px;
+    right: 3px;
+    width: 32px;
+    height: 32px;
     border: none;
-    background: linear-gradient(135deg, var(--feed-primary), var(--feed-primary-dark));
+    background: var(--feed-primary);
     color: #fff;
-    border-radius: 8px;
+    border-radius: 50%;
     display: flex;
     align-items: center;
     justify-content: center;
     cursor: pointer;
-    transition: all 0.25s ease;
+    transition: all 0.2s ease;
 }
 
 .connectly-search-btn:hover {
-    background: linear-gradient(135deg, var(--feed-primary-dark), #1e40af);
-    transform: scale(1.05);
+    background: var(--feed-primary-dark);
 }
 
 .connectly-search-btn:active {
-    transform: scale(0.95);
+    transform: scale(0.92);
 }
 
 /* ===== TIPS LIST ===== */
@@ -1098,52 +1060,49 @@
 
 /* ===== MAIN REACTION BUTTON ===== */
 .connectly-main-reaction-btn {
-    border-radius: 999px !important;
-    padding: 0.3rem 0.85rem !important;
+    border-radius: var(--feed-radius-pill) !important;
+    padding: 0.3rem 0.9rem !important;
     font-size: 0.8rem !important;
     font-weight: 500 !important;
-    transition: all 0.25s ease !important;
-    border: 1.5px solid var(--feed-border) !important;
+    transition: all 0.2s ease !important;
+    border: 1px solid var(--feed-border) !important;
     background: var(--feed-surface) !important;
     color: var(--feed-muted) !important;
 }
 
 .connectly-main-reaction-btn:hover {
-    background: rgba(37,99,235,0.06) !important;
-    border-color: rgba(37,99,235,0.25) !important;
+    background: var(--feed-primary-subtle) !important;
+    border-color: var(--feed-primary) !important;
     color: var(--feed-primary) !important;
-    transform: translateY(-1px);
 }
 
 .connectly-main-reaction-btn.btn-primary {
-    background: linear-gradient(135deg, var(--feed-primary), var(--feed-primary-dark)) !important;
-    border-color: transparent !important;
+    background: var(--feed-primary) !important;
+    border-color: var(--feed-primary) !important;
     color: #fff !important;
-    box-shadow: 0 3px 10px rgba(37,99,235,0.2);
 }
 
 .connectly-main-reaction-btn.btn-primary:hover {
-    box-shadow: 0 5px 16px rgba(37,99,235,0.3);
     color: #fff !important;
+    background: var(--feed-primary-dark) !important;
 }
 
 /* ===== COMMENT BUTTON ===== */
 .connectly-comment-btn {
-    border-radius: 999px !important;
-    padding: 0.3rem 0.85rem !important;
+    border-radius: var(--feed-radius-pill) !important;
+    padding: 0.3rem 0.9rem !important;
     font-size: 0.8rem !important;
     font-weight: 500 !important;
-    border: 1.5px solid var(--feed-border) !important;
+    border: 1px solid var(--feed-border) !important;
     background: var(--feed-surface) !important;
     color: var(--feed-muted) !important;
-    transition: all 0.25s ease !important;
+    transition: all 0.2s ease !important;
 }
 
 .connectly-comment-btn:hover {
-    background: rgba(37,99,235,0.06) !important;
-    border-color: rgba(37,99,235,0.25) !important;
+    background: var(--feed-primary-subtle) !important;
+    border-color: var(--feed-primary) !important;
     color: var(--feed-primary) !important;
-    transform: translateY(-1px);
 }
 
 /* ===== REACTION BADGES ===== */
@@ -1341,26 +1300,19 @@
     align-items: center;
     gap: 6px;
     padding: 0.5rem 1.25rem;
-    background: linear-gradient(135deg, var(--feed-primary), var(--feed-primary-dark));
+    background: var(--feed-primary);
     color: #fff;
     font-size: 0.85rem;
-    font-weight: 600;
+    font-weight: 500;
     border: none;
-    border-radius: var(--feed-radius-sm);
+    border-radius: var(--feed-radius-pill);
     cursor: pointer;
-    transition: all 0.25s ease;
-    box-shadow: 0 4px 14px rgba(37,99,235,0.2);
+    transition: all 0.2s ease;
 }
 
 .connectly-comment-submit-btn:hover {
-    background: linear-gradient(135deg, var(--feed-primary-dark), #1e40af);
-    transform: translateY(-1px);
-    box-shadow: 0 6px 20px rgba(37,99,235,0.3);
+    background: var(--feed-primary-dark);
     color: #fff;
-}
-
-.connectly-comment-submit-btn:active {
-    transform: translateY(0);
 }
 
 /* ===== FILE INPUT WRAPPER ===== */
