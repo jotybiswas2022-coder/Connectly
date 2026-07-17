@@ -3,6 +3,17 @@
 @section('content')
 
 <div class="connectly-feed-page">
+    {{-- Animated background orbs --}}
+    <div class="connectly-bg-orbs" aria-hidden="true">
+        <div class="connectly-orb connectly-orb-1"></div>
+        <div class="connectly-orb connectly-orb-2"></div>
+        <div class="connectly-orb connectly-orb-3"></div>
+        <div class="connectly-orb connectly-orb-4"></div>
+        <div class="connectly-orb connectly-orb-5"></div>
+    </div>
+    {{-- Subtle noise texture overlay --}}
+    <div class="connectly-noise-overlay" aria-hidden="true"></div>
+
     <div class="container py-4">
         @if (session('success'))
             <div class="alert alert-success alert-dismissible fade show connectly-feed-alert" role="alert" id="successAlert">
@@ -197,12 +208,13 @@
 :root {
     --feed-bg: #f0f4ff;
     --feed-bg-alt: #faf5ff;
+    --feed-bg-dark: #e8edf5;
     --feed-surface: #ffffff;
     --feed-surface-hover: #f8faff;
     --feed-border: #e2e8f0;
     --feed-border-focus: #2563EB;
-    --feed-text: #0f172a;
-    --feed-text-secondary: #334155;
+    --feed-text: #0b1121;
+    --feed-text-secondary: #1e293b;
     --feed-muted: #64748b;
     --feed-muted-light: #94a3b8;
     --feed-primary: #2563EB;
@@ -211,18 +223,25 @@
     --feed-primary-subtle: rgba(37,99,235,0.08);
     --feed-purple: #7C3AED;
     --feed-purple-light: #A78BFA;
-    --feed-success: #10b981;
-    --feed-warning: #f59e0b;
-    --feed-danger: #ef4444;
-    --feed-input-bg: #f8fafc;
+    --feed-cyan: #06b6d4;
+    --feed-rose: #f43f5e;
+    --feed-amber: #f59e0b;
+    --feed-emerald: #10b981;
+    --feed-success: #059669;
+    --feed-warning: #d97706;
+    --feed-danger: #dc2626;
+    --feed-input-bg: #f1f5f9;
     --feed-input-border: #cbd5e1;
-    --feed-radius: 16px;
-    --feed-radius-sm: 10px;
-    --feed-shadow-sm: 0 1px 3px rgba(0,0,0,0.04), 0 1px 2px rgba(0,0,0,0.03);
-    --feed-shadow-md: 0 4px 16px rgba(0,0,0,0.06), 0 2px 8px rgba(0,0,0,0.04);
-    --feed-shadow-lg: 0 12px 40px rgba(0,0,0,0.08), 0 4px 16px rgba(0,0,0,0.04);
-    --feed-shadow-xl: 0 20px 60px rgba(0,0,0,0.1);
+    --feed-radius: 20px;
+    --feed-radius-sm: 12px;
+    --feed-radius-xs: 8px;
+    --feed-shadow-sm: 0 1px 2px rgba(0,0,0,0.04), 0 1px 1px rgba(0,0,0,0.02);
+    --feed-shadow-md: 0 4px 6px -1px rgba(0,0,0,0.05), 0 2px 4px -1px rgba(0,0,0,0.03), 0 0 0 1px rgba(0,0,0,0.01);
+    --feed-shadow-lg: 0 10px 25px -3px rgba(0,0,0,0.06), 0 4px 10px -2px rgba(0,0,0,0.04);
+    --feed-shadow-xl: 0 20px 50px -8px rgba(0,0,0,0.08), 0 10px 20px -6px rgba(0,0,0,0.04);
+    --feed-shadow-glow: 0 8px 32px rgba(37,99,235,0.08), 0 2px 8px rgba(37,99,235,0.04);
     --feed-transition: 0.3s cubic-bezier(.16,1,.3,1);
+    --feed-bounce: 0.5s cubic-bezier(.34,1.56,.64,1);
 }
 
 /* ----- Page Layout ----- */
@@ -260,6 +279,104 @@
 @keyframes connectlyAlertSlideIn {
     from { transform: translateY(-10px); opacity: 0; }
     to { transform: translateY(0); opacity: 1; }
+}
+
+/* ===== ANIMATED BACKGROUND ORBS ===== */
+.connectly-bg-orbs {
+    position: fixed;
+    inset: 0;
+    overflow: hidden;
+    pointer-events: none;
+    z-index: 0;
+}
+
+.connectly-orb {
+    position: absolute;
+    border-radius: 50%;
+    filter: blur(80px);
+    opacity: 0.4;
+    will-change: transform;
+}
+
+.connectly-orb-1 {
+    width: 600px;
+    height: 600px;
+    background: radial-gradient(circle, rgba(37,99,235,0.15), transparent 70%);
+    top: -200px;
+    left: -150px;
+    animation: orbFloat1 20s ease-in-out infinite;
+}
+
+.connectly-orb-2 {
+    width: 500px;
+    height: 500px;
+    background: radial-gradient(circle, rgba(124,58,237,0.12), transparent 70%);
+    top: 40%;
+    right: -200px;
+    animation: orbFloat2 25s ease-in-out infinite;
+}
+
+.connectly-orb-3 {
+    width: 400px;
+    height: 400px;
+    background: radial-gradient(circle, rgba(6,182,212,0.1), transparent 70%);
+    bottom: -150px;
+    left: 30%;
+    animation: orbFloat3 18s ease-in-out infinite;
+}
+
+.connectly-orb-4 {
+    width: 350px;
+    height: 350px;
+    background: radial-gradient(circle, rgba(244,63,94,0.08), transparent 70%);
+    top: 15%;
+    left: 50%;
+    animation: orbFloat4 22s ease-in-out infinite;
+}
+
+.connectly-orb-5 {
+    width: 300px;
+    height: 300px;
+    background: radial-gradient(circle, rgba(245,158,11,0.08), transparent 70%);
+    bottom: 20%;
+    right: 10%;
+    animation: orbFloat1 28s ease-in-out infinite reverse;
+}
+
+@keyframes orbFloat1 {
+    0%, 100% { transform: translate(0, 0) scale(1); }
+    33% { transform: translate(80px, -60px) scale(1.1); }
+    66% { transform: translate(-40px, 40px) scale(0.9); }
+}
+
+@keyframes orbFloat2 {
+    0%, 100% { transform: translate(0, 0) scale(1); }
+    25% { transform: translate(-60px, 80px) scale(1.15); }
+    50% { transform: translate(-100px, -40px) scale(0.85); }
+    75% { transform: translate(-30px, 60px) scale(1.05); }
+}
+
+@keyframes orbFloat3 {
+    0%, 100% { transform: translate(0, 0) scale(1) rotate(0deg); }
+    50% { transform: translate(60px, -80px) scale(1.2) rotate(180deg); }
+}
+
+@keyframes orbFloat4 {
+    0%, 100% { transform: translate(0, 0) scale(1); }
+    33% { transform: translate(-70px, -50px) scale(0.95); }
+    66% { transform: translate(50px, 30px) scale(1.1); }
+}
+
+/* ===== NOISE TEXTURE OVERLAY ===== */
+.connectly-noise-overlay {
+    position: fixed;
+    inset: 0;
+    z-index: 1;
+    pointer-events: none;
+    opacity: 0.015;
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)'/%3E%3C/svg%3E");
+    background-repeat: repeat;
+    background-size: 256px 256px;
 }
 
 /* ===== MOBILE SEARCH (STICKY) ===== */
@@ -575,6 +692,24 @@
     transition: all var(--feed-transition);
     animation: feedCardSlideUp 0.5s ease-out backwards;
     box-shadow: var(--feed-shadow-sm);
+    transform: perspective(1000px) rotateX(0deg);
+    transform-style: preserve-3d;
+    will-change: transform, box-shadow;
+}
+
+.connectly-post-card::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    border-radius: var(--feed-radius);
+    background: linear-gradient(135deg, transparent 40%, rgba(37,99,235,0.02) 100%);
+    opacity: 0;
+    transition: opacity 0.4s ease;
+    pointer-events: none;
+}
+
+.connectly-post-card:hover::after {
+    opacity: 1;
 }
 
 .connectly-post-card:nth-child(1) { animation-delay: 0.08s; }
@@ -584,9 +719,9 @@
 .connectly-post-card:nth-child(5) { animation-delay: 0.40s; }
 
 .connectly-post-card:hover {
-    border-color: rgba(37,99,235,0.1);
-    box-shadow: var(--feed-shadow-lg);
-    transform: translateY(-2px);
+    border-color: rgba(37,99,235,0.12);
+    box-shadow: var(--feed-shadow-lg), var(--feed-shadow-glow);
+    transform: perspective(1000px) rotateX(2deg) translateY(-4px) scale(1.005);
 }
 
 @keyframes feedCardSlideUp {
@@ -1536,6 +1671,84 @@
     border-color: var(--feed-muted-light) !important;
 }
 
+/* ===== PREMIUM SCROLLBAR ===== */
+::-webkit-scrollbar {
+    width: 8px;
+    height: 8px;
+}
+
+::-webkit-scrollbar-track {
+    background: var(--feed-input-bg);
+    border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb {
+    background: var(--feed-border);
+    border-radius: 4px;
+    transition: background 0.2s ease;
+}
+
+::-webkit-scrollbar-thumb:hover {
+    background: var(--feed-muted-light);
+}
+
+/* ===== MICRO-INTERACTIONS ===== */
+.connectly-feed-post-btn,
+.connectly-search-btn,
+.connectly-comment-submit-btn {
+    position: relative;
+    overflow: hidden;
+}
+
+.connectly-feed-post-btn::before,
+.connectly-search-btn::before,
+.connectly-comment-submit-btn::before {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 0;
+    height: 0;
+    border-radius: 50%;
+    background: rgba(255,255,255,0.25);
+    transform: translate(-50%, -50%);
+    transition: width 0.6s ease, height 0.6s ease;
+    pointer-events: none;
+}
+
+.connectly-feed-post-btn:active::before,
+.connectly-search-btn:active::before,
+.connectly-comment-submit-btn:active::before {
+    width: 300px;
+    height: 300px;
+}
+
+/* Scale-down on click for buttons */
+.connectly-feed-post-btn:active,
+.connectly-search-btn:active,
+.connectly-comment-submit-btn:active,
+.connectly-main-reaction-btn:active,
+.connectly-comment-btn:active,
+.connectly-reply-trigger:active {
+    transform: scale(0.96) !important;
+}
+
+/* Smooth focus ring for inputs */
+.connectly-feed-textarea:focus,
+.connectly-search-input:focus,
+.modal-body .form-control:focus {
+    transition: all 0.2s ease, box-shadow 0.3s ease !important;
+}
+
+/* Avatar subtle glow pulse */
+.connectly-feed-avatar-image {
+    transition: box-shadow 0.3s ease, transform 0.3s ease;
+}
+
+.connectly-feed-avatar-image:hover {
+    box-shadow: 0 0 0 3px rgba(37,99,235,0.15), 0 4px 16px rgba(37,99,235,0.2);
+}
+
 /* ===== RESPONSIVE ===== */
 @media (max-width: 991.98px) {
     .connectly-composer-card { padding: 1.2rem; }
@@ -1612,9 +1825,39 @@
 
 <script>
 // ============================================================
-// IMAGE PREVIEW — Composer
+// SCROLL REVEAL ANIMATION (Intersection Observer)
 // ============================================================
 document.addEventListener('DOMContentLoaded', function() {
+    // Staggered reveal for post cards as user scrolls
+    if ('IntersectionObserver' in window) {
+        const postCards = document.querySelectorAll('.connectly-post-card');
+        
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach((entry) => {
+                if (entry.isIntersecting) {
+                    entry.target.style.opacity = '1';
+                    entry.target.style.transform = 'perspective(1000px) rotateX(0deg)';
+                    observer.unobserve(entry.target);
+                }
+            });
+        }, {
+            threshold: 0.1,
+            rootMargin: '0px 0px -50px 0px'
+        });
+
+        postCards.forEach((card, index) => {
+            // Reset initial state for observer to reveal
+            card.style.opacity = '0';
+            card.style.transform = 'perspective(1000px) rotateX(5deg) translateY(20px)';
+            card.style.transition = `all 0.6s ease-out ${index * 0.08}s`;
+            observer.observe(card);
+        });
+    }
+
+    // ============================================================
+    // IMAGE PREVIEW — Composer
+    // ============================================================
+    const composerInput = document.getElementById('composerImageInput');
     const composerInput = document.getElementById('composerImageInput');
     const previewContainer = document.getElementById('composerPreviewContainer');
     const previewGrid = document.getElementById('composerPreviewGrid');
