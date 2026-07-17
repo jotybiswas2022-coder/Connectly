@@ -107,6 +107,12 @@
 
                 {{-- Card Header --}}
                 <div class="cr-card-hd">
+                    <a href="/" class="cr-mobile-brand" aria-label="Connectly Home">
+                        <div class="cr-mobile-brand-icon">
+                            <i class="bi bi-diagram-3-fill"></i>
+                        </div>
+                        <span class="cr-mobile-brand-name">Connectly</span>
+                    </a>
                     <div class="cr-card-ico">
                         <i class="bi bi-person-plus-fill"></i>
                     </div>
@@ -895,6 +901,16 @@ document.addEventListener('DOMContentLoaded', function() {
     animation:cr-sp 0.7s linear infinite;
 }
 @keyframes cr-sp { to { transform:rotate(360deg); } }
+@keyframes cr-icon-breathe {
+    0%,100% { box-shadow:0 0 0 0 rgba(37,99,235,0.15), 0 4px 16px rgba(37,99,235,0.1); transform:scale(1); }
+    50% { box-shadow:0 0 0 8px rgba(37,99,235,0.05), 0 4px 24px rgba(37,99,235,0.15); transform:scale(1.03); }
+}
+@keyframes cr-btn-glow-pulse {
+    0%,100% { box-shadow:0 4px 16px rgba(37,99,235,0.3); }
+    50% { box-shadow:0 4px 28px rgba(37,99,235,0.5), 0 0 40px rgba(37,99,235,0.1); }
+}
+
+.cr-mobile-brand { display:none; }
 
 
 .cr-login-row { text-align:center; font-size:0.88rem; color:var(--clr-muted); display:flex; align-items:center; justify-content:center; gap:5px; flex-wrap:wrap; }
@@ -921,60 +937,101 @@ document.addEventListener('DOMContentLoaded', function() {
 }
 @media (max-width: 820px) {
     .cr-wrapper { flex-direction:column; gap:28px; padding:20px 16px; min-height:auto; }
-    .cr-brand { max-width:100%; width:100%; }
-    .cr-brand-inner { text-align:center; }
-    .cr-logo { justify-content:center; }
-    .cr-benefits { max-width:400px; margin-left:auto; margin-right:auto; }
-    .cr-testimonial { justify-content:center; max-width:400px; margin:0 auto; }
+    .cr-brand { display:none; }
     .cr-card-wrap { max-width:100%; width:100%; max-width:460px; }
     .cr-card { padding:28px 22px; }
     .cr-card-title { font-size:1.3rem; }
+    .cr-mobile-brand {
+        display:flex; align-items:center; justify-content:center; gap:8px;
+        text-decoration:none; margin-bottom:20px; padding-bottom:20px;
+        border-bottom:1px solid rgba(255,255,255,0.06);
+    }
+    .cr-mobile-brand-icon {
+        width:32px; height:32px; display:flex; align-items:center; justify-content:center;
+        background:linear-gradient(135deg,var(--clr-primary),var(--clr-dark));
+        border-radius:9px; font-size:1rem; color:#fff;
+    }
+    .cr-mobile-brand-name {
+        font-size:1.1rem; font-weight:700;
+        background:linear-gradient(135deg,var(--clr-light),var(--clr-primary));
+        -webkit-background-clip:text; -webkit-text-fill-color:transparent;
+        background-clip:text; letter-spacing:-0.3px;
+    }
 }
 @media (max-width: 480px) {
-    .cr-page { min-height:auto; padding:16px 0; }
-    .cr-wrapper { padding:12px; gap:20px; }
-    .cr-card { padding:22px 16px; border-radius:18px; }
-    .cr-card::before { border-radius:18px; }
-
-    .cr-logo-text { font-size:1.5rem; }
-    .cr-logo-icon { width:38px; height:38px; font-size:1.1rem; border-radius:10px; }
-    .cr-card-ico { width:44px; height:44px; font-size:1.2rem; border-radius:12px; }
-    .cr-card-title { font-size:1.2rem; }
-    .cr-brand-inner { text-align:center; }
-    .cr-badge { margin-left:auto; margin-right:auto; }
-    .cr-input { padding:11px 38px 11px 40px; font-size:0.88rem; }
-    .cr-btn { padding:12px 18px; font-size:0.9rem; }
-    .cr-card-sub { font-size:0.82rem; }
-    .cr-card-hd { margin-bottom:20px; }
+    .cr-page { min-height:100vh; min-height:100dvh; padding:0; display:flex; align-items:center; justify-content:center; }
+    .cr-wrapper { padding:20px 12px; gap:0; min-height:auto; }
+    .cr-card { padding:28px 20px 24px; border-radius:22px; transform-origin:bottom center; }
+    .cr-card::before { border-radius:22px; }
+    .cr-mobile-brand { margin-bottom:16px; padding-bottom:16px; }
+    .cr-mobile-brand-icon { width:28px; height:28px; font-size:0.85rem; border-radius:8px; }
+    .cr-mobile-brand-name { font-size:1rem; }
+    .cr-card-ico { width:50px; height:50px; font-size:1.25rem; border-radius:14px; margin-bottom:16px; animation:cr-icon-breathe 3s ease-in-out infinite; }
+    .cr-card-title { font-size:1.35rem; margin-bottom:6px; }
+    .cr-card-sub { font-size:0.85rem; }
+    .cr-card-hd { margin-bottom:28px; }
+    .cr-fg { margin-bottom:18px; }
+    .cr-label { font-size:0.82rem; margin-bottom:7px; }
+    .cr-input { padding:13px 42px 13px 44px; font-size:0.9rem; border-radius:12px; }
+    .cr-input:focus { border-color:var(--clr-primary); background:rgba(37,99,235,0.06); box-shadow:0 0 0 3px var(--clr-focus), 0 0 20px rgba(37,99,235,0.08); }
+    .cr-ico { left:14px; font-size:1rem; }
+    .cr-btn { padding:14px 22px; font-size:0.95rem; border-radius:12px; animation:cr-btn-glow-pulse 3s ease-in-out infinite; }
+    .cr-card-sub { font-size:0.85rem; }
     .cr-ps { padding:8px 10px; }
     .cr-ps-txt { font-size:0.72rem; }
     .cr-match { font-size:0.75rem; padding:6px 10px; }
+    .cr-terms { margin-bottom:22px; }
+    .cr-cb-label { font-size:0.82rem; }
+    .cr-login-row { font-size:0.85rem; margin-top:8px; }
+    .cr-card-ft { flex-direction:column; text-align:center; gap:6px; margin-top:24px; padding-top:18px; }
+    .cr-card-ft span { font-size:0.75rem; }
+    .cr-orb-1 { width:300px; height:300px; top:-120px; left:-100px; }
+    .cr-orb-2 { width:250px; height:250px; bottom:-100px; right:-80px; }
+    .cr-orb-3, .cr-orb-4 { display:none; }
+    .cr-particles { display:none; }
+    .cr-grid { background-size:40px 40px; mask-image:none; -webkit-mask-image:none; }
+}
+@media (max-width: 320px) {
+    .cr-wrapper { padding:12px 8px; }
+    .cr-card { padding:20px 12px 16px; border-radius:18px; }
+    .cr-card::before { border-radius:18px; }
+    .cr-mobile-brand { margin-bottom:12px; padding-bottom:12px; }
+    .cr-mobile-brand-icon { width:24px; height:24px; font-size:0.75rem; border-radius:6px; }
+    .cr-mobile-brand-name { font-size:0.85rem; }
+    .cr-card-ico { width:40px; height:40px; font-size:1rem; border-radius:11px; margin-bottom:12px; }
+    .cr-card-title { font-size:1.05rem; }
+    .cr-card-sub { font-size:0.76rem; }
+    .cr-card-hd { margin-bottom:20px; }
     .cr-fg { margin-bottom:14px; }
-    .cr-label { font-size:0.78rem; }
-    .cr-orb-1 { width:250px; height:250px; }
-    .cr-orb-2 { width:200px; height:200px; }
-    .cr-orb-3 { display:none; }
-    .cr-orb-4 { display:none; }
-    .cr-grid { background-size:30px 30px; }
-    .cr-card-ft { flex-direction:column; text-align:center; gap:4px; }
-    .cr-card-ft span { font-size:0.72rem; }
-    .cr-cb-label { font-size:0.78rem; }
+    .cr-label { font-size:0.76rem; }
+    .cr-input { padding:10px 32px 10px 34px; font-size:0.82rem; border-radius:10px; }
+    .cr-ico { left:8px; font-size:0.82rem; }
+    .cr-btn { padding:11px 16px; font-size:0.86rem; border-radius:10px; }
+    .cr-login-row { font-size:0.76rem; }
+    .cr-card-ft { margin-top:16px; padding-top:14px; }
+    .cr-card-ft span { font-size:0.68rem; }
 }
 @media (max-width: 375px) {
-    .cr-card { padding:18px 12px; border-radius:16px; }
-    .cr-card::before { border-radius:16px; }
-    .cr-card-title { font-size:1.05rem; }
-    .cr-logo-text { font-size:1.3rem; }
-    .cr-logo-icon { width:32px; height:32px; font-size:1rem; border-radius:8px; }
-    .cr-card-ico { width:38px; height:38px; font-size:1rem; border-radius:10px; }
-    .cr-input { padding:10px 34px 10px 36px; font-size:0.82rem; }
-    .cr-btn { padding:11px 16px; font-size:0.85rem; }
-    .cr-ico { left:10px; font-size:0.85rem; }
+    .cr-wrapper { padding:16px 12px; }
+    .cr-card { padding:24px 16px 20px; border-radius:20px; }
+    .cr-card::before { border-radius:20px; }
+    .cr-mobile-brand { margin-bottom:14px; padding-bottom:14px; }
+    .cr-mobile-brand-icon { width:26px; height:26px; font-size:0.8rem; border-radius:7px; }
+    .cr-mobile-brand-name { font-size:0.95rem; }
+    .cr-card-ico { width:44px; height:44px; font-size:1.1rem; border-radius:12px; margin-bottom:14px; }
+    .cr-card-title { font-size:1.2rem; margin-bottom:5px; }
+    .cr-card-sub { font-size:0.8rem; }
+    .cr-card-hd { margin-bottom:24px; }
+    .cr-fg { margin-bottom:16px; }
+    .cr-label { font-size:0.8rem; }
+    .cr-input { padding:11px 36px 11px 38px; font-size:0.86rem; border-radius:11px; }
+    .cr-ico { left:10px; font-size:0.88rem; }
+    .cr-btn { padding:12px 18px; font-size:0.9rem; border-radius:11px; }
+    .cr-login-row { font-size:0.8rem; }
+    .cr-card-ft { margin-top:20px; padding-top:16px; }
+    .cr-card-ft span { font-size:0.72rem; }
     .cr-pw-tog { right:8px; font-size:0.95rem; }
-    .cr-benefit { padding:10px 12px; }
-    .cr-benefit-icon { width:32px; height:32px; font-size:1rem; }
-    .cr-benefit-title { font-size:0.8rem; }
-    .cr-benefit-desc { font-size:0.72rem; }
+    .cr-cb-label { font-size:0.78rem; }
 }
 @media (max-height: 600px) and (orientation: landscape) {
     .cr-wrapper { min-height:auto; padding:12px; gap:16px; }
