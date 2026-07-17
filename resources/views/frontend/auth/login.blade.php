@@ -1134,7 +1134,6 @@ document.addEventListener('DOMContentLoaded', function() {
 @media (max-width: 860px) {
     .cl-login-wrapper {
         flex-direction: column;
-        gap: 32px;
         padding: 24px 16px;
         min-height: auto;
     }
@@ -1149,61 +1148,79 @@ document.addEventListener('DOMContentLoaded', function() {
     .cl-card-title { font-size: 1.4rem; }
 }@media (max-width: 480px) {
     .cl-login-page {
-        min-height: auto;
-        padding: 12px 0;
+        min-height: 100vh;
+        min-height: 100dvh;
+        padding: 0;
+        display: flex;
+        align-items: center;
+        justify-content: center;
     }
     .cl-login-wrapper {
-        padding: 12px 10px;
-        gap: 20px;
+        padding: 24px 16px;
+        gap: 0;
+        min-height: auto;
     }
-    .cl-login-card { padding: 22px 16px; border-radius: 18px; }
-    .cl-login-card::before { border-radius: 18px; }
-    .cl-options-row { flex-direction: column; gap: 12px; align-items: flex-start; }
-    .cl-card-icon { width: 46px; height: 46px; font-size: 1.15rem; border-radius: 13px; margin-bottom: 14px; }
-    .cl-card-title { font-size: 1.25rem; }
-    .cl-card-subtitle { font-size: 0.82rem; }
-    .cl-card-header { margin-bottom: 22px; }
-    .cl-input-group { margin-bottom: 16px; }
-    .cl-input { padding: 12px 40px 12px 40px; font-size: 0.88rem; }
-    .cl-input-label { font-size: 0.8rem; }
-    .cl-submit-btn { padding: 13px 20px; font-size: 0.92rem; }
-    .cl-card-footer { flex-direction: column; text-align: center; gap: 4px; margin-top: 20px; padding-top: 16px; }
-    .cl-checkbox-label { font-size: 0.8rem; }
-    .cl-forgot-link { font-size: 0.8rem; }
-    .cl-signup-row { font-size: 0.82rem; }
-    .cl-options-row { margin-bottom: 20px; }
-    .cl-orb-1 { width: 250px; height: 250px; top: -100px; left: -80px; }
-    .cl-orb-2 { width: 200px; height: 200px; bottom: -80px; right: -60px; }
+    .cl-login-card { padding: 28px 20px; border-radius: 20px; }
+    .cl-login-card::before { border-radius: 20px; }
+    .cl-card-icon { width: 50px; height: 50px; font-size: 1.25rem; border-radius: 14px; margin-bottom: 16px; }
+    .cl-card-title { font-size: 1.35rem; margin-bottom: 6px; }
+    .cl-card-subtitle { font-size: 0.85rem; }
+    .cl-card-header { margin-bottom: 28px; }
+    .cl-input-group { margin-bottom: 18px; }
+    .cl-input { padding: 13px 42px 13px 42px; font-size: 0.9rem; border-radius: 11px; }
+    .cl-input-label { font-size: 0.82rem; margin-bottom: 7px; }
+    .cl-submit-btn { padding: 14px 22px; font-size: 0.95rem; border-radius: 11px; }
+    .cl-options-row { flex-direction: column; gap: 14px; align-items: flex-start; margin-bottom: 24px; }
+    .cl-checkbox-label { font-size: 0.82rem; }
+    .cl-forgot-link { font-size: 0.82rem; }
+    .cl-signup-row { font-size: 0.85rem; margin-top: 8px; }
+    .cl-card-footer { flex-direction: column; text-align: center; gap: 6px; margin-top: 24px; padding-top: 18px; }
+    .cl-card-footer span { font-size: 0.75rem; }
+    .cl-orb-1 { width: 300px; height: 300px; top: -120px; left: -100px; }
+    .cl-orb-2 { width: 250px; height: 250px; bottom: -100px; right: -80px; }
     .cl-orb-3, .cl-orb-4 { display: none; }
     .cl-particles { display: none; }
-    .cl-grid-overlay { background-size: 30px 30px; mask-image: none; -webkit-mask-image: none; }
+    .cl-grid-overlay { background-size: 40px 40px; mask-image: none; -webkit-mask-image: none; }
 }
 @media (max-width: 375px) {
-    .cl-login-wrapper { padding: 10px 8px; gap: 16px; }
-    .cl-login-card { padding: 18px 12px; border-radius: 16px; }
-    .cl-login-card::before { border-radius: 16px; }
-    .cl-card-title { font-size: 1.1rem; }
-    .cl-card-subtitle { font-size: 0.78rem; }
-    .cl-card-icon { width: 40px; height: 40px; font-size: 1rem; }
-    .cl-input { padding: 10px 34px 10px 34px; font-size: 0.84rem; border-radius: 10px; }
-    .cl-input-icon { left: 10px; font-size: 0.85rem; }
-    .cl-input-label { font-size: 0.78rem; margin-bottom: 6px; }
-    .cl-submit-btn { padding: 11px 16px; font-size: 0.88rem; border-radius: 10px; }
-    .cl-checkbox-label { font-size: 0.78rem; }
+    .cl-login-wrapper { padding: 20px 14px; }
+    .cl-login-card { padding: 24px 16px; border-radius: 18px; }
+    .cl-login-card::before { border-radius: 18px; }
+    .cl-card-icon { width: 44px; height: 44px; font-size: 1.1rem; border-radius: 12px; margin-bottom: 14px; }
+    .cl-card-title { font-size: 1.2rem; margin-bottom: 5px; }
+    .cl-card-subtitle { font-size: 0.8rem; }
+    .cl-card-header { margin-bottom: 24px; }
+    .cl-input-group { margin-bottom: 16px; }
+    .cl-input { padding: 11px 36px 11px 36px; font-size: 0.86rem; border-radius: 10px; }
+    .cl-input-icon { left: 10px; font-size: 0.88rem; }
+    .cl-input-label { font-size: 0.8rem; margin-bottom: 6px; }
+    .cl-submit-btn { padding: 12px 18px; font-size: 0.9rem; border-radius: 10px; }
+    .cl-options-row { margin-bottom: 22px; gap: 12px; }
+    .cl-checkbox-label { font-size: 0.8rem; }
     .cl-checkbox-mark { width: 16px; height: 16px; }
-    .cl-forgot-link { font-size: 0.78rem; }
+    .cl-forgot-link { font-size: 0.8rem; }
     .cl-pw-toggle { right: 8px; font-size: 0.95rem; }
-    .cl-signup-row { font-size: 0.78rem; }
-    .cl-card-footer span { font-size: 0.7rem; }
-    .cl-card-footer { margin-top: 16px; padding-top: 14px; }
+    .cl-signup-row { font-size: 0.8rem; margin-top: 6px; }
+    .cl-card-footer { margin-top: 20px; padding-top: 16px; }
+    .cl-card-footer span { font-size: 0.72rem; }
     .cl-bubble { display: none; }
 }
 @media (max-width: 320px) {
-    .cl-login-card { padding: 14px 10px; }
-    .cl-card-title { font-size: 1rem; }
-    .cl-input { padding: 9px 30px 9px 30px; font-size: 0.8rem; }
-    .cl-input-icon { left: 8px; font-size: 0.8rem; }
-    .cl-submit-btn { padding: 10px 14px; font-size: 0.84rem; }
+    .cl-login-wrapper { padding: 16px 10px; }
+    .cl-login-card { padding: 20px 12px; border-radius: 16px; }
+    .cl-login-card::before { border-radius: 16px; }
+    .cl-card-icon { width: 40px; height: 40px; font-size: 1rem; border-radius: 11px; margin-bottom: 12px; }
+    .cl-card-title { font-size: 1.05rem; }
+    .cl-card-subtitle { font-size: 0.76rem; }
+    .cl-card-header { margin-bottom: 20px; }
+    .cl-input-group { margin-bottom: 14px; }
+    .cl-input { padding: 10px 32px 10px 32px; font-size: 0.82rem; border-radius: 9px; }
+    .cl-input-icon { left: 8px; font-size: 0.82rem; }
+    .cl-input-label { font-size: 0.76rem; }
+    .cl-submit-btn { padding: 11px 16px; font-size: 0.86rem; border-radius: 9px; }
+    .cl-signup-row { font-size: 0.76rem; }
+    .cl-card-footer { margin-top: 16px; padding-top: 14px; }
+    .cl-card-footer span { font-size: 0.68rem; }
 }
 @media (max-height: 600px) and (orientation: landscape) {
     .cl-login-wrapper {
