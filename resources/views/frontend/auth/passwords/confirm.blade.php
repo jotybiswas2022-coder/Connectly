@@ -38,6 +38,12 @@
 
                 {{-- Header --}}
                 <div class="clc-card-hd">
+                    <a href="/" class="clc-mobile-brand" aria-label="Connectly Home">
+                        <div class="clc-mobile-brand-icon">
+                            <i class="bi bi-diagram-3-fill"></i>
+                        </div>
+                        <span class="clc-mobile-brand-name">Connectly</span>
+                    </a>
                     <div class="clc-card-ico">
                         <i class="bi bi-shield-lock-fill"></i>
                     </div>
@@ -211,6 +217,16 @@ document.addEventListener('DOMContentLoaded', function() {
 .clc-btn-ldr { font-size:1.05rem; display:flex; align-items:center; }
 .clc-btn:hover .clc-btn-ldr i { animation:clc-ba 1s ease infinite; }
 @keyframes clc-ba { 0%,100% { transform:translateX(0); } 50% { transform:translateX(4px); } }
+@keyframes clc-icon-breathe {
+    0%,100% { box-shadow:0 0 0 0 rgba(37,99,235,0.15), 0 4px 16px rgba(37,99,235,0.1); transform:scale(1); }
+    50% { box-shadow:0 0 0 8px rgba(37,99,235,0.05), 0 4px 24px rgba(37,99,235,0.15); transform:scale(1.03); }
+}
+@keyframes clc-btn-glow-pulse {
+    0%,100% { box-shadow:0 4px 16px rgba(37,99,235,0.3); }
+    50% { box-shadow:0 4px 28px rgba(37,99,235,0.5), 0 0 40px rgba(37,99,235,0.1); }
+}
+
+.clc-mobile-brand { display:none; }
 
 /* Back */
 .clc-back { text-align:center; margin-top:16px; }
@@ -227,44 +243,91 @@ document.addEventListener('DOMContentLoaded', function() {
 /* Responsive */
 @media (max-width: 920px) {
     .clc-wrap { flex-direction:column; gap:28px; padding:20px 16px; min-height:auto; }
-    .clc-brand { max-width:100%; width:100%; }
-    .clc-brand-inner { text-align:center; }
-    .clc-logo { justify-content:center; }
-    .clc-features { flex-direction:row; flex-wrap:wrap; justify-content:center; }
+    .clc-brand { display:none; }
     .clc-card-wrap { max-width:100%; width:100%; max-width:440px; }
     .clc-card { padding:28px 22px; }
+    .clc-mobile-brand {
+        display:flex; align-items:center; justify-content:center; gap:8px;
+        text-decoration:none; margin-bottom:20px; padding-bottom:20px;
+        border-bottom:1px solid rgba(255,255,255,0.06);
+    }
+    .clc-mobile-brand-icon {
+        width:32px; height:32px; display:flex; align-items:center; justify-content:center;
+        background:linear-gradient(135deg,var(--p),var(--pd));
+        border-radius:9px; font-size:1rem; color:#fff;
+    }
+    .clc-mobile-brand-name {
+        font-size:1.1rem; font-weight:700;
+        background:linear-gradient(135deg,var(--pl),var(--p));
+        -webkit-background-clip:text; -webkit-text-fill-color:transparent;
+        background-clip:text; letter-spacing:-0.3px;
+    }
 }
 @media (max-width: 480px) {
-    .clc-page { min-height:auto; padding:12px 0; }
-    .clc-wrap { padding:12px 10px; gap:20px; }
-    .clc-card { padding:22px 16px; border-radius:18px; }
-    .clc-card::before { border-radius:18px; }
-    .clc-orb-1 { width:250px;height:250px; }
-    .clc-orb-2 { width:200px;height:200px; }
+    .clc-page { min-height:100vh; min-height:100dvh; padding:0; display:flex; align-items:center; justify-content:center; }
+    .clc-wrap { padding:20px 12px; gap:0; min-height:auto; }
+    .clc-card { padding:28px 20px 24px; border-radius:22px; transform-origin:bottom center; }
+    .clc-card::before { border-radius:22px; }
+    .clc-mobile-brand { margin-bottom:16px; padding-bottom:16px; }
+    .clc-mobile-brand-icon { width:28px; height:28px; font-size:0.85rem; border-radius:8px; }
+    .clc-mobile-brand-name { font-size:1rem; }
+    .clc-card-ico { width:50px; height:50px; font-size:1.25rem; border-radius:14px; margin-bottom:16px; animation:clc-icon-breathe 3s ease-in-out infinite; }
+    .clc-card-title { font-size:1.35rem; margin-bottom:6px; }
+    .clc-card-sub { font-size:0.85rem; }
+    .clc-card-hd { margin-bottom:28px; }
+    .clc-fg { margin-bottom:18px; }
+    .clc-label { font-size:0.82rem; margin-bottom:7px; }
+    .clc-input { padding:13px 42px 13px 44px; font-size:0.9rem; border-radius:12px; }
+    .clc-input:focus { border-color:var(--p); background:rgba(37,99,235,0.06); box-shadow:0 0 0 3px var(--fc), 0 0 20px rgba(37,99,235,0.08); }
+    .clc-ico { left:14px; font-size:1rem; }
+    .clc-btn { padding:14px 22px; font-size:0.95rem; border-radius:12px; animation:clc-btn-glow-pulse 3s ease-in-out infinite; }
+    .clc-back { margin-top:18px; }
+    .clc-back-link { font-size:0.85rem; }
+    .clc-card-ft { flex-direction:column; text-align:center; gap:6px; margin-top:24px; padding-top:18px; }
+    .clc-card-ft span { font-size:0.75rem; }
+    .clc-orb-1 { width:300px; height:300px; top:-120px; left:-100px; }
+    .clc-orb-2 { width:250px; height:250px; bottom:-100px; right:-80px; }
     .clc-orb-3,.clc-orb-4 { display:none; }
     .clc-particles { display:none; }
-    .clc-grid { background-size:30px 30px; mask-image:none; -webkit-mask-image:none; }
-    .clc-logo-text { font-size:1.5rem; }
-    .clc-logo-icon { width:38px; height:38px; font-size:1.1rem; }
-    .clc-input { font-size:0.88rem; padding:11px 38px 11px 40px; }
-    .clc-btn { padding:12px 18px; font-size:0.9rem; }
-    .clc-card-title { font-size:1.2rem; }
+    .clc-grid { background-size:40px 40px; mask-image:none; -webkit-mask-image:none; }
 }
 @media (max-width: 375px) {
-    .clc-card { padding:18px 12px; border-radius:16px; }
-    .clc-card::before { border-radius:16px; }
-    .clc-input { padding:10px 34px 10px 36px; font-size:0.84rem; }
-    .clc-btn { padding:11px 16px; font-size:0.86rem; }
-    .clc-ico { left:10px; font-size:0.85rem; }
+    .clc-wrap { padding:16px 12px; }
+    .clc-card { padding:24px 16px 20px; border-radius:20px; }
+    .clc-card::before { border-radius:20px; }
+    .clc-mobile-brand { margin-bottom:14px; padding-bottom:14px; }
+    .clc-mobile-brand-icon { width:26px; height:26px; font-size:0.8rem; border-radius:7px; }
+    .clc-mobile-brand-name { font-size:0.95rem; }
+    .clc-card-ico { width:44px; height:44px; font-size:1.1rem; border-radius:12px; margin-bottom:14px; }
+    .clc-card-title { font-size:1.2rem; }
+    .clc-card-sub { font-size:0.8rem; }
+    .clc-card-hd { margin-bottom:24px; }
+    .clc-fg { margin-bottom:16px; }
+    .clc-label { font-size:0.8rem; }
+    .clc-input { padding:11px 36px 11px 38px; font-size:0.86rem; border-radius:11px; }
+    .clc-ico { left:10px; font-size:0.88rem; }
+    .clc-btn { padding:12px 18px; font-size:0.9rem; border-radius:11px; }
+    .clc-card-ft { margin-top:20px; padding-top:16px; }
+    .clc-card-ft span { font-size:0.72rem; }
 }
 @media (max-width: 320px) {
-    .clc-card { padding:14px 10px; }
-    .clc-card-title { font-size:1rem; }
-    .clc-input { padding:9px 30px 9px 30px; font-size:0.8rem; }
-    .clc-ico { left:8px; font-size:0.8rem; }
-    .clc-btn { padding:10px 14px; font-size:0.82rem; }
-    .clc-logo-text { font-size:1.2rem; }
-    .clc-logo-icon { width:32px; height:32px; font-size:0.95rem; }
+    .clc-wrap { padding:12px 8px; }
+    .clc-card { padding:20px 12px 16px; border-radius:18px; }
+    .clc-card::before { border-radius:18px; }
+    .clc-mobile-brand { margin-bottom:12px; padding-bottom:12px; }
+    .clc-mobile-brand-icon { width:24px; height:24px; font-size:0.75rem; border-radius:6px; }
+    .clc-mobile-brand-name { font-size:0.85rem; }
+    .clc-card-ico { width:40px; height:40px; font-size:1rem; border-radius:11px; margin-bottom:12px; }
+    .clc-card-title { font-size:1.05rem; }
+    .clc-card-sub { font-size:0.76rem; }
+    .clc-card-hd { margin-bottom:20px; }
+    .clc-fg { margin-bottom:14px; }
+    .clc-label { font-size:0.76rem; }
+    .clc-input { padding:10px 32px 10px 34px; font-size:0.82rem; border-radius:10px; }
+    .clc-ico { left:8px; font-size:0.82rem; }
+    .clc-btn { padding:11px 16px; font-size:0.86rem; border-radius:10px; }
+    .clc-card-ft { margin-top:16px; padding-top:14px; }
+    .clc-card-ft span { font-size:0.68rem; }
 }
 @media (max-height: 600px) and (orientation: landscape) {
     .clc-wrap { padding:12px; gap:16px; }
