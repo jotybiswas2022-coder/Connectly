@@ -1526,7 +1526,14 @@
     font-weight: 600 !important;
     padding: 0.5rem 1.25rem !important;
     border: 1.5px solid var(--feed-border) !important;
-    color: var(--feed-muted) !important;
+    color: var(--feed-text-secondary) !important;
+    background: var(--feed-surface) !important;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.04) !important;
+}
+
+.connectly-confirm-popup .swal2-cancel:hover {
+    background: var(--feed-input-bg) !important;
+    border-color: var(--feed-muted-light) !important;
 }
 
 /* ===== RESPONSIVE ===== */
