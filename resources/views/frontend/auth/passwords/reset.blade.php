@@ -361,9 +361,9 @@ document.addEventListener('DOMContentLoaded', function() {
 }
 @media (max-height: 600px) and (orientation: landscape) {
     .clr-wrap { padding:12px; gap:16px; }
+    .clr-brand { display:none; }
     .clr-card { padding:16px 16px; border-radius:18px; }
     .clr-card::before { border-radius:18px; }
-    .clr-features { display:none; }
     .clr-card-hd { margin-bottom:14px; }
     .clr-card-ico { width:36px; height:36px; font-size:1rem; margin-bottom:8px; }
     .clr-card-title { font-size:1.1rem; }

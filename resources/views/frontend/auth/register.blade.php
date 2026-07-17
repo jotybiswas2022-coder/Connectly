@@ -1035,12 +1035,10 @@ document.addEventListener('DOMContentLoaded', function() {
 }
 @media (max-height: 600px) and (orientation: landscape) {
     .cr-wrapper { min-height:auto; padding:12px; gap:16px; }
-    .cr-brand { max-width:280px; }
+    .cr-brand { display:none; }
     .cr-card-wrap { max-width:380px; }
     .cr-card { padding:18px 16px; border-radius:18px; }
     .cr-card::before { border-radius:18px; }
-    .cr-benefits { display:none; }
-    .cr-testimonial { display:none; }
     .cr-card-hd { margin-bottom:14px; }
     .cr-card-ico { width:36px; height:36px; font-size:1rem; margin-bottom:8px; }
     .cr-card-title { font-size:1.1rem; }

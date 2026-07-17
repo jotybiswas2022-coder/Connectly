@@ -331,9 +331,9 @@ document.addEventListener('DOMContentLoaded', function() {
 }
 @media (max-height: 600px) and (orientation: landscape) {
     .clc-wrap { padding:12px; gap:16px; }
+    .clc-brand { display:none; }
     .clc-card { padding:16px 16px; border-radius:18px; }
     .clc-card::before { border-radius:18px; }
-    .clc-features { display:none; }
     .clc-card-hd { margin-bottom:14px; }
     .clc-card-ico { width:36px; height:36px; font-size:1rem; margin-bottom:8px; }
     .clc-card-title { font-size:1.1rem; }

@@ -409,9 +409,9 @@ document.addEventListener('DOMContentLoaded', function() {
 }
 @media (max-height: 600px) and (orientation: landscape) {
     .clp-wrap { padding:12px; gap:16px; }
+    .clp-brand { display:none; }
     .clp-card { padding:16px 16px; border-radius:18px; }
     .clp-card::before { border-radius:18px; }
-    .clp-features { display:none; }
     .clp-card-hd { margin-bottom:14px; }
     .clp-card-ico { width:36px; height:36px; font-size:1rem; margin-bottom:8px; }
     .clp-card-title { font-size:1.1rem; }
