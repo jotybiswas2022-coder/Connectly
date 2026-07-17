@@ -1139,28 +1139,14 @@ document.addEventListener('DOMContentLoaded', function() {
         min-height: auto;
     }
     .cl-brand-section {
-        max-width: 100%;
-        width: 100%;
+        display: none;
     }
-    .cl-brand-content {
-        text-align: center;
-    }
-    .cl-brand-logo { justify-content: center; }
-    .cl-feature-list {
-        flex-direction: row;
-        flex-wrap: wrap;
-        justify-content: center;
-    }
-    .cl-brand-stats { padding: 16px; }
-    .cl-stat-num { font-size: 1.3rem; }
     .cl-login-card-wrapper {
         max-width: 100%;
         width: 100%;
     }
     .cl-login-card { padding: 32px 24px; }
     .cl-card-title { font-size: 1.4rem; }
-    .cl-brand-tagline { margin-bottom: 24px; }
-    .cl-brand-stats { margin-bottom: 24px; }
 }@media (max-width: 480px) {
     .cl-login-page {
         min-height: auto;
@@ -1173,15 +1159,6 @@ document.addEventListener('DOMContentLoaded', function() {
     .cl-login-card { padding: 22px 16px; border-radius: 18px; }
     .cl-login-card::before { border-radius: 18px; }
     .cl-options-row { flex-direction: column; gap: 12px; align-items: flex-start; }
-    .cl-brand-name { font-size: 1.5rem; }
-    .cl-brand-icon-wrap { width: 38px; height: 38px; font-size: 1.1rem; border-radius: 11px; }
-    .cl-brand-tagline { font-size: 1rem; margin-bottom: 24px; }
-    .cl-brand-stats { padding: 14px 16px; margin-bottom: 24px; gap: 12px; }
-    .cl-stat-num { font-size: 1.2rem; }
-    .cl-stat-label { font-size: 0.65rem; }
-    .cl-stat-divider { height: 30px; }
-    .cl-feature-list { flex-direction: row; flex-wrap: wrap; justify-content: center; gap: 8px; }
-    .cl-feature-item { font-size: 0.8rem; }
     .cl-card-icon { width: 46px; height: 46px; font-size: 1.15rem; border-radius: 13px; margin-bottom: 14px; }
     .cl-card-title { font-size: 1.25rem; }
     .cl-card-subtitle { font-size: 0.82rem; }
@@ -1207,8 +1184,6 @@ document.addEventListener('DOMContentLoaded', function() {
     .cl-login-card::before { border-radius: 16px; }
     .cl-card-title { font-size: 1.1rem; }
     .cl-card-subtitle { font-size: 0.78rem; }
-    .cl-brand-name { font-size: 1.3rem; }
-    .cl-brand-icon-wrap { width: 34px; height: 34px; font-size: 1rem; border-radius: 10px; }
     .cl-card-icon { width: 40px; height: 40px; font-size: 1rem; }
     .cl-input { padding: 10px 34px 10px 34px; font-size: 0.84rem; border-radius: 10px; }
     .cl-input-icon { left: 10px; font-size: 0.85rem; }
@@ -1223,18 +1198,23 @@ document.addEventListener('DOMContentLoaded', function() {
     .cl-card-footer { margin-top: 16px; padding-top: 14px; }
     .cl-bubble { display: none; }
 }
+@media (max-width: 320px) {
+    .cl-login-card { padding: 14px 10px; }
+    .cl-card-title { font-size: 1rem; }
+    .cl-input { padding: 9px 30px 9px 30px; font-size: 0.8rem; }
+    .cl-input-icon { left: 8px; font-size: 0.8rem; }
+    .cl-submit-btn { padding: 10px 14px; font-size: 0.84rem; }
+}
 @media (max-height: 600px) and (orientation: landscape) {
     .cl-login-wrapper {
         min-height: auto;
         padding: 12px;
         gap: 16px;
     }
-    .cl-brand-section { max-width: 280px; }
+    .cl-brand-section { display: none; }
     .cl-login-card-wrapper { max-width: 340px; }
     .cl-login-card { padding: 16px 16px; border-radius: 18px; }
     .cl-login-card::before { border-radius: 18px; }
-    .cl-brand-stats { display: none; }
-    .cl-feature-list { display: none; }
     .cl-card-header { margin-bottom: 14px; }
     .cl-card-icon { width: 36px; height: 36px; font-size: 0.9rem; margin-bottom: 8px; }
     .cl-card-title { font-size: 1.1rem; margin-bottom: 4px; }
@@ -1251,16 +1231,7 @@ document.addEventListener('DOMContentLoaded', function() {
     .cl-checkbox-label { font-size: 0.78rem; }
     .cl-signup-row { font-size: 0.8rem; }
 }
-@media (max-width: 320px) {
-    .cl-login-card { padding: 14px 10px; }
-    .cl-card-title { font-size: 1rem; }
-    .cl-input { padding: 9px 30px 9px 30px; font-size: 0.8rem; }
-    .cl-input-icon { left: 8px; font-size: 0.8rem; }
-    .cl-submit-btn { padding: 10px 14px; font-size: 0.84rem; }
-    .cl-brand-name { font-size: 1.1rem; }
-    .cl-brand-icon-wrap { width: 30px; height: 30px; font-size: 0.9rem; }
-    .cl-brand-badge { font-size: 0.7rem; padding: 4px 10px; }
-}
+
 @media (prefers-reduced-motion: reduce) {
     .cl-login-page *,
     .cl-login-page *::before,
