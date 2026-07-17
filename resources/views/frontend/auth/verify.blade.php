@@ -19,6 +19,12 @@
 
                 {{-- Header --}}
                 <div class="clv-card-hd">
+                    <a href="/" class="clv-mobile-brand" aria-label="Connectly Home">
+                        <div class="clv-mobile-brand-icon">
+                            <i class="bi bi-diagram-3-fill"></i>
+                        </div>
+                        <span class="clv-mobile-brand-name">Connectly</span>
+                    </a>
                     <div class="clv-card-ico">
                         <i class="bi bi-envelope-check-fill"></i>
                     </div>
@@ -132,6 +138,16 @@ document.addEventListener('DOMContentLoaded', function() {
 .clv-card-hd { text-align:center; margin-bottom:28px; position:relative; z-index:1; }
 .clv-card-ico { width:56px; height:56px; display:flex; align-items:center; justify-content:center; background:linear-gradient(135deg,rgba(37,99,235,0.15),rgba(37,99,235,0.05)); border:1px solid rgba(37,99,235,0.15); border-radius:16px; margin:0 auto 14px; font-size:1.5rem; color:var(--pl); animation:clv-pulse 3s ease-in-out infinite; }
 @keyframes clv-pulse { 0%,100% { transform:scale(1); } 50% { transform:scale(1.05); } }
+@keyframes clv-icon-breathe {
+    0%,100% { box-shadow:0 0 0 0 rgba(37,99,235,0.15), 0 4px 16px rgba(37,99,235,0.1); transform:scale(1); }
+    50% { box-shadow:0 0 0 8px rgba(37,99,235,0.05), 0 4px 24px rgba(37,99,235,0.15); transform:scale(1.03); }
+}
+@keyframes clv-btn-glow-pulse {
+    0%,100% { box-shadow:0 4px 16px rgba(37,99,235,0.3); }
+    50% { box-shadow:0 4px 28px rgba(37,99,235,0.5), 0 0 40px rgba(37,99,235,0.1); }
+}
+
+.clv-mobile-brand { display:none; }
 .clv-card-title { font-size:1.4rem; font-weight:800; color:var(--txt); margin-bottom:8px; letter-spacing:-0.3px; }
 .clv-card-sub { font-size:0.88rem; color:var(--mt); }
 .clv-card-body { position:relative; z-index:1; }
@@ -154,25 +170,63 @@ document.addEventListener('DOMContentLoaded', function() {
 
 /* Responsive */
 @media (max-width: 480px) {
-    .clv-page { padding:12px 0; }
-    .clv-wrap { padding:12px 10px; }
-    .clv-card { padding:24px 16px; border-radius:18px; }
-    .clv-card::before { border-radius:18px; }
-    .clv-orb-1 { width:250px;height:250px; }
-    .clv-orb-2 { width:200px;height:200px; }
+    .clv-page { min-height:100vh; min-height:100dvh; padding:0; display:flex; align-items:center; justify-content:center; }
+    .clv-wrap { padding:20px 12px; min-height:auto; }
+    .clv-card { padding:28px 20px 24px; border-radius:22px; transform-origin:bottom center; }
+    .clv-card::before { border-radius:22px; }
+    .clv-mobile-brand { display:flex; align-items:center; justify-content:center; gap:8px; text-decoration:none; margin-bottom:20px; padding-bottom:20px; border-bottom:1px solid rgba(255,255,255,0.06); }
+    .clv-mobile-brand-icon { width:28px; height:28px; display:flex; align-items:center; justify-content:center; background:linear-gradient(135deg,var(--p),var(--pd)); border-radius:8px; font-size:0.85rem; color:#fff; }
+    .clv-mobile-brand-name { font-size:1rem; font-weight:700; background:linear-gradient(135deg,var(--pl),var(--p)); -webkit-background-clip:text; -webkit-text-fill-color:transparent; background-clip:text; letter-spacing:-0.3px; }
+    .clv-card-ico { width:50px; height:50px; font-size:1.25rem; border-radius:14px; margin-bottom:16px; animation:clv-icon-breathe 3s ease-in-out infinite; }
+    .clv-card-title { font-size:1.25rem; margin-bottom:6px; }
+    .clv-card-sub { font-size:0.85rem; }
+    .clv-card-hd { margin-bottom:28px; }
+    .clv-alert { font-size:0.82rem; margin-bottom:18px; padding:10px 12px; }
+    .clv-info { padding:20px 14px; margin-bottom:18px; }
+    .clv-info-icon { width:44px; height:44px; font-size:1.15rem; }
+    .clv-info p { font-size:0.85rem; }
+    .clv-text { font-size:0.82rem; margin-bottom:14px; }
+    .clv-btn { padding:14px 20px; font-size:0.95rem; border-radius:12px; animation:clv-btn-glow-pulse 3s ease-in-out infinite; }
+    .clv-back { margin-top:18px; }
+    .clv-back-link { font-size:0.85rem; }
+    .clv-card-ft { flex-direction:column; text-align:center; gap:6px; margin-top:24px; padding-top:18px; }
+    .clv-card-ft span { font-size:0.75rem; }
+    .clv-orb-1 { width:300px; height:300px; top:-120px; left:-100px; }
+    .clv-orb-2 { width:250px; height:250px; bottom:-100px; right:-80px; }
     .clv-orb-3,.clv-orb-4 { display:none; }
     .clv-particles { display:none; }
-    .clv-grid { background-size:30px 30px; mask-image:none; -webkit-mask-image:none; }
-    .clv-card-title { font-size:1.2rem; }
+    .clv-grid { background-size:40px 40px; mask-image:none; -webkit-mask-image:none; }
 }
 @media (max-width: 375px) {
-    .clv-card { padding:18px 12px; border-radius:16px; }
-    .clv-card::before { border-radius:16px; }
-    .clv-card-title { font-size:1.05rem; }
+    .clv-wrap { padding:16px 12px; }
+    .clv-card { padding:24px 16px 20px; border-radius:20px; }
+    .clv-card::before { border-radius:20px; }
+    .clv-mobile-brand { margin-bottom:16px; padding-bottom:16px; }
+    .clv-mobile-brand-icon { width:26px; height:26px; font-size:0.8rem; border-radius:7px; }
+    .clv-mobile-brand-name { font-size:0.95rem; }
+    .clv-card-ico { width:44px; height:44px; font-size:1.1rem; border-radius:12px; margin-bottom:14px; }
+    .clv-card-title { font-size:1.15rem; }
+    .clv-card-sub { font-size:0.8rem; }
+    .clv-card-hd { margin-bottom:24px; }
+    .clv-info { padding:16px 12px; }
+    .clv-btn { padding:12px 18px; font-size:0.9rem; border-radius:11px; }
+    .clv-card-ft { margin-top:20px; padding-top:16px; }
+    .clv-card-ft span { font-size:0.72rem; }
 }
 @media (max-width: 320px) {
-    .clv-card { padding:14px 10px; }
-    .clv-card-title { font-size:0.95rem; }
+    .clv-wrap { padding:12px 8px; }
+    .clv-card { padding:20px 12px 16px; border-radius:18px; }
+    .clv-card::before { border-radius:18px; }
+    .clv-mobile-brand { margin-bottom:14px; padding-bottom:14px; }
+    .clv-mobile-brand-icon { width:24px; height:24px; font-size:0.75rem; border-radius:6px; }
+    .clv-mobile-brand-name { font-size:0.85rem; }
+    .clv-card-ico { width:40px; height:40px; font-size:1rem; border-radius:11px; margin-bottom:12px; }
+    .clv-card-title { font-size:1rem; }
+    .clv-card-sub { font-size:0.76rem; }
+    .clv-card-hd { margin-bottom:20px; }
+    .clv-btn { padding:11px 16px; font-size:0.86rem; border-radius:10px; }
+    .clv-card-ft { margin-top:16px; padding-top:14px; }
+    .clv-card-ft span { font-size:0.68rem; }
 }
 @media (max-height: 600px) and (orientation: landscape) {
     .clv-wrap { padding:12px; }
