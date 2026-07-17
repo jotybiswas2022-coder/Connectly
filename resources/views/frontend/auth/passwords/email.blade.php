@@ -48,6 +48,12 @@
 
                 {{-- Header --}}
                 <div class="clp-card-hd">
+                    <a href="/" class="clp-mobile-brand" aria-label="Connectly Home">
+                        <div class="clp-mobile-brand-icon">
+                            <i class="bi bi-diagram-3-fill"></i>
+                        </div>
+                        <span class="clp-mobile-brand-name">Connectly</span>
+                    </a>
                     <div class="clp-card-ico">
                         <i class="bi bi-lock-fill"></i>
                     </div>
@@ -288,6 +294,16 @@ document.addEventListener('DOMContentLoaded', function() {
 @keyframes clp-ba { 0%,100% { transform:translateX(0); } 50% { transform:translateX(4px); } }
 .clp-spin { width:16px; height:16px; border:2.5px solid rgba(255,255,255,0.3); border-top-color:#fff; border-radius:50%; animation:clp-sp 0.7s linear infinite; }
 @keyframes clp-sp { to { transform:rotate(360deg); } }
+@keyframes clp-icon-breathe {
+    0%,100% { box-shadow:0 0 0 0 rgba(37,99,235,0.15), 0 4px 16px rgba(37,99,235,0.1); transform:scale(1); }
+    50% { box-shadow:0 0 0 8px rgba(37,99,235,0.05), 0 4px 24px rgba(37,99,235,0.15); transform:scale(1.03); }
+}
+@keyframes clp-btn-glow-pulse {
+    0%,100% { box-shadow:0 4px 16px rgba(37,99,235,0.3); }
+    50% { box-shadow:0 4px 28px rgba(37,99,235,0.5), 0 0 40px rgba(37,99,235,0.1); }
+}
+
+.clp-mobile-brand { display:none; }
 
 /* Back link */
 .clp-back { text-align:center; margin-top:20px; }
@@ -304,45 +320,92 @@ document.addEventListener('DOMContentLoaded', function() {
 /* ===== RESPONSIVE ===== */
 @media (max-width: 920px) {
     .clp-wrap { flex-direction:column; gap:28px; padding:20px 16px; min-height:auto; }
-    .clp-brand { max-width:100%; width:100%; }
-    .clp-brand-inner { text-align:center; }
-    .clp-logo { justify-content:center; }
-    .clp-features { flex-direction:row; flex-wrap:wrap; justify-content:center; }
+    .clp-brand { display:none; }
     .clp-card-wrap { max-width:100%; width:100%; max-width:440px; }
     .clp-card { padding:28px 22px; }
+    .clp-mobile-brand {
+        display:flex; align-items:center; justify-content:center; gap:8px;
+        text-decoration:none; margin-bottom:20px; padding-bottom:20px;
+        border-bottom:1px solid rgba(255,255,255,0.06);
+    }
+    .clp-mobile-brand-icon {
+        width:32px; height:32px; display:flex; align-items:center; justify-content:center;
+        background:linear-gradient(135deg,var(--p),var(--pd));
+        border-radius:9px; font-size:1rem; color:#fff;
+    }
+    .clp-mobile-brand-name {
+        font-size:1.1rem; font-weight:700;
+        background:linear-gradient(135deg,var(--pl),var(--p));
+        -webkit-background-clip:text; -webkit-text-fill-color:transparent;
+        background-clip:text; letter-spacing:-0.3px;
+    }
 }
 @media (max-width: 480px) {
-    .clp-page { min-height:auto; padding:12px 0; }
-    .clp-wrap { padding:12px 10px; gap:20px; }
-    .clp-card { padding:22px 16px; border-radius:18px; }
-    .clp-card::before { border-radius:18px; }
-    .clp-orb-1 { width:250px; height:250px; }
-    .clp-orb-2 { width:200px; height:200px; }
+    .clp-page { min-height:100vh; min-height:100dvh; padding:0; display:flex; align-items:center; justify-content:center; }
+    .clp-wrap { padding:20px 12px; gap:0; min-height:auto; }
+    .clp-card { padding:28px 20px 24px; border-radius:22px; transform-origin:bottom center; }
+    .clp-card::before { border-radius:22px; }
+    .clp-mobile-brand { margin-bottom:16px; padding-bottom:16px; }
+    .clp-mobile-brand-icon { width:28px; height:28px; font-size:0.85rem; border-radius:8px; }
+    .clp-mobile-brand-name { font-size:1rem; }
+    .clp-card-ico { width:50px; height:50px; font-size:1.25rem; border-radius:14px; margin-bottom:16px; animation:clp-icon-breathe 3s ease-in-out infinite; }
+    .clp-card-title { font-size:1.35rem; margin-bottom:6px; }
+    .clp-card-sub { font-size:0.85rem; }
+    .clp-card-hd { margin-bottom:28px; }
+    .clp-alert { font-size:0.82rem; padding:10px 12px; margin-bottom:18px; }
+    .clp-fg { margin-bottom:18px; }
+    .clp-label { font-size:0.82rem; margin-bottom:7px; }
+    .clp-input { padding:13px 42px 13px 44px; font-size:0.9rem; border-radius:12px; }
+    .clp-input:focus { border-color:var(--p); background:rgba(37,99,235,0.06); box-shadow:0 0 0 3px var(--fc), 0 0 20px rgba(37,99,235,0.08); }
+    .clp-ico { left:14px; font-size:1rem; }
+    .clp-btn { padding:14px 22px; font-size:0.95rem; border-radius:12px; animation:clp-btn-glow-pulse 3s ease-in-out infinite; }
+    .clp-back { margin-top:18px; }
+    .clp-back-link { font-size:0.85rem; }
+    .clp-card-ft { flex-direction:column; text-align:center; gap:6px; margin-top:24px; padding-top:18px; }
+    .clp-card-ft span { font-size:0.75rem; }
+    .clp-orb-1 { width:300px; height:300px; top:-120px; left:-100px; }
+    .clp-orb-2 { width:250px; height:250px; bottom:-100px; right:-80px; }
     .clp-orb-3,.clp-orb-4 { display:none; }
     .clp-particles { display:none; }
-    .clp-grid { background-size:30px 30px; mask-image:none; -webkit-mask-image:none; }
-    .clp-logo-text { font-size:1.5rem; }
-    .clp-logo-icon { width:38px; height:38px; font-size:1.1rem; }
-    .clp-input { font-size:0.88rem; padding:11px 38px 11px 40px; }
-    .clp-btn { padding:12px 18px; font-size:0.9rem; }
-    .clp-card-title { font-size:1.2rem; }
-    .clp-card-ft { flex-direction:column; text-align:center; gap:4px; }
+    .clp-grid { background-size:40px 40px; mask-image:none; -webkit-mask-image:none; }
 }
 @media (max-width: 375px) {
-    .clp-card { padding:18px 12px; border-radius:16px; }
-    .clp-card::before { border-radius:16px; }
-    .clp-input { padding:10px 34px 10px 36px; font-size:0.84rem; }
-    .clp-btn { padding:11px 16px; font-size:0.86rem; }
-    .clp-ico { left:10px; font-size:0.85rem; }
+    .clp-wrap { padding:16px 12px; }
+    .clp-card { padding:24px 16px 20px; border-radius:20px; }
+    .clp-card::before { border-radius:20px; }
+    .clp-mobile-brand { margin-bottom:14px; padding-bottom:14px; }
+    .clp-mobile-brand-icon { width:26px; height:26px; font-size:0.8rem; border-radius:7px; }
+    .clp-mobile-brand-name { font-size:0.95rem; }
+    .clp-card-ico { width:44px; height:44px; font-size:1.1rem; border-radius:12px; margin-bottom:14px; }
+    .clp-card-title { font-size:1.2rem; }
+    .clp-card-sub { font-size:0.8rem; }
+    .clp-card-hd { margin-bottom:24px; }
+    .clp-fg { margin-bottom:16px; }
+    .clp-label { font-size:0.8rem; }
+    .clp-input { padding:11px 36px 11px 38px; font-size:0.86rem; border-radius:11px; }
+    .clp-ico { left:10px; font-size:0.88rem; }
+    .clp-btn { padding:12px 18px; font-size:0.9rem; border-radius:11px; }
+    .clp-card-ft { margin-top:20px; padding-top:16px; }
+    .clp-card-ft span { font-size:0.72rem; }
 }
 @media (max-width: 320px) {
-    .clp-card { padding:14px 10px; }
-    .clp-card-title { font-size:1rem; }
-    .clp-input { padding:9px 30px 9px 30px; font-size:0.8rem; }
-    .clp-ico { left:8px; font-size:0.8rem; }
-    .clp-btn { padding:10px 14px; font-size:0.82rem; }
-    .clp-logo-text { font-size:1.2rem; }
-    .clp-logo-icon { width:32px; height:32px; font-size:0.95rem; }
+    .clp-wrap { padding:12px 8px; }
+    .clp-card { padding:20px 12px 16px; border-radius:18px; }
+    .clp-card::before { border-radius:18px; }
+    .clp-mobile-brand { margin-bottom:12px; padding-bottom:12px; }
+    .clp-mobile-brand-icon { width:24px; height:24px; font-size:0.75rem; border-radius:6px; }
+    .clp-mobile-brand-name { font-size:0.85rem; }
+    .clp-card-ico { width:40px; height:40px; font-size:1rem; border-radius:11px; margin-bottom:12px; }
+    .clp-card-title { font-size:1.05rem; }
+    .clp-card-sub { font-size:0.76rem; }
+    .clp-card-hd { margin-bottom:20px; }
+    .clp-fg { margin-bottom:14px; }
+    .clp-label { font-size:0.76rem; }
+    .clp-input { padding:10px 32px 10px 34px; font-size:0.82rem; border-radius:10px; }
+    .clp-ico { left:8px; font-size:0.82rem; }
+    .clp-btn { padding:11px 16px; font-size:0.86rem; border-radius:10px; }
+    .clp-card-ft { margin-top:16px; padding-top:14px; }
+    .clp-card-ft span { font-size:0.68rem; }
 }
 @media (max-height: 600px) and (orientation: landscape) {
     .clp-wrap { padding:12px; gap:16px; }
