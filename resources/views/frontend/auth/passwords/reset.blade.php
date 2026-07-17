@@ -38,6 +38,12 @@
 
                 {{-- Header --}}
                 <div class="clr-card-hd">
+                    <a href="/" class="clr-mobile-brand" aria-label="Connectly Home">
+                        <div class="clr-mobile-brand-icon">
+                            <i class="bi bi-diagram-3-fill"></i>
+                        </div>
+                        <span class="clr-mobile-brand-name">Connectly</span>
+                    </a>
                     <div class="clr-card-ico">
                         <i class="bi bi-key-fill"></i>
                     </div>
@@ -241,6 +247,16 @@ document.addEventListener('DOMContentLoaded', function() {
 .clr-btn-ldr { font-size:1.05rem; display:flex; align-items:center; }
 .clr-btn:hover .clr-btn-ldr i { animation:clr-ba 1s ease infinite; }
 @keyframes clr-ba { 0%,100% { transform:translateX(0); } 50% { transform:translateX(4px); } }
+@keyframes clr-icon-breathe {
+    0%,100% { box-shadow:0 0 0 0 rgba(37,99,235,0.15), 0 4px 16px rgba(37,99,235,0.1); transform:scale(1); }
+    50% { box-shadow:0 0 0 8px rgba(37,99,235,0.05), 0 4px 24px rgba(37,99,235,0.15); transform:scale(1.03); }
+}
+@keyframes clr-btn-glow-pulse {
+    0%,100% { box-shadow:0 4px 16px rgba(37,99,235,0.3); }
+    50% { box-shadow:0 4px 28px rgba(37,99,235,0.5), 0 0 40px rgba(37,99,235,0.1); }
+}
+
+.clr-mobile-brand { display:none; }
 
 /* Back */
 .clr-back { text-align:center; margin-top:20px; }
@@ -257,44 +273,91 @@ document.addEventListener('DOMContentLoaded', function() {
 /* Responsive */
 @media (max-width: 920px) {
     .clr-wrap { flex-direction:column; gap:28px; padding:20px 16px; min-height:auto; }
-    .clr-brand { max-width:100%; width:100%; }
-    .clr-brand-inner { text-align:center; }
-    .clr-logo { justify-content:center; }
-    .clr-features { flex-direction:row; flex-wrap:wrap; justify-content:center; }
+    .clr-brand { display:none; }
     .clr-card-wrap { max-width:100%; width:100%; max-width:440px; }
     .clr-card { padding:28px 22px; }
+    .clr-mobile-brand {
+        display:flex; align-items:center; justify-content:center; gap:8px;
+        text-decoration:none; margin-bottom:20px; padding-bottom:20px;
+        border-bottom:1px solid rgba(255,255,255,0.06);
+    }
+    .clr-mobile-brand-icon {
+        width:32px; height:32px; display:flex; align-items:center; justify-content:center;
+        background:linear-gradient(135deg,var(--p),var(--pd));
+        border-radius:9px; font-size:1rem; color:#fff;
+    }
+    .clr-mobile-brand-name {
+        font-size:1.1rem; font-weight:700;
+        background:linear-gradient(135deg,var(--pl),var(--p));
+        -webkit-background-clip:text; -webkit-text-fill-color:transparent;
+        background-clip:text; letter-spacing:-0.3px;
+    }
 }
 @media (max-width: 480px) {
-    .clr-page { min-height:auto; padding:12px 0; }
-    .clr-wrap { padding:12px 10px; gap:20px; }
-    .clr-card { padding:22px 16px; border-radius:18px; }
-    .clr-card::before { border-radius:18px; }
-    .clr-orb-1 { width:250px;height:250px; }
-    .clr-orb-2 { width:200px;height:200px; }
+    .clr-page { min-height:100vh; min-height:100dvh; padding:0; display:flex; align-items:center; justify-content:center; }
+    .clr-wrap { padding:20px 12px; gap:0; min-height:auto; }
+    .clr-card { padding:28px 20px 24px; border-radius:22px; transform-origin:bottom center; }
+    .clr-card::before { border-radius:22px; }
+    .clr-mobile-brand { margin-bottom:16px; padding-bottom:16px; }
+    .clr-mobile-brand-icon { width:28px; height:28px; font-size:0.85rem; border-radius:8px; }
+    .clr-mobile-brand-name { font-size:1rem; }
+    .clr-card-ico { width:50px; height:50px; font-size:1.25rem; border-radius:14px; margin-bottom:16px; animation:clr-icon-breathe 3s ease-in-out infinite; }
+    .clr-card-title { font-size:1.35rem; margin-bottom:6px; }
+    .clr-card-sub { font-size:0.85rem; }
+    .clr-card-hd { margin-bottom:28px; }
+    .clr-fg { margin-bottom:18px; }
+    .clr-label { font-size:0.82rem; margin-bottom:7px; }
+    .clr-input { padding:13px 42px 13px 44px; font-size:0.9rem; border-radius:12px; }
+    .clr-input:focus { border-color:var(--p); background:rgba(37,99,235,0.06); box-shadow:0 0 0 3px var(--fc), 0 0 20px rgba(37,99,235,0.08); }
+    .clr-ico { left:14px; font-size:1rem; }
+    .clr-btn { padding:14px 22px; font-size:0.95rem; border-radius:12px; animation:clr-btn-glow-pulse 3s ease-in-out infinite; }
+    .clr-back { margin-top:18px; }
+    .clr-back-link { font-size:0.85rem; }
+    .clr-card-ft { flex-direction:column; text-align:center; gap:6px; margin-top:24px; padding-top:18px; }
+    .clr-card-ft span { font-size:0.75rem; }
+    .clr-orb-1 { width:300px; height:300px; top:-120px; left:-100px; }
+    .clr-orb-2 { width:250px; height:250px; bottom:-100px; right:-80px; }
     .clr-orb-3,.clr-orb-4 { display:none; }
     .clr-particles { display:none; }
-    .clr-grid { background-size:30px 30px; mask-image:none; -webkit-mask-image:none; }
-    .clr-logo-text { font-size:1.5rem; }
-    .clr-logo-icon { width:38px; height:38px; font-size:1.1rem; }
-    .clr-input { font-size:0.88rem; padding:11px 38px 11px 40px; }
-    .clr-btn { padding:12px 18px; font-size:0.9rem; }
-    .clr-card-title { font-size:1.2rem; }
+    .clr-grid { background-size:40px 40px; mask-image:none; -webkit-mask-image:none; }
 }
 @media (max-width: 375px) {
-    .clr-card { padding:18px 12px; border-radius:16px; }
-    .clr-card::before { border-radius:16px; }
-    .clr-input { padding:10px 34px 10px 36px; font-size:0.84rem; }
-    .clr-btn { padding:11px 16px; font-size:0.86rem; }
-    .clr-ico { left:10px; font-size:0.85rem; }
+    .clr-wrap { padding:16px 12px; }
+    .clr-card { padding:24px 16px 20px; border-radius:20px; }
+    .clr-card::before { border-radius:20px; }
+    .clr-mobile-brand { margin-bottom:14px; padding-bottom:14px; }
+    .clr-mobile-brand-icon { width:26px; height:26px; font-size:0.8rem; border-radius:7px; }
+    .clr-mobile-brand-name { font-size:0.95rem; }
+    .clr-card-ico { width:44px; height:44px; font-size:1.1rem; border-radius:12px; margin-bottom:14px; }
+    .clr-card-title { font-size:1.2rem; }
+    .clr-card-sub { font-size:0.8rem; }
+    .clr-card-hd { margin-bottom:24px; }
+    .clr-fg { margin-bottom:16px; }
+    .clr-label { font-size:0.8rem; }
+    .clr-input { padding:11px 36px 11px 38px; font-size:0.86rem; border-radius:11px; }
+    .clr-ico { left:10px; font-size:0.88rem; }
+    .clr-btn { padding:12px 18px; font-size:0.9rem; border-radius:11px; }
+    .clr-card-ft { margin-top:20px; padding-top:16px; }
+    .clr-card-ft span { font-size:0.72rem; }
 }
 @media (max-width: 320px) {
-    .clr-card { padding:14px 10px; }
-    .clr-card-title { font-size:1rem; }
-    .clr-input { padding:9px 30px 9px 30px; font-size:0.8rem; }
-    .clr-ico { left:8px; font-size:0.8rem; }
-    .clr-btn { padding:10px 14px; font-size:0.82rem; }
-    .clr-logo-text { font-size:1.2rem; }
-    .clr-logo-icon { width:32px; height:32px; font-size:0.95rem; }
+    .clr-wrap { padding:12px 8px; }
+    .clr-card { padding:20px 12px 16px; border-radius:18px; }
+    .clr-card::before { border-radius:18px; }
+    .clr-mobile-brand { margin-bottom:12px; padding-bottom:12px; }
+    .clr-mobile-brand-icon { width:24px; height:24px; font-size:0.75rem; border-radius:6px; }
+    .clr-mobile-brand-name { font-size:0.85rem; }
+    .clr-card-ico { width:40px; height:40px; font-size:1rem; border-radius:11px; margin-bottom:12px; }
+    .clr-card-title { font-size:1.05rem; }
+    .clr-card-sub { font-size:0.76rem; }
+    .clr-card-hd { margin-bottom:20px; }
+    .clr-fg { margin-bottom:14px; }
+    .clr-label { font-size:0.76rem; }
+    .clr-input { padding:10px 32px 10px 34px; font-size:0.82rem; border-radius:10px; }
+    .clr-ico { left:8px; font-size:0.82rem; }
+    .clr-btn { padding:11px 16px; font-size:0.86rem; border-radius:10px; }
+    .clr-card-ft { margin-top:16px; padding-top:14px; }
+    .clr-card-ft span { font-size:0.68rem; }
 }
 @media (max-height: 600px) and (orientation: landscape) {
     .clr-wrap { padding:12px; gap:16px; }
