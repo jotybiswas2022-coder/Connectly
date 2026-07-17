@@ -118,26 +118,31 @@ class FeedController extends Controller
     {
         $validated = $request->validate([
             'content' => 'nullable|string|max:600',
-            'image' => 'sometimes|nullable|image|mimes:jpeg,png,jpg,gif,webp|max:5120',
+            'images' => 'sometimes|nullable|array',
+            'images.*' => 'image|mimes:jpeg,png,jpg,gif,webp|max:5120',
         ]);
 
         $content = isset($validated['content']) ? trim((string) $validated['content']) : '';
-        $imagePath = null;
+        $imagePaths = [];
 
-        if ($request->hasFile('image')) {
-            $imagePath = $request->file('image')->store('posts', 'public');
+        if ($request->hasFile('images')) {
+            foreach ($request->file('images') as $image) {
+                if ($image && $image->isValid()) {
+                    $imagePaths[] = $image->store('posts', 'public');
+                }
+            }
         }
 
-        if ($content === '' && !$imagePath) {
+        if ($content === '' && empty($imagePaths)) {
             return back()->withErrors([
-                'content' => 'Please write something. Image is optional.',
+                'content' => 'Please write something or upload at least one image.',
             ])->withInput();
         }
 
         Post::create([
             'user_id' => (int) Auth::id(),
             'content' => $content,
-            'image_path' => $imagePath,
+            'images' => !empty($imagePaths) ? $imagePaths : null,
         ]);
 
         return back()->with('success', 'Post published successfully.');
@@ -151,8 +156,10 @@ class FeedController extends Controller
 
         $validator = Validator::make($request->all(), [
             'edit_content' => 'nullable|string|max:600',
-            'edit_image' => 'sometimes|nullable|image|mimes:jpeg,png,jpg,gif,webp|max:5120',
-            'remove_image' => 'nullable|boolean',
+            'edit_images' => 'sometimes|nullable|array',
+            'edit_images.*' => 'image|mimes:jpeg,png,jpg,gif,webp|max:5120',
+            'remove_images' => 'nullable|array',
+            'remove_images.*' => 'string',
         ]);
 
         if ($validator->fails()) {
@@ -165,20 +172,27 @@ class FeedController extends Controller
         $validated = $validator->validated();
 
         $content = isset($validated['edit_content']) ? trim((string) $validated['edit_content']) : '';
-        $imagePath = $post->image_path;
-        $removeImage = (bool) ($validated['remove_image'] ?? false);
+        $currentImages = $post->images ?? [];
+        $removeImages = $validated['remove_images'] ?? [];
 
-        if ($request->hasFile('edit_image')) {
-            if ($imagePath) {
-                Storage::disk('public')->delete($imagePath);
+        // Remove selected images from storage
+        foreach ($removeImages as $removePath) {
+            if (in_array($removePath, $currentImages)) {
+                Storage::disk('public')->delete($removePath);
+                $currentImages = array_values(array_filter($currentImages, fn($p) => $p !== $removePath));
             }
-            $imagePath = $request->file('edit_image')->store('posts', 'public');
-        } elseif ($removeImage && $imagePath) {
-            Storage::disk('public')->delete($imagePath);
-            $imagePath = null;
         }
 
-        if ($content === '' && !$imagePath) {
+        // Add new images
+        if ($request->hasFile('edit_images')) {
+            foreach ($request->file('edit_images') as $image) {
+                if ($image && $image->isValid()) {
+                    $currentImages[] = $image->store('posts', 'public');
+                }
+            }
+        }
+
+        if ($content === '' && empty($currentImages)) {
             return back()
                 ->withErrors(['edit_content' => 'Post cannot be empty.'], 'editPost_' . $post->id)
                 ->withInput()
@@ -187,7 +201,7 @@ class FeedController extends Controller
 
         $post->update([
             'content' => $content,
-            'image_path' => $imagePath,
+            'images' => !empty($currentImages) ? $currentImages : null,
         ]);
 
         return back()->with('success', 'Post updated successfully.');
@@ -199,8 +213,10 @@ class FeedController extends Controller
             abort(403);
         }
 
-        if ($post->image_path) {
-            Storage::disk('public')->delete($post->image_path);
+        // Delete all images from storage
+        $images = $post->images ?? [];
+        foreach ($images as $imagePath) {
+            Storage::disk('public')->delete($imagePath);
         }
 
         $post->delete();

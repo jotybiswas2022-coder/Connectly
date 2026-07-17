@@ -9,6 +9,8 @@
                                 'sad' => '😢',
                                 default => '👍',
                             };
+                            $postImages = $post->images ?? [];
+                            $imageCount = count($postImages);
                         @endphp
                         <article class="chatbox-feed-post-card connectly-post-card" data-pinned="{{ $post->is_pinned ? 'true' : 'false' }}">
                             <div class="d-flex align-items-start gap-3">
@@ -59,7 +61,7 @@
                                                 <form action="{{ route('feed.posts.delete', $post->id) }}" method="POST" class="d-inline">
                                                     @csrf
                                                     @method('DELETE')
-                                                    <button type="submit" class="btn btn-sm btn-outline-danger" onclick="return confirm('Delete this post?')">
+                                                    <button type="submit" class="btn btn-sm btn-outline-danger" data-delete-post>
                                                         <i class="bi bi-trash me-1"></i>Delete
                                                     </button>
                                                 </form>
@@ -71,13 +73,21 @@
                                         <p class="mb-3 chatbox-feed-post-text connectly-post-text">{!! nl2br(e($post->content)) !!}</p>
                                     @endif
 
-                                    @if ($post->image_path)
-                                        <div class="mb-3">
-                                            <img
-                                                src="{{ route('media.show', ['path' => $post->image_path]) }}"
-                                                alt="Post image"
-                                                class="img-fluid rounded chatbox-feed-post-image connectly-post-image"
-                                            >
+                                    @if ($imageCount > 0)
+                                        <div class="connectly-post-image-grid {{ $imageCount === 1 ? 'grid-1' : ($imageCount === 2 ? 'grid-2' : ($imageCount === 3 ? 'grid-3' : ($imageCount === 4 ? 'grid-4' : 'grid-many'))) }}">
+                                            @foreach ($postImages as $index => $imgPath)
+                                                @if ($index < 4 || ($index === 4 && $imageCount <= 4))
+                                                    <div class="connectly-post-image-item" style="{{ $imageCount === 1 ? 'max-height: 400px;' : '' }}" onclick="openImageModal('{{ route('media.show', ['path' => $imgPath]) }}')">
+                                                        <img src="{{ route('media.show', ['path' => $imgPath]) }}" alt="Post image {{ $index + 1 }}" loading="lazy">
+                                                    </div>
+                                                @endif
+                                            @endforeach
+                                            @if ($imageCount > 4)
+                                                <div class="connectly-post-image-item" onclick="openImageModal('{{ route('media.show', ['path' => $postImages[4]]) }}')">
+                                                    <img src="{{ route('media.show', ['path' => $postImages[4]]) }}" alt="Post image 5" loading="lazy">
+                                                    <div class="connectly-post-image-overlay">+{{ $imageCount - 4 }}</div>
+                                                </div>
+                                            @endif
                                         </div>
                                     @endif
 
@@ -145,7 +155,7 @@
                                                     default => '👍',
                                                 };
                                             @endphp
-                                            <span class="badge rounded-pill text-bg-light border {{ $reactionCount > 0 ? '' : 'd-none' }}" data-reaction-badge="{{ $reactionKey }}">
+                                            <span class="badge rounded-pill text-bg-light border connectly-reaction-badge {{ $reactionCount > 0 ? '' : 'd-none' }}" data-reaction-badge="{{ $reactionKey }}">
                                                 <span class="chatbox-reaction-badge-emoji">{{ $reactionEmoji }}</span>
                                                 <span class="chatbox-reaction-badge-count">{{ $reactionCount }}</span>
                                             </span>
@@ -155,78 +165,84 @@
                             </div>
                         </article>
 
+                        {{-- ===== EDIT POST MODAL (PREMIUM LIGHT) ===== --}}
                         @if ((int) $post->user_id === (int) auth()->id())
                             <div class="modal fade" id="editPostModal{{ $post->id }}" tabindex="-1" aria-hidden="true">
                                 <div class="modal-dialog modal-dialog-scrollable">
                                     <div class="modal-content">
                                         <div class="modal-header">
-                                            <h5 class="modal-title">Edit Post</h5>
+                                            <h5 class="modal-title">
+                                                <i class="bi bi-pencil-square me-1" style="color:var(--feed-primary);"></i>
+                                                Edit Post
+                                            </h5>
                                             <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                                         </div>
                                         <div class="modal-body">
-                                            <form action="{{ route('feed.posts.update', $post->id) }}" method="POST" enctype="multipart/form-data">
+                                            <form action="{{ route('feed.posts.update', $post->id) }}" method="POST" enctype="multipart/form-data" class="edit-post-form">
                                                 @csrf
                                                 @method('PUT')
 
-                                                <textarea
-                                                    name="edit_content"
-                                                    class="form-control @error('edit_content', 'editPost_' . $post->id) is-invalid @enderror"
-                                                    rows="4"
-                                                    placeholder="Update your post..."
-                                                    maxlength="600"
-                                                >{{ session('open_modal') === 'editPostModal' . $post->id ? old('edit_content', $post->content) : $post->content }}</textarea>
-                                                @error('edit_content', 'editPost_' . $post->id)
-                                                    <div class="invalid-feedback d-block">{{ $message }}</div>
-                                                @enderror
-
-                                                @if ($post->image_path)
-                                                    <div class="mt-3">
-                                                        <p class="small text-muted mb-1">Current image</p>
-                                                        <img
-                                                            src="{{ route('media.show', ['path' => $post->image_path]) }}"
-                                                            alt="Current post image"
-                                                            class="img-fluid rounded chatbox-feed-post-image connectly-post-image"
-                                                        >
-                                                    </div>
-                                                @endif
-
-                                                <div class="mt-3">
-                                                    <div class="chatbox-file-input-wrapper connectly-file-input-wrapper">
-                                                        <input
-                                                            type="file"
-                                                            name="edit_image"
-                                                            accept="image/*"
-                                                            class="chatbox-file-input @error('edit_image', 'editPost_' . $post->id) is-invalid @enderror"
-                                                            id="editImage{{ $post->id }}"
-                                                        >
-                                                        <label for="editImage{{ $post->id }}" class="chatbox-file-label connectly-file-label-comment">
-                                                            <i class="bi bi-cloud-arrow-up me-2"></i>
-                                                            <span>Change Image (optional)</span>
-                                                        </label>
-                                                    </div>
-                                                    @error('edit_image', 'editPost_' . $post->id)
+                                                <div class="mb-3">
+                                                    <label class="form-label small fw-semibold text-muted">Post Content</label>
+                                                    <textarea
+                                                        name="edit_content"
+                                                        class="form-control @error('edit_content', 'editPost_' . $post->id) is-invalid @enderror"
+                                                        rows="4"
+                                                        placeholder="Update your post..."
+                                                        maxlength="600"
+                                                    >{{ session('open_modal') === 'editPostModal' . $post->id ? old('edit_content', $post->content) : $post->content }}</textarea>
+                                                    @error('edit_content', 'editPost_' . $post->id)
                                                         <div class="invalid-feedback d-block">{{ $message }}</div>
                                                     @enderror
                                                 </div>
 
-                                                @if ($post->image_path)
-                                                    <div class="form-check mt-3">
-                                                        <input
-                                                            class="form-check-input"
-                                                            type="checkbox"
-                                                            name="remove_image"
-                                                            value="1"
-                                                            id="removeImage{{ $post->id }}"
-                                                        >
-                                                        <label class="form-check-label" for="removeImage{{ $post->id }}">
-                                                            Remove current image
+                                                {{-- Existing Images --}}
+                                                @if ($imageCount > 0)
+                                                    <div class="mb-3">
+                                                        <label class="form-label small fw-semibold text-muted">
+                                                            <i class="bi bi-images me-1"></i>Current Images
                                                         </label>
+                                                        <div class="connectly-edit-existing-images">
+                                                            @foreach ($postImages as $imgPath)
+                                                                <div class="connectly-edit-existing-item">
+                                                                    <img src="{{ route('media.show', ['path' => $imgPath]) }}" alt="Post image" loading="lazy">
+                                                                    <label class="connectly-edit-remove-check">
+                                                                        <input type="checkbox" name="remove_images[]" value="{{ $imgPath }}" class="me-1" onchange="this.parentElement.style.opacity=this.checked?'0.6':'1'">
+                                                                        Remove
+                                                                    </label>
+                                                                </div>
+                                                            @endforeach
+                                                        </div>
                                                     </div>
                                                 @endif
 
-                                                <div class="d-flex justify-content-end mt-3">
-                                                    <button type="submit" class="btn btn-primary btn-sm">
-                                                        Save Changes
+                                                {{-- New Images Upload --}}
+                                                <div class="mb-3">
+                                                    <label class="form-label small fw-semibold text-muted">
+                                                        <i class="bi bi-cloud-arrow-up me-1"></i>Add More Images
+                                                    </label>
+                                                    <div class="connectly-file-upload">
+                                                        <input
+                                                            type="file"
+                                                            name="edit_images[]"
+                                                            accept="image/*"
+                                                            multiple
+                                                            class="connectly-file-input connectly-edit-image-input"
+                                                            id="editImageInput{{ $post->id }}"
+                                                            data-preview-container="editPreview{{ $post->id }}"
+                                                        >
+                                                        <label for="editImageInput{{ $post->id }}" class="connectly-file-label">
+                                                            <i class="bi bi-cloud-arrow-up me-2"></i>
+                                                            <span>Click to add more images</span>
+                                                        </label>
+                                                    </div>
+                                                    <div id="editPreview{{ $post->id }}" class="connectly-edit-preview-grid mt-2"></div>
+                                                </div>
+
+                                                <div class="d-flex justify-content-end gap-2 mt-4">
+                                                    <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">Cancel</button>
+                                                    <button type="submit" class="btn btn-primary">
+                                                        <i class="bi bi-check-lg me-1"></i>Save Changes
                                                     </button>
                                                 </div>
                                             </form>
@@ -236,15 +252,21 @@
                             </div>
                         @endif
 
+                        {{-- ===== COMMENTS MODAL (PREMIUM LIGHT) ===== --}}
                         <div class="modal fade" id="commentsModal{{ $post->id }}" tabindex="-1" aria-hidden="true">
                             <div class="modal-dialog modal-dialog-scrollable">
                                 <div class="modal-content">
                                     <div class="modal-header">
-                                        <h5 class="modal-title">Comments</h5>
+                                        <h5 class="modal-title">
+                                            <i class="bi bi-chat-dots-fill me-1" style="color:var(--feed-primary);"></i>
+                                            Comments
+                                        </h5>
                                         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                                     </div>
                                     <div class="modal-body">
-                                        <p id="commentsEmpty{{ $post->id }}" class="text-muted mb-3 {{ $post->comments->isEmpty() ? '' : 'd-none' }}">No comments yet.</p>
+                                        <p id="commentsEmpty{{ $post->id }}" class="text-muted mb-3 {{ $post->comments->isEmpty() ? '' : 'd-none' }}">
+                                            <i class="bi bi-chat-square-text me-1"></i>No comments yet. Be the first to comment!
+                                        </p>
 
                                         <div id="commentsList{{ $post->id }}" class="d-flex flex-column gap-3 mb-3 {{ $post->comments->isEmpty() ? 'd-none' : '' }}">
                                             @foreach ($post->comments as $comment)
@@ -275,7 +297,7 @@
                                                             <span class="text-muted small">{{ $comment->created_at->diffForHumans() }}</span>
                                                         </div>
                                                         @if (filled($comment->comment))
-                                                            <p class="mb-0 text-dark">{!! nl2br(e($comment->comment)) !!}</p>
+                                                            <p class="mb-0 connectly-post-text" style="font-size:0.88rem;">{!! nl2br(e($comment->comment)) !!}</p>
                                                         @endif
 
                                                         @if ($comment->image_path)
@@ -284,6 +306,8 @@
                                                                     src="{{ route('media.show', ['path' => $comment->image_path]) }}"
                                                                     alt="Comment image"
                                                                     class="img-fluid rounded chatbox-comment-image connectly-comment-image"
+                                                                    onclick="openImageModal(this.src)"
+                                                                    style="cursor:pointer;"
                                                                 >
                                                             </div>
                                                         @endif
@@ -351,13 +375,14 @@
                                                                         default => '👍',
                                                                     };
                                                                 @endphp
-                                                                <span class="badge rounded-pill text-bg-light border {{ $reactionCount > 0 ? '' : 'd-none' }}" data-comment-reaction-badge="{{ $reactionKey }}">
+                                                                <span class="badge rounded-pill text-bg-light border connectly-reaction-badge {{ $reactionCount > 0 ? '' : 'd-none' }}" data-comment-reaction-badge="{{ $reactionKey }}">
                                                                     <span class="chatbox-comment-reaction-badge-emoji">{{ $reactionEmoji }}</span>
                                                                     <span class="chatbox-comment-reaction-badge-count">{{ $reactionCount }}</span>
                                                                 </span>
                                                             @endforeach
                                                         </div>
 
+                                                        {{-- Replies --}}
                                                         <div class="chatbox-comment-replies connectly-comment-replies mt-3 {{ $comment->replies->isEmpty() ? 'd-none' : '' }}" data-replies-for="{{ $comment->id }}">
                                                             @foreach ($comment->replies as $reply)
                                                                     @php
@@ -387,7 +412,7 @@
                                                                             <span class="text-muted small">{{ $reply->created_at->diffForHumans() }}</span>
                                                                         </div>
                                                                         @if (filled($reply->comment))
-                                                                            <p class="mb-0 text-dark">{!! nl2br(e($reply->comment)) !!}</p>
+                                                                            <p class="mb-0 connectly-post-text" style="font-size:0.88rem;">{!! nl2br(e($reply->comment)) !!}</p>
                                                                         @endif
 
                                                                         @if ($reply->image_path)
@@ -396,6 +421,8 @@
                                                                                     src="{{ route('media.show', ['path' => $reply->image_path]) }}"
                                                                                     alt="Reply image"
                                                                                     class="img-fluid rounded chatbox-comment-image connectly-comment-image"
+                                                                                    onclick="openImageModal(this.src)"
+                                                                                    style="cursor:pointer;"
                                                                                 >
                                                                             </div>
                                                                         @endif
@@ -463,7 +490,7 @@
                                                                                         default => '👍',
                                                                                     };
                                                                                 @endphp
-                                                                                <span class="badge rounded-pill text-bg-light border {{ $reactionCount > 0 ? '' : 'd-none' }}" data-comment-reaction-badge="{{ $reactionKey }}">
+                                                                                <span class="badge rounded-pill text-bg-light border connectly-reaction-badge {{ $reactionCount > 0 ? '' : 'd-none' }}" data-comment-reaction-badge="{{ $reactionKey }}">
                                                                                     <span class="chatbox-comment-reaction-badge-emoji">{{ $reactionEmoji }}</span>
                                                                                     <span class="chatbox-comment-reaction-badge-count">{{ $reactionCount }}</span>
                                                                                 </span>
@@ -476,6 +503,7 @@
                                             @endforeach
                                         </div>
 
+                                        {{-- Comment Form --}}
                                         <form action="{{ route('feed.posts.comments.store', $post->id) }}" method="POST" enctype="multipart/form-data" id="commentForm{{ $post->id }}" data-comment-form-id="{{ $post->id }}">
                                             @csrf
                                             <input type="hidden" name="parent_id" value="" class="chatbox-reply-parent-id">
@@ -529,3 +557,5 @@
                                 </div>
                             </div>
                         </div>
+
+

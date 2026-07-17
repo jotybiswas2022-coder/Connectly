@@ -3,18 +3,46 @@
 @section('content')
 
 <div class="connectly-feed-page">
-    <div class="connectly-feed-bg-glow"></div>
     <div class="container py-4">
         @if (session('success'))
-            <div class="alert alert-success alert-dismissible fade show connectly-feed-alert" role="alert">
+            <div class="alert alert-success alert-dismissible fade show connectly-feed-alert" role="alert" id="successAlert">
                 <i class="bi bi-check-circle-fill me-1"></i>
                 {{ session('success') }}
                 <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
             </div>
         @endif
 
+        @if (session('error'))
+            <div class="alert alert-danger alert-dismissible fade show connectly-feed-alert-danger" role="alert" id="errorAlert">
+                <i class="bi bi-exclamation-circle-fill me-1"></i>
+                {{ session('error') }}
+                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+            </div>
+        @endif
+
         <div class="row g-4">
             <div class="col-lg-8">
+                <!-- Mobile Search Card (Only visible on mobile) -->
+                <div class="connectly-mobile-search d-lg-none" id="mobileSearch">
+                    <div class="connectly-mobile-search-inner">
+                        <form action="{{ route('search') }}" method="GET">
+                            <div class="connectly-search-group">
+                                <i class="bi bi-search connectly-search-group-icon"></i>
+                                <input
+                                    type="text"
+                                    name="q"
+                                    class="connectly-search-input"
+                                    placeholder="Search users, posts..."
+                                    autocomplete="off"
+                                >
+                                <button type="submit" class="connectly-search-btn">
+                                    <i class="bi bi-arrow-right"></i>
+                                </button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+
                 <!-- Composer Card -->
                 <div class="connectly-composer-card">
                     <div class="d-flex align-items-start gap-3">
@@ -32,7 +60,7 @@
                             <h6 class="mb-1 fw-bold connectly-composer-name">{{ auth()->user()->name }}</h6>
                             <p class="mb-3 text-muted small connectly-composer-hint">What's on your mind?</p>
 
-                            <form action="{{ route('feed.posts.store') }}" method="POST" enctype="multipart/form-data">
+                            <form action="{{ route('feed.posts.store') }}" method="POST" enctype="multipart/form-data" id="composerForm">
                                 @csrf
                                 <textarea
                                     name="content"
@@ -45,27 +73,41 @@
                                     <div class="invalid-feedback">{{ $message }}</div>
                                 @enderror
 
+                                <!-- Image Preview Container -->
+                                <div class="connectly-image-preview-container mt-3 d-none" id="composerPreviewContainer">
+                                    <div class="d-flex align-items-center justify-content-between mb-2">
+                                        <span class="small fw-semibold text-muted">
+                                            <i class="bi bi-images me-1"></i>Image Preview
+                                        </span>
+                                        <button type="button" class="connectly-preview-clear-btn" id="composerClearPreview">
+                                            <i class="bi bi-x-lg"></i>
+                                        </button>
+                                    </div>
+                                    <div class="connectly-image-preview-grid" id="composerPreviewGrid"></div>
+                                </div>
+
                                 <div class="mt-3">
-                                    <label class="form-label small fw-semibold text-muted mb-1 connectly-image-label">
-                                        <i class="bi bi-image me-1"></i>Add Image (optional)
-                                    </label>
                                     <div class="connectly-file-upload">
                                         <input
                                             type="file"
-                                            name="image"
+                                            name="images[]"
                                             accept="image/*"
-                                            class="connectly-file-input @error('image') is-invalid @enderror"
+                                            multiple
+                                            class="connectly-file-input @error('images') is-invalid @enderror"
                                             id="composerImageInput"
                                         >
                                         <label for="composerImageInput" class="connectly-file-label">
                                             <i class="bi bi-cloud-arrow-up me-2"></i>
-                                            <span>Choose an image</span>
+                                            <span>Add images <span class="text-muted fw-normal">(drag & drop or click)</span></span>
                                         </label>
                                     </div>
-                                    @error('image')
+                                    @error('images')
                                         <div class="invalid-feedback d-block">{{ $message }}</div>
                                     @enderror
-                                    <div class="form-text connectly-form-text">You can post without image.</div>
+                                    @error('images.*')
+                                        <div class="invalid-feedback d-block">{{ $message }}</div>
+                                    @enderror
+                                    <div class="form-text connectly-form-text">You can add multiple images or post without any.</div>
                                 </div>
 
                                 <div class="d-flex justify-content-end mt-3">
@@ -83,17 +125,20 @@
                     @forelse ($posts as $post)
                         @include('frontend.partials.post', ['post' => $post, 'showPinButton' => false])
                     @empty
-                        <div class="connectly-post-card text-center py-5">
-                            <i class="bi bi-journal-text" style="font-size: 2.5rem; color: #94a3b8; display: block; margin-bottom: 0.75rem;"></i>
-                            <p class="mb-0 text-muted">No posts yet. Be the first one to share something!</p>
+                        <div class="connectly-empty-state text-center py-5">
+                            <div class="connectly-empty-icon">
+                                <i class="bi bi-journal-text"></i>
+                            </div>
+                            <h5 class="fw-bold mt-3">No posts yet</h5>
+                            <p class="text-muted mb-0">Be the first one to share something with the community!</p>
                         </div>
                     @endforelse
                 </div>
             </div>
 
             <div class="col-lg-4">
-                <!-- Search Card -->
-                <div class="connectly-side-card">
+                <!-- Desktop Search Card -->
+                <div class="connectly-side-card d-none d-lg-block connectly-side-sticky">
                     <h6 class="fw-bold mb-3 connectly-side-card-title">
                         <i class="bi bi-search-heart me-2 connectly-side-icon-search"></i>Search
                     </h6>
@@ -132,6 +177,10 @@
                             <span class="connectly-tips-bullet"></span>
                             Add comments to start meaningful discussions.
                         </li>
+                        <li>
+                            <span class="connectly-tips-bullet"></span>
+                            Upload multiple images to make your posts more expressive.
+                        </li>
                     </ul>
                 </div>
             </div>
@@ -140,63 +189,72 @@
 </div>
 
 <style>
-/* ===== CONNECTLY FEED PAGE — PREMIUM DARK THEME ===== */
+/* ============================================================
+   CONNECTLY FEED PAGE — PREMIUM LIGHT THEME
+   ============================================================ */
 
+/* ----- CSS Variables ----- */
 :root {
-    --feed-bg: #0b1121;
-    --feed-surface: rgba(255,255,255,0.04);
-    --feed-border: rgba(255,255,255,0.06);
-    --feed-text: #f1f5f9;
-    --feed-muted: #94a3b8;
+    --feed-bg: #f0f4ff;
+    --feed-bg-alt: #faf5ff;
+    --feed-surface: #ffffff;
+    --feed-surface-hover: #f8faff;
+    --feed-border: #e2e8f0;
+    --feed-border-focus: #2563EB;
+    --feed-text: #0f172a;
+    --feed-text-secondary: #334155;
+    --feed-muted: #64748b;
+    --feed-muted-light: #94a3b8;
     --feed-primary: #2563EB;
     --feed-primary-light: #60A5FA;
-    --feed-primary-dark: #1E40AF;
-    --feed-input-bg: rgba(255,255,255,0.05);
-    --feed-input-border: rgba(255,255,255,0.08);
+    --feed-primary-dark: #1D4ED8;
+    --feed-primary-subtle: rgba(37,99,235,0.08);
+    --feed-purple: #7C3AED;
+    --feed-purple-light: #A78BFA;
+    --feed-success: #10b981;
+    --feed-warning: #f59e0b;
+    --feed-danger: #ef4444;
+    --feed-input-bg: #f8fafc;
+    --feed-input-border: #cbd5e1;
     --feed-radius: 16px;
     --feed-radius-sm: 10px;
+    --feed-shadow-sm: 0 1px 3px rgba(0,0,0,0.04), 0 1px 2px rgba(0,0,0,0.03);
+    --feed-shadow-md: 0 4px 16px rgba(0,0,0,0.06), 0 2px 8px rgba(0,0,0,0.04);
+    --feed-shadow-lg: 0 12px 40px rgba(0,0,0,0.08), 0 4px 16px rgba(0,0,0,0.04);
+    --feed-shadow-xl: 0 20px 60px rgba(0,0,0,0.1);
+    --feed-transition: 0.3s cubic-bezier(.16,1,.3,1);
 }
 
+/* ----- Page Layout ----- */
 .connectly-feed-page {
-    min-height: 100%;
-    background: var(--feed-bg);
+    min-height: 100vh;
+    background: linear-gradient(135deg, var(--feed-bg) 0%, var(--feed-bg-alt) 50%, #fdf4ff 100%);
     position: relative;
-    overflow: hidden;
 }
 
-/* Background glow */
-.connectly-feed-bg-glow {
-    position: fixed;
-    top: -200px;
-    left: -100px;
-    width: 500px;
-    height: 500px;
-    background: radial-gradient(circle, rgba(37,99,235,0.08), transparent 70%);
-    border-radius: 50%;
-    filter: blur(60px);
-    pointer-events: none;
-    z-index: 0;
-    animation: feedGlowFloat1 12s ease-in-out infinite;
-}
-
-@keyframes feedGlowFloat1 {
-    0%,100% { transform: translate(0,0) scale(1); }
-    50% { transform: translate(60px,40px) scale(1.1); }
-}
-
-/* ===== ALERT ===== */
+/* ----- Alert ----- */
 .connectly-feed-alert {
-    border-radius: var(--feed-radius-sm, 10px);
-    border: 1px solid rgba(16,185,129,0.2);
-    background: rgba(16,185,129,0.08);
-    color: #34d399;
+    border-radius: var(--feed-radius-sm);
+    border: 1px solid rgba(16,185,129,0.25);
+    background: linear-gradient(135deg, rgba(16,185,129,0.08), rgba(16,185,129,0.04));
+    color: #065f46;
     font-weight: 500;
-    backdrop-filter: blur(12px);
-    -webkit-backdrop-filter: blur(12px);
     animation: connectlyAlertSlideIn 0.4s ease-out;
+    box-shadow: var(--feed-shadow-sm);
 }
-.connectly-feed-alert .btn-close {
-    filter: invert(0.8) brightness(1.5);
+.connectly-feed-alert-danger {
+    border-radius: var(--feed-radius-sm);
+    border: 1px solid rgba(239,68,68,0.25);
+    background: linear-gradient(135deg, rgba(239,68,68,0.08), rgba(239,68,68,0.04));
+    color: #991b1b;
+    font-weight: 500;
+    animation: connectlyAlertSlideIn 0.4s ease-out;
+    box-shadow: var(--feed-shadow-sm);
+}
+.connectly-feed-alert .btn-close,
+.connectly-feed-alert-danger .btn-close {
+    filter: none;
+    opacity: 0.6;
 }
 
 @keyframes connectlyAlertSlideIn {
@@ -204,51 +262,69 @@
     to { transform: translateY(0); opacity: 1; }
 }
 
+/* ===== MOBILE SEARCH (STICKY) ===== */
+.connectly-mobile-search {
+    position: sticky;
+    top: 70px;
+    z-index: 1020;
+    margin-bottom: 1rem;
+}
+
+.connectly-mobile-search-inner {
+    background: rgba(255,255,255,0.85);
+    backdrop-filter: blur(16px) saturate(200%);
+    -webkit-backdrop-filter: blur(16px) saturate(200%);
+    border-radius: var(--feed-radius);
+    border: 1px solid rgba(226,232,240,0.8);
+    padding: 0.85rem 1rem;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.06), 0 1px 3px rgba(0,0,0,0.03);
+    animation: mobileSearchSlideDown 0.4s ease-out;
+}
+
+@keyframes mobileSearchSlideDown {
+    from { transform: translateY(-8px); opacity: 0; }
+    to { transform: translateY(0); opacity: 1; }
+}
+
+.connectly-mobile-search-inner .connectly-search-group {
+    margin-bottom: 0;
+}
+
 /* ===== COMPOSER CARD ===== */
 .connectly-composer-card {
     background: var(--feed-surface);
-    backdrop-filter: blur(24px) saturate(180%);
-    -webkit-backdrop-filter: blur(24px) saturate(180%);
     border-radius: var(--feed-radius);
     border: 1px solid var(--feed-border);
     padding: 1.5rem;
     position: relative;
     overflow: hidden;
-    transition: all 0.4s cubic-bezier(.16,1,.3,1);
+    transition: all var(--feed-transition);
     animation: feedCardSlideUp 0.5s ease-out;
+    box-shadow: var(--feed-shadow-md);
 }
 
-/* Animated gradient border */
+/* Premium gradient top accent bar */
 .connectly-composer-card::before {
     content: '';
     position: absolute;
-    inset: -1px;
-    border-radius: var(--feed-radius);
-    padding: 1px;
-    background: linear-gradient(135deg, rgba(37,99,235,0.3), rgba(96,165,250,0.1), rgba(37,99,235,0.05), rgba(96,165,250,0.2));
-    background-size: 300% 300%;
-    -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
-    -webkit-mask-composite: xor;
-    mask-composite: exclude;
-    animation: feedBorderGlow 6s ease-in-out infinite;
-    pointer-events: none;
-    z-index: 0;
-    opacity: 0.5;
-    transition: opacity 0.4s ease;
-}
-.connectly-composer-card:hover::before {
-    opacity: 1;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 3px;
+    background: linear-gradient(90deg, var(--feed-primary), var(--feed-purple), var(--feed-primary-light));
+    background-size: 200% 100%;
+    animation: feedAccentBar 4s ease-in-out infinite;
 }
 
-@keyframes feedBorderGlow {
+@keyframes feedAccentBar {
     0%,100% { background-position: 0% 50%; }
     50% { background-position: 100% 50%; }
 }
 
 .connectly-composer-card:hover {
-    border-color: rgba(37,99,235,0.15);
-    box-shadow: 0 20px 60px rgba(0,0,0,0.3), 0 0 40px rgba(37,99,235,0.05);
+    box-shadow: var(--feed-shadow-lg);
     transform: translateY(-2px);
+    border-color: rgba(37,99,235,0.15);
 }
 
 .connectly-composer-name {
@@ -274,17 +350,17 @@
     color: #ffffff;
     background: linear-gradient(135deg, var(--feed-primary) 0%, var(--feed-primary-dark) 100%);
     flex-shrink: 0;
-    box-shadow: 0 3px 10px rgba(37, 99, 235, 0.3);
+    box-shadow: 0 3px 10px rgba(37, 99, 235, 0.25);
 }
 
 .connectly-feed-avatar-alt {
-    background: linear-gradient(135deg, #475569 0%, #1e293b 100%);
+    background: linear-gradient(135deg, #94a3b8 0%, #64748b 100%);
 }
 
 .connectly-feed-avatar-image {
     object-fit: cover;
-    border: 2px solid rgba(37,99,235,0.2);
-    background: var(--feed-bg);
+    border: 2px solid rgba(37,99,235,0.15);
+    background: var(--feed-surface);
 }
 
 /* ===== TEXTAREA ===== */
@@ -296,17 +372,120 @@
     font-size: 0.9rem;
     background: var(--feed-input-bg);
     color: var(--feed-text);
-    transition: all 0.3s cubic-bezier(.16,1,.3,1);
+    transition: all var(--feed-transition);
 }
 
 .connectly-feed-textarea:focus {
     border-color: var(--feed-primary);
-    box-shadow: 0 0 0 4px rgba(37,99,235,0.15);
-    background: rgba(37,99,235,0.05);
+    box-shadow: 0 0 0 4px rgba(37,99,235,0.1);
+    background: #ffffff;
 }
 
 .connectly-feed-textarea::placeholder {
-    color: #475569;
+    color: var(--feed-muted-light);
+}
+
+/* ===== IMAGE PREVIEW ===== */
+.connectly-image-preview-container {
+    background: var(--feed-input-bg);
+    border: 1.5px dashed var(--feed-border);
+    border-radius: var(--feed-radius-sm);
+    padding: 0.75rem;
+    animation: previewFadeIn 0.3s ease;
+}
+
+@keyframes previewFadeIn {
+    from { opacity: 0; transform: translateY(-4px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+.connectly-preview-clear-btn {
+    background: rgba(239,68,68,0.1);
+    border: none;
+    color: var(--feed-danger);
+    width: 28px;
+    height: 28px;
+    border-radius: 50%;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    font-size: 0.7rem;
+    transition: all 0.2s ease;
+}
+
+.connectly-preview-clear-btn:hover {
+    background: rgba(239,68,68,0.2);
+    transform: scale(1.1);
+}
+
+.connectly-image-preview-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(80px, 1fr));
+    gap: 0.5rem;
+}
+
+.connectly-preview-item {
+    position: relative;
+    border-radius: 8px;
+    overflow: hidden;
+    aspect-ratio: 1;
+    border: 1px solid var(--feed-border);
+    background: var(--feed-surface);
+    animation: previewItemIn 0.25s ease backwards;
+}
+
+.connectly-preview-item:nth-child(1) { animation-delay: 0.02s; }
+.connectly-preview-item:nth-child(2) { animation-delay: 0.06s; }
+.connectly-preview-item:nth-child(3) { animation-delay: 0.10s; }
+.connectly-preview-item:nth-child(4) { animation-delay: 0.14s; }
+.connectly-preview-item:nth-child(5) { animation-delay: 0.18s; }
+
+@keyframes previewItemIn {
+    from { opacity: 0; transform: scale(0.85); }
+    to { opacity: 1; transform: scale(1); }
+}
+
+.connectly-preview-item img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.connectly-preview-item-remove {
+    position: absolute;
+    top: 3px;
+    right: 3px;
+    width: 22px;
+    height: 22px;
+    border-radius: 50%;
+    background: rgba(239,68,68,0.9);
+    color: #fff;
+    border: none;
+    font-size: 0.6rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    opacity: 0;
+}
+
+.connectly-preview-item:hover .connectly-preview-item-remove {
+    opacity: 1;
+}
+
+.connectly-preview-count-badge {
+    position: absolute;
+    top: 3px;
+    right: 3px;
+    background: var(--feed-primary);
+    color: #fff;
+    font-size: 0.65rem;
+    font-weight: 600;
+    padding: 2px 8px;
+    border-radius: 999px;
+    display: none;
 }
 
 /* ===== FILE UPLOAD ===== */
@@ -327,9 +506,9 @@
     display: flex;
     align-items: center;
     padding: 0.65rem 1rem;
-    border: 1.5px dashed rgba(255,255,255,0.1);
+    border: 1.5px dashed var(--feed-border);
     border-radius: var(--feed-radius-sm);
-    background: rgba(255,255,255,0.03);
+    background: var(--feed-input-bg);
     color: var(--feed-muted);
     font-size: 0.82rem;
     font-weight: 500;
@@ -339,18 +518,17 @@
 
 .connectly-file-label:hover {
     border-color: var(--feed-primary);
-    background: rgba(37,99,235,0.08);
-    color: var(--feed-primary-light);
+    background: rgba(37,99,235,0.05);
+    color: var(--feed-primary);
 }
 
-.connectly-image-label {
-    color: var(--feed-muted);
-    font-size: 0.8rem;
+.connectly-file-label i {
+    font-size: 1.1rem;
 }
 
 .connectly-form-text {
     font-size: 0.75rem;
-    color: #475569;
+    color: var(--feed-muted-light);
 }
 
 /* ===== POST BUTTON ===== */
@@ -362,15 +540,23 @@
     font-size: 0.85rem;
     padding: 0.6rem 1.5rem;
     border: none;
-    transition: all 0.3s cubic-bezier(.16,1,.3,1);
-    box-shadow: 0 4px 16px rgba(37,99,235,0.3);
+    transition: all var(--feed-transition);
+    box-shadow: 0 4px 14px rgba(37,99,235,0.25);
     position: relative;
     overflow: hidden;
 }
 
+.connectly-feed-post-btn::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(135deg, transparent 40%, rgba(255,255,255,0.15));
+    pointer-events: none;
+}
+
 .connectly-feed-post-btn:hover {
     transform: translateY(-2px);
-    box-shadow: 0 8px 28px rgba(37,99,235,0.4);
+    box-shadow: 0 8px 24px rgba(37,99,235,0.35);
     color: #fff;
 }
 
@@ -381,15 +567,14 @@
 /* ===== POST CARD ===== */
 .connectly-post-card {
     background: var(--feed-surface);
-    backdrop-filter: blur(24px) saturate(180%);
-    -webkit-backdrop-filter: blur(24px) saturate(180%);
     border-radius: var(--feed-radius);
     border: 1px solid var(--feed-border);
     padding: 1.25rem 1.35rem;
     position: relative;
     overflow: hidden;
-    transition: all 0.4s cubic-bezier(.16,1,.3,1);
+    transition: all var(--feed-transition);
     animation: feedCardSlideUp 0.5s ease-out backwards;
+    box-shadow: var(--feed-shadow-sm);
 }
 
 .connectly-post-card:nth-child(1) { animation-delay: 0.08s; }
@@ -399,9 +584,9 @@
 .connectly-post-card:nth-child(5) { animation-delay: 0.40s; }
 
 .connectly-post-card:hover {
-    border-color: rgba(37,99,235,0.12);
-    box-shadow: 0 12px 40px rgba(0,0,0,0.3), 0 0 30px rgba(37,99,235,0.03);
-    transform: translateY(-3px);
+    border-color: rgba(37,99,235,0.1);
+    box-shadow: var(--feed-shadow-lg);
+    transform: translateY(-2px);
 }
 
 @keyframes feedCardSlideUp {
@@ -411,55 +596,119 @@
 
 /* ===== POST TEXT ===== */
 .connectly-post-text {
-    color: var(--feed-text);
+    color: var(--feed-text-secondary);
     line-height: 1.7;
     white-space: pre-line;
     font-size: 0.92rem;
 }
 
+/* ===== POST IMAGE GRID ===== */
+.connectly-post-image-grid {
+    display: grid;
+    gap: 0.4rem;
+    border-radius: var(--feed-radius-sm);
+    overflow: hidden;
+}
+
+.connectly-post-image-grid:not(.d-none) {
+    margin-bottom: 0.75rem;
+}
+
+/* 1 image */
+.connectly-post-image-grid.grid-1 {
+    grid-template-columns: 1fr;
+    max-height: 400px;
+}
+
+/* 2 images */
+.connectly-post-image-grid.grid-2 {
+    grid-template-columns: 1fr 1fr;
+    max-height: 280px;
+}
+
+/* 3 images */
+.connectly-post-image-grid.grid-3 {
+    grid-template-columns: 1fr 1fr;
+    grid-template-rows: 1fr 1fr;
+    max-height: 320px;
+}
+.connectly-post-image-grid.grid-3 .connectly-post-image-item:nth-child(1) {
+    grid-row: span 2;
+}
+
+/* 4+ images */
+.connectly-post-image-grid.grid-4,
+.connectly-post-image-grid.grid-many {
+    grid-template-columns: 1fr 1fr;
+    grid-template-rows: 1fr 1fr;
+    max-height: 320px;
+}
+
+.connectly-post-image-item {
+    position: relative;
+    overflow: hidden;
+    border-radius: 6px;
+    background: var(--feed-input-bg);
+    cursor: pointer;
+}
+
+.connectly-post-image-item img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform 0.4s ease;
+}
+
+.connectly-post-image-item:hover img {
+    transform: scale(1.03);
+}
+
+.connectly-post-image-overlay {
+    position: absolute;
+    inset: 0;
+    background: rgba(0,0,0,0.5);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #fff;
+    font-size: 1.2rem;
+    font-weight: 700;
+    cursor: pointer;
+}
+
 /* ===== SIDE CARDS ===== */
 .connectly-side-card {
     background: var(--feed-surface);
-    backdrop-filter: blur(24px) saturate(180%);
-    -webkit-backdrop-filter: blur(24px) saturate(180%);
     border-radius: var(--feed-radius);
     border: 1px solid var(--feed-border);
     padding: 1.3rem;
     position: relative;
     overflow: hidden;
     animation: feedCardSlideUp 0.6s ease-out;
+    box-shadow: var(--feed-shadow-sm);
+    transition: all var(--feed-transition);
 }
 
-.connectly-side-card::before {
-    content: '';
-    position: absolute;
-    inset: -1px;
-    border-radius: var(--feed-radius);
-    padding: 1px;
-    background: linear-gradient(135deg, rgba(37,99,235,0.2), transparent, rgba(37,99,235,0.1));
-    -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
-    -webkit-mask-composite: xor;
-    mask-composite: exclude;
-    pointer-events: none;
-    z-index: 0;
-    opacity: 0.4;
+.connectly-side-card:hover {
+    box-shadow: var(--feed-shadow-md);
+}
+
+.connectly-side-sticky {
+    position: sticky;
+    top: 24px;
 }
 
 .connectly-side-card-title {
     color: var(--feed-text);
     font-size: 0.92rem;
-    position: relative;
-    z-index: 1;
 }
 
 .connectly-side-icon-search {
-    color: var(--feed-primary-light);
-    font-size: 1.05rem;
+    color: var(--feed-primary);
 }
 
 .connectly-side-icon-tips {
-    color: #fbbf24;
-    font-size: 1.05rem;
+    color: var(--feed-warning);
 }
 
 /* ===== SEARCH GROUP ===== */
@@ -467,30 +716,30 @@
     position: relative;
     display: flex;
     align-items: center;
-    background: rgba(255,255,255,0.04);
-    border: 1.5px solid rgba(255,255,255,0.08);
+    background: var(--feed-input-bg);
+    border: 1.5px solid var(--feed-input-border);
     border-radius: var(--feed-radius-sm);
     padding: 0.1rem;
-    transition: all 0.3s cubic-bezier(.16,1,.3,1);
+    transition: all var(--feed-transition);
 }
 
 .connectly-search-group:focus-within {
     border-color: var(--feed-primary);
-    background: rgba(37,99,235,0.05);
-    box-shadow: 0 0 0 3px rgba(37,99,235,0.12);
+    background: var(--feed-surface);
+    box-shadow: 0 0 0 3px rgba(37,99,235,0.1);
 }
 
 .connectly-search-group-icon {
     position: absolute;
     left: 12px;
-    color: #64748b;
+    color: var(--feed-muted-light);
     font-size: 0.9rem;
     pointer-events: none;
     transition: color 0.25s ease;
 }
 
 .connectly-search-group:focus-within .connectly-search-group-icon {
-    color: var(--feed-primary-light);
+    color: var(--feed-primary);
 }
 
 .connectly-search-input {
@@ -505,7 +754,7 @@
 }
 
 .connectly-search-input::placeholder {
-    color: #475569;
+    color: var(--feed-muted-light);
 }
 
 .connectly-search-btn {
@@ -525,7 +774,7 @@
 }
 
 .connectly-search-btn:hover {
-    background: linear-gradient(135deg, var(--feed-primary-dark), #153e75);
+    background: linear-gradient(135deg, var(--feed-primary-dark), #1e40af);
     transform: scale(1.05);
 }
 
@@ -537,11 +786,9 @@
 .connectly-tips-list {
     padding-left: 0;
     list-style: none;
-    color: #cbd5e1;
+    color: var(--feed-text-secondary);
     line-height: 1.8;
     font-size: 0.85rem;
-    position: relative;
-    z-index: 1;
 }
 
 .connectly-tips-list li {
@@ -549,7 +796,7 @@
     align-items: flex-start;
     gap: 10px;
     padding: 0.5rem 0;
-    border-bottom: 1px solid rgba(255,255,255,0.04);
+    border-bottom: 1px solid var(--feed-border);
 }
 
 .connectly-tips-list li:last-child {
@@ -564,21 +811,78 @@
     border-radius: 50%;
     background: linear-gradient(135deg, var(--feed-primary-light), var(--feed-primary));
     margin-top: 8px;
-    box-shadow: 0 1px 6px rgba(37,99,235,0.4);
+    box-shadow: 0 1px 6px rgba(37,99,235,0.3);
 }
 
-/* ===== POST IMAGE ===== */
-.connectly-post-image {
+/* ===== EMPTY STATE ===== */
+.connectly-empty-state {
+    background: var(--feed-surface);
+    border-radius: var(--feed-radius);
+    border: 2px dashed var(--feed-border);
+    box-shadow: var(--feed-shadow-sm);
+}
+
+.connectly-empty-icon {
+    width: 64px;
+    height: 64px;
+    margin: 0 auto;
+    background: linear-gradient(135deg, rgba(37,99,235,0.08), rgba(124,58,237,0.08));
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.6rem;
+    color: var(--feed-muted-light);
+}
+
+.connectly-empty-state h5 {
+    color: var(--feed-text);
+}
+
+/* ===== PROFILE LINK ===== */
+.connectly-profile-link {
+    color: var(--feed-text);
+    font-weight: 600;
+    transition: color 0.2s ease;
+}
+
+.connectly-profile-link:hover {
+    color: var(--feed-primary);
+}
+
+/* ===== COMMENT ITEM (LIGHT) ===== */
+.connectly-comment-item {
+    padding: 0.85rem;
+    border-radius: var(--feed-radius-sm);
+    border: 1px solid var(--feed-border);
+    background: var(--feed-input-bg);
+    transition: background 0.2s ease;
+}
+
+.connectly-comment-item:hover {
+    background: var(--feed-surface-hover);
+}
+
+.connectly-comment-replies {
+    margin-left: 1rem;
+    padding-left: 0.9rem;
+    border-left: 2px solid var(--feed-border);
+}
+
+.connectly-comment-reply-item {
+    padding: 0.75rem;
+    border-radius: var(--feed-radius-sm);
+    border: 1px solid var(--feed-border);
+    background: var(--feed-input-bg);
+}
+
+.connectly-comment-image {
     width: 100%;
-    max-height: 420px;
+    max-width: 320px;
+    max-height: 260px;
     object-fit: cover;
     border-radius: var(--feed-radius-sm);
-    border: 1px solid rgba(255,255,255,0.06);
-    transition: transform 0.4s ease;
-}
-
-.connectly-post-image:hover {
-    transform: scale(1.01);
+    border: 1px solid var(--feed-border);
 }
 
 /* ===== REACTION PICKER ===== */
@@ -595,12 +899,12 @@
     display: flex;
     gap: 0.35rem;
     padding: 0.4rem 0.5rem;
-    background: rgba(30,41,59,0.95);
+    background: var(--feed-surface);
     backdrop-filter: blur(16px);
     -webkit-backdrop-filter: blur(16px);
-    border: 1px solid rgba(255,255,255,0.08);
+    border: 1px solid var(--feed-border);
     border-radius: 999px;
-    box-shadow: 0 12px 40px rgba(0,0,0,0.4);
+    box-shadow: var(--feed-shadow-lg);
     opacity: 0;
     visibility: hidden;
     pointer-events: none;
@@ -644,11 +948,11 @@
 
 .connectly-reaction-option:hover {
     transform: scale(1.22);
-    background: rgba(37,99,235,0.15);
+    background: rgba(37,99,235,0.1);
 }
 
 .connectly-reaction-option.active {
-    background: rgba(37,99,235,0.2);
+    background: rgba(37,99,235,0.15);
 }
 
 /* ===== MAIN REACTION BUTTON ===== */
@@ -658,15 +962,15 @@
     font-size: 0.8rem !important;
     font-weight: 500 !important;
     transition: all 0.25s ease !important;
-    border: 1.5px solid rgba(255,255,255,0.08) !important;
-    background: rgba(255,255,255,0.04) !important;
+    border: 1.5px solid var(--feed-border) !important;
+    background: var(--feed-surface) !important;
     color: var(--feed-muted) !important;
 }
 
 .connectly-main-reaction-btn:hover {
-    background: rgba(37,99,235,0.1) !important;
+    background: rgba(37,99,235,0.06) !important;
     border-color: rgba(37,99,235,0.25) !important;
-    color: var(--feed-primary-light) !important;
+    color: var(--feed-primary) !important;
     transform: translateY(-1px);
 }
 
@@ -674,11 +978,12 @@
     background: linear-gradient(135deg, var(--feed-primary), var(--feed-primary-dark)) !important;
     border-color: transparent !important;
     color: #fff !important;
-    box-shadow: 0 3px 12px rgba(37,99,235,0.3);
+    box-shadow: 0 3px 10px rgba(37,99,235,0.2);
 }
 
 .connectly-main-reaction-btn.btn-primary:hover {
-    box-shadow: 0 5px 20px rgba(37,99,235,0.4);
+    box-shadow: 0 5px 16px rgba(37,99,235,0.3);
+    color: #fff !important;
 }
 
 /* ===== COMMENT BUTTON ===== */
@@ -687,23 +992,23 @@
     padding: 0.3rem 0.85rem !important;
     font-size: 0.8rem !important;
     font-weight: 500 !important;
-    border: 1.5px solid rgba(255,255,255,0.08) !important;
-    background: rgba(255,255,255,0.04) !important;
+    border: 1.5px solid var(--feed-border) !important;
+    background: var(--feed-surface) !important;
     color: var(--feed-muted) !important;
     transition: all 0.25s ease !important;
 }
 
 .connectly-comment-btn:hover {
-    background: rgba(37,99,235,0.1) !important;
+    background: rgba(37,99,235,0.06) !important;
     border-color: rgba(37,99,235,0.25) !important;
-    color: var(--feed-primary-light) !important;
+    color: var(--feed-primary) !important;
     transform: translateY(-1px);
 }
 
 /* ===== REACTION BADGES ===== */
 .connectly-reaction-badge {
-    background: rgba(255,255,255,0.04) !important;
-    border: 1px solid rgba(255,255,255,0.06) !important;
+    background: var(--feed-input-bg) !important;
+    border: 1px solid var(--feed-border) !important;
     color: var(--feed-muted) !important;
     font-weight: 500 !important;
     font-size: 0.75rem !important;
@@ -720,59 +1025,13 @@
     display: inline-flex;
     align-items: center;
     gap: 3px;
-    background: rgba(251,191,36,0.12);
-    color: #fbbf24;
+    background: rgba(245,158,11,0.1);
+    color: #d97706;
     font-size: 0.7rem;
     font-weight: 600;
     padding: 2px 10px;
     border-radius: 12px;
-    border: 1px solid rgba(251,191,36,0.2);
-}
-
-/* ===== PROFILE LINK ===== */
-.connectly-profile-link {
-    color: var(--feed-primary-light);
-    font-weight: 600;
-    transition: color 0.2s ease;
-}
-
-.connectly-profile-link:hover {
-    color: var(--feed-primary);
-}
-
-/* ===== COMMENT ITEM ===== */
-.connectly-comment-item {
-    padding: 0.85rem;
-    border-radius: var(--feed-radius-sm);
-    border: 1px solid rgba(255,255,255,0.05);
-    background: rgba(255,255,255,0.02);
-    transition: background 0.2s ease;
-}
-
-.connectly-comment-item:hover {
-    background: rgba(255,255,255,0.04);
-}
-
-.connectly-comment-replies {
-    margin-left: 1rem;
-    padding-left: 0.9rem;
-    border-left: 2px solid rgba(255,255,255,0.06);
-}
-
-.connectly-comment-reply-item {
-    padding: 0.75rem;
-    border-radius: var(--feed-radius-sm);
-    border: 1px solid rgba(255,255,255,0.05);
-    background: rgba(255,255,255,0.02);
-}
-
-.connectly-comment-image {
-    width: 100%;
-    max-width: 320px;
-    max-height: 260px;
-    object-fit: cover;
-    border-radius: var(--feed-radius-sm);
-    border: 1px solid rgba(255,255,255,0.06);
+    border: 1px solid rgba(245,158,11,0.2);
 }
 
 /* ===== COMMENT REACTION PICKER ===== */
@@ -789,12 +1048,12 @@
     display: flex;
     gap: 0.3rem;
     padding: 0.35rem 0.45rem;
-    background: rgba(30,41,59,0.95);
+    background: var(--feed-surface);
     backdrop-filter: blur(16px);
     -webkit-backdrop-filter: blur(16px);
-    border: 1px solid rgba(255,255,255,0.08);
+    border: 1px solid var(--feed-border);
     border-radius: 999px;
-    box-shadow: 0 12px 40px rgba(0,0,0,0.4);
+    box-shadow: var(--feed-shadow-lg);
     opacity: 0;
     visibility: hidden;
     pointer-events: none;
@@ -838,11 +1097,11 @@
 
 .connectly-comment-reaction-option:hover {
     transform: scale(1.22);
-    background: rgba(37,99,235,0.15);
+    background: rgba(37,99,235,0.1);
 }
 
 .connectly-comment-reaction-option.active {
-    background: rgba(37,99,235,0.2);
+    background: rgba(37,99,235,0.15);
 }
 
 .connectly-comment-main-reaction-btn {
@@ -850,27 +1109,28 @@
     padding: 0.2rem 0.7rem !important;
     font-size: 0.75rem !important;
     font-weight: 500 !important;
-    border: 1.5px solid rgba(255,255,255,0.08) !important;
-    background: rgba(255,255,255,0.04) !important;
+    border: 1.5px solid var(--feed-border) !important;
+    background: var(--feed-surface) !important;
     color: var(--feed-muted) !important;
     transition: all 0.2s ease !important;
 }
 
 .connectly-comment-main-reaction-btn:hover {
-    background: rgba(37,99,235,0.1) !important;
+    background: rgba(37,99,235,0.06) !important;
     border-color: rgba(37,99,235,0.25) !important;
-    color: var(--feed-primary-light) !important;
+    color: var(--feed-primary) !important;
 }
 
 .connectly-comment-main-reaction-btn.btn-primary {
     background: linear-gradient(135deg, var(--feed-primary), var(--feed-primary-dark)) !important;
     border-color: transparent !important;
     color: #fff !important;
-    box-shadow: 0 3px 10px rgba(37,99,235,0.25);
+    box-shadow: 0 3px 10px rgba(37,99,235,0.2);
 }
 
 .connectly-comment-main-reaction-btn.btn-primary:hover {
-    box-shadow: 0 5px 16px rgba(37,99,235,0.35);
+    box-shadow: 0 5px 16px rgba(37,99,235,0.3);
+    color: #fff !important;
 }
 
 /* ===== REPLY TRIGGER ===== */
@@ -879,16 +1139,16 @@
     padding: 0.2rem 0.7rem !important;
     font-size: 0.75rem !important;
     font-weight: 500 !important;
-    border: 1.5px solid rgba(255,255,255,0.08) !important;
-    background: rgba(255,255,255,0.04) !important;
+    border: 1.5px solid var(--feed-border) !important;
+    background: var(--feed-surface) !important;
     color: var(--feed-muted) !important;
     transition: all 0.2s ease !important;
 }
 
 .connectly-reply-trigger:hover {
-    background: rgba(37,99,235,0.1) !important;
+    background: rgba(37,99,235,0.06) !important;
     border-color: rgba(37,99,235,0.25) !important;
-    color: var(--feed-primary-light) !important;
+    color: var(--feed-primary) !important;
 }
 
 /* ===== REPLY INDICATOR ===== */
@@ -898,10 +1158,10 @@
     gap: 8px;
     padding: 0.55rem 0.85rem;
     margin-bottom: 0.75rem;
-    background: rgba(37,99,235,0.08);
+    background: rgba(37,99,235,0.06);
     border: 1px solid rgba(37,99,235,0.15);
     border-radius: var(--feed-radius-sm);
-    color: var(--feed-primary-light);
+    color: var(--feed-primary);
     font-size: 0.82rem;
     font-weight: 500;
     animation: feedReplySlideIn 0.25s ease;
@@ -913,7 +1173,7 @@
 }
 
 .connectly-reply-indicator-icon {
-    color: var(--feed-primary-light);
+    color: var(--feed-primary);
     font-size: 0.85rem;
 }
 
@@ -930,8 +1190,8 @@
 }
 
 .connectly-reply-cancel-btn:hover {
-    background: rgba(37,99,235,0.15);
-    color: var(--feed-primary-light);
+    background: rgba(37,99,235,0.1);
+    color: var(--feed-primary);
 }
 
 /* ===== COMMENT SUBMIT ===== */
@@ -948,13 +1208,13 @@
     border-radius: var(--feed-radius-sm);
     cursor: pointer;
     transition: all 0.25s ease;
-    box-shadow: 0 4px 16px rgba(37,99,235,0.25);
+    box-shadow: 0 4px 14px rgba(37,99,235,0.2);
 }
 
 .connectly-comment-submit-btn:hover {
-    background: linear-gradient(135deg, var(--feed-primary-dark), #153e75);
+    background: linear-gradient(135deg, var(--feed-primary-dark), #1e40af);
     transform: translateY(-1px);
-    box-shadow: 0 6px 20px rgba(37,99,235,0.35);
+    box-shadow: 0 6px 20px rgba(37,99,235,0.3);
     color: #fff;
 }
 
@@ -980,9 +1240,9 @@
     display: flex;
     align-items: center;
     padding: 0.55rem 0.9rem;
-    border: 1.5px dashed rgba(255,255,255,0.1);
+    border: 1.5px dashed var(--feed-border);
     border-radius: var(--feed-radius-sm);
-    background: rgba(255,255,255,0.03);
+    background: var(--feed-input-bg);
     color: var(--feed-muted);
     font-size: 0.8rem;
     font-weight: 500;
@@ -992,18 +1252,229 @@
 
 .connectly-file-label-comment:hover {
     border-color: var(--feed-primary);
-    background: rgba(37,99,235,0.08);
-    color: var(--feed-primary-light);
+    background: rgba(37,99,235,0.05);
+    color: var(--feed-primary);
 }
 
-/* ===== TOAST ===== */
+/* ===== MODAL UPGRADE (LIGHT THEME) ===== */
+.modal-content {
+    border-radius: var(--feed-radius) !important;
+    border: 1px solid var(--feed-border) !important;
+    box-shadow: var(--feed-shadow-xl) !important;
+    background: var(--feed-surface) !important;
+    color: var(--feed-text) !important;
+    overflow: hidden;
+}
+
+.modal-header {
+    border-bottom: 1px solid var(--feed-border) !important;
+    padding: 1.1rem 1.25rem !important;
+    background: linear-gradient(135deg, var(--feed-surface), var(--feed-input-bg));
+}
+
+.modal-header .modal-title {
+    font-weight: 700 !important;
+    font-size: 1.05rem !important;
+    color: var(--feed-text) !important;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.modal-header .btn-close {
+    filter: none !important;
+    opacity: 0.5;
+    transition: all 0.2s ease;
+    background: transparent url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16' fill='%230f172a'%3e%3cpath d='M.293.293a1 1 0 0 1 1.414 0L8 6.586 14.293.293a1 1 0 1 1 1.414 1.414L9.414 8l6.293 6.293a1 1 0 0 1-1.414 1.414L8 9.414l-6.293 6.293a1 1 0 0 1-1.414-1.414L6.586 8 .293 1.707a1 1 0 0 1 0-1.414z'/%3e%3c/svg%3e") center/1em auto no-repeat;
+}
+
+.modal-header .btn-close:hover {
+    opacity: 1;
+    transform: rotate(90deg);
+}
+
+.modal-body {
+    padding: 1.25rem !important;
+}
+
+.modal-body .form-control {
+    background: var(--feed-input-bg) !important;
+    border: 1.5px solid var(--feed-input-border) !important;
+    color: var(--feed-text) !important;
+    border-radius: var(--feed-radius-sm) !important;
+    font-size: 0.9rem !important;
+}
+
+.modal-body .form-control:focus {
+    border-color: var(--feed-primary) !important;
+    box-shadow: 0 0 0 4px rgba(37,99,235,0.1) !important;
+    background: var(--feed-surface) !important;
+}
+
+.modal-body .form-check-label {
+    color: var(--feed-text-secondary) !important;
+    font-size: 0.85rem !important;
+}
+
+.modal-body .form-check-input:checked {
+    background-color: var(--feed-primary) !important;
+    border-color: var(--feed-primary) !important;
+}
+
+.modal-body .btn {
+    border-radius: 8px !important;
+    font-weight: 600 !important;
+    font-size: 0.85rem !important;
+    padding: 0.45rem 1rem !important;
+    transition: all 0.25s ease !important;
+}
+
+.modal-body .btn-primary {
+    background: linear-gradient(135deg, var(--feed-primary), var(--feed-primary-dark)) !important;
+    border: none !important;
+    box-shadow: 0 4px 12px rgba(37,99,235,0.2) !important;
+    color: #fff !important;
+}
+
+.modal-body .btn-primary:hover {
+    box-shadow: 0 6px 18px rgba(37,99,235,0.3) !important;
+    transform: translateY(-1px);
+}
+
+.modal-body .btn-outline-secondary {
+    color: var(--feed-muted) !important;
+    border-color: var(--feed-border) !important;
+}
+
+.modal-body .btn-outline-secondary:hover {
+    background: var(--feed-input-bg) !important;
+    color: var(--feed-text) !important;
+}
+
+.modal-body .btn-outline-danger {
+    color: var(--feed-danger) !important;
+    border-color: rgba(239,68,68,0.3) !important;
+}
+
+.modal-body .btn-outline-danger:hover {
+    background: rgba(239,68,68,0.06) !important;
+}
+
+.modal-body .btn-outline-warning {
+    color: #d97706 !important;
+    border-color: rgba(245,158,11,0.3) !important;
+}
+
+.modal-body .btn-outline-warning:hover {
+    background: rgba(245,158,11,0.08) !important;
+}
+
+.modal-body .btn-warning {
+    background: rgba(245,158,11,0.12) !important;
+    border-color: rgba(245,158,11,0.3) !important;
+    color: #d97706 !important;
+}
+
+.modal-dialog-scrollable .modal-body {
+    max-height: calc(100vh - 200px);
+    overflow-y: auto;
+}
+
+/* ===== MODAL IMAGE PREVIEW ===== */
+.connectly-edit-preview-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
+    gap: 0.5rem;
+    margin-top: 0.5rem;
+}
+
+.connectly-edit-preview-item {
+    position: relative;
+    border-radius: 8px;
+    overflow: hidden;
+    aspect-ratio: 1;
+    border: 1px solid var(--feed-border);
+    background: var(--feed-input-bg);
+}
+
+.connectly-edit-preview-item img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.connectly-edit-preview-item .connectly-edit-remove-btn {
+    position: absolute;
+    top: 4px;
+    right: 4px;
+    width: 24px;
+    height: 24px;
+    border-radius: 50%;
+    background: rgba(239,68,68,0.9);
+    color: #fff;
+    border: none;
+    font-size: 0.65rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    opacity: 0;
+}
+
+.connectly-edit-preview-item:hover .connectly-edit-remove-btn {
+    opacity: 1;
+}
+
+.connectly-edit-existing-images {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
+    gap: 0.5rem;
+    margin-bottom: 0.75rem;
+}
+
+.connectly-edit-existing-item {
+    position: relative;
+    border-radius: 8px;
+    overflow: hidden;
+    aspect-ratio: 1;
+    border: 1px solid var(--feed-border);
+    background: var(--feed-input-bg);
+}
+
+.connectly-edit-existing-item img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.connectly-edit-existing-item .connectly-edit-remove-check {
+    position: absolute;
+    bottom: 4px;
+    left: 4px;
+    background: rgba(255,255,255,0.9);
+    border-radius: 6px;
+    padding: 2px 6px;
+    font-size: 0.65rem;
+    color: var(--feed-danger);
+    font-weight: 600;
+    cursor: pointer;
+    border: 1px solid rgba(239,68,68,0.3);
+    transition: all 0.2s ease;
+}
+
+.connectly-edit-existing-item .connectly-edit-remove-check:hover {
+    background: rgba(239,68,68,0.9);
+    color: #fff;
+}
+
+/* ===== SWEETALERT OVERRIDES ===== */
 .connectly-toast-popup {
     border-radius: var(--feed-radius-sm) !important;
-    box-shadow: 0 12px 40px rgba(0,0,0,0.4) !important;
+    box-shadow: var(--feed-shadow-lg) !important;
     font-family: inherit !important;
-    background: rgba(30,41,59,0.98) !important;
-    backdrop-filter: blur(16px) !important;
-    border: 1px solid rgba(255,255,255,0.06) !important;
+    background: var(--feed-surface) !important;
+    border: 1px solid var(--feed-border) !important;
     color: var(--feed-text) !important;
 }
 
@@ -1018,78 +1489,50 @@
     height: 3px !important;
 }
 
-/* ===== DARK MODE COMPATIBILITY FOR BOOTSTRAP MODALS ===== */
-.modal-content {
-    background: rgba(15,23,42,0.98) !important;
-    backdrop-filter: blur(24px) saturate(180%) !important;
-    border: 1px solid rgba(255,255,255,0.08) !important;
+.connectly-toast-popup .swal2-icon {
+    font-size: 0.6em !important;
+}
+
+/* Delete confirm dialog */
+.connectly-confirm-popup {
     border-radius: var(--feed-radius) !important;
+    font-family: inherit !important;
+    padding: 1.5rem !important;
+    box-shadow: var(--feed-shadow-xl) !important;
+    border: 1px solid var(--feed-border) !important;
+}
+
+.connectly-confirm-popup .swal2-title {
+    font-size: 1.1rem !important;
+    font-weight: 700 !important;
     color: var(--feed-text) !important;
 }
-.modal-header {
-    border-bottom: 1px solid rgba(255,255,255,0.06) !important;
+
+.connectly-confirm-popup .swal2-html-container {
+    font-size: 0.9rem !important;
+    color: var(--feed-text-secondary) !important;
 }
-.modal-header .btn-close {
-    filter: invert(0.7) brightness(1.5);
+
+.connectly-confirm-popup .swal2-confirm {
+    background: linear-gradient(135deg, var(--feed-danger), #dc2626) !important;
+    border-radius: 8px !important;
+    font-weight: 600 !important;
+    padding: 0.5rem 1.25rem !important;
+    box-shadow: 0 4px 12px rgba(239,68,68,0.3) !important;
 }
-.modal-title {
-    color: var(--feed-text) !important;
-}
-.modal-body .form-control {
-    background: var(--feed-input-bg) !important;
-    border: 1.5px solid var(--feed-input-border) !important;
-    color: var(--feed-text) !important;
-    border-radius: var(--feed-radius-sm) !important;
-}
-.modal-body .form-control:focus {
-    border-color: var(--feed-primary) !important;
-    box-shadow: 0 0 0 4px rgba(37,99,235,0.15) !important;
-    background: rgba(37,99,235,0.05) !important;
-}
-.modal-body .form-check-label {
+
+.connectly-confirm-popup .swal2-cancel {
+    border-radius: 8px !important;
+    font-weight: 600 !important;
+    padding: 0.5rem 1.25rem !important;
+    border: 1.5px solid var(--feed-border) !important;
     color: var(--feed-muted) !important;
-}
-.modal-body .btn-primary {
-    background: linear-gradient(135deg, var(--feed-primary), var(--feed-primary-dark)) !important;
-    border: none !important;
-    box-shadow: 0 4px 12px rgba(37,99,235,0.25) !important;
-}
-.modal-body .btn-primary:hover {
-    box-shadow: 0 6px 18px rgba(37,99,235,0.35) !important;
-    transform: translateY(-1px);
-}
-.modal-body .btn-outline-warning,
-.modal-body .btn-warning {
-    color: #fbbf24 !important;
-    border-color: rgba(251,191,36,0.3) !important;
-}
-.modal-body .btn-outline-warning:hover,
-.modal-body .btn-warning:hover {
-    background: rgba(251,191,36,0.1) !important;
-}
-.modal-body .btn-warning {
-    background: rgba(251,191,36,0.15) !important;
-    border-color: rgba(251,191,36,0.3) !important;
-}
-.modal-body .btn-outline-secondary {
-    color: var(--feed-muted) !important;
-    border-color: rgba(255,255,255,0.1) !important;
-}
-.modal-body .btn-outline-secondary:hover {
-    background: rgba(255,255,255,0.05) !important;
-    color: var(--feed-text) !important;
-}
-.modal-body .btn-outline-danger {
-    color: #ef4444 !important;
-    border-color: rgba(239,68,68,0.3) !important;
-}
-.modal-body .btn-outline-danger:hover {
-    background: rgba(239,68,68,0.1) !important;
 }
 
 /* ===== RESPONSIVE ===== */
 @media (max-width: 991.98px) {
     .connectly-composer-card { padding: 1.2rem; }
+    .connectly-post-card { padding: 1.15rem; }
 }
 
 @media (max-width: 576px) {
@@ -1097,476 +1540,699 @@
     .connectly-post-card { padding: 1rem; }
     .connectly-side-card { padding: 1rem; }
     .connectly-feed-avatar { width: 40px; height: 40px; font-size: 0.95rem; }
+
+    .connectly-post-image-grid.grid-2,
+    .connectly-post-image-grid.grid-3,
+    .connectly-post-image-grid.grid-4,
+    .connectly-post-image-grid.grid-many {
+        max-height: 200px;
+    }
+
+    .connectly-image-preview-grid {
+        grid-template-columns: repeat(auto-fill, minmax(70px, 1fr));
+    }
+
+    .modal-body {
+        padding: 1rem !important;
+    }
+}
+
+@media (max-width: 480px) {
+    .connectly-mobile-search-inner {
+        padding: 0.65rem 0.85rem;
+        border-radius: 14px;
+    }
+
+    .connectly-composer-card {
+        padding: 0.85rem;
+        border-radius: 14px;
+    }
+
+    .connectly-post-card {
+        padding: 0.85rem;
+        border-radius: 14px;
+    }
+
+    .connectly-feed-avatar {
+        width: 36px;
+        height: 36px;
+        font-size: 0.85rem;
+    }
+
+    .connectly-feed-textarea {
+        padding: 0.75rem 0.85rem;
+        font-size: 0.85rem;
+    }
+
+    .connectly-post-text {
+        font-size: 0.88rem;
+    }
+
+    .connectly-main-reaction-btn,
+    .connectly-comment-btn {
+        padding: 0.25rem 0.65rem !important;
+        font-size: 0.75rem !important;
+    }
+
+    .connectly-post-image-grid.grid-2,
+    .connectly-post-image-grid.grid-3,
+    .connectly-post-image-grid.grid-4,
+    .connectly-post-image-grid.grid-many {
+        max-height: 160px;
+    }
 }
 </style>
 
 <script>
-    // Update file input label when a file is selected
-    document.addEventListener('change', function(e) {
-        if (e.target.matches('.chatbox-file-input') || e.target.matches('.connectly-file-input')) {
-            const wrapper = e.target.closest('.connectly-file-upload') || e.target.closest('.chatbox-file-input-wrapper');
-            const label = wrapper?.querySelector('.connectly-file-label span, .chatbox-file-label span');
-            if (label && e.target.files.length > 0) {
-                label.textContent = e.target.files[0].name;
-                e.target.classList.add('has-file');
-            } else if (label) {
-                label.textContent = 'Choose an image';
-                e.target.classList.remove('has-file');
-            }
-        }
+// ============================================================
+// IMAGE PREVIEW — Composer
+// ============================================================
+document.addEventListener('DOMContentLoaded', function() {
+    const composerInput = document.getElementById('composerImageInput');
+    const previewContainer = document.getElementById('composerPreviewContainer');
+    const previewGrid = document.getElementById('composerPreviewGrid');
+    const clearBtn = document.getElementById('composerClearPreview');
+
+    if (!composerInput) return;
+
+    let previewFiles = [];
+
+    composerInput.addEventListener('change', function(e) {
+        const newFiles = Array.from(e.target.files || []);
+        if (newFiles.length === 0) return;
+
+        previewFiles = previewFiles.concat(newFiles);
+        renderPreviews();
+        updateFileList();
     });
 
-    // Toast notification helper using SweetAlert2
-    function chatboxToast(icon, title) {
-        if (typeof Swal === 'undefined') {
-            console.warn('SweetAlert2 not loaded, falling back to alert');
-            alert(title);
+    clearBtn?.addEventListener('click', function() {
+        previewFiles = [];
+        composerInput.value = '';
+        previewContainer.classList.add('d-none');
+        previewGrid.innerHTML = '';
+        updateFileList();
+    });
+
+    function renderPreviews() {
+        if (previewFiles.length === 0) {
+            previewContainer.classList.add('d-none');
             return;
         }
+
+        previewContainer.classList.remove('d-none');
+        previewGrid.innerHTML = '';
+
+        // Show max 5 previews with count badge
+        const maxShow = 5;
+        const filesToShow = previewFiles.slice(0, maxShow);
+        const remaining = previewFiles.length - maxShow;
+
+        filesToShow.forEach((file, index) => {
+            const reader = new FileReader();
+            const item = document.createElement('div');
+            item.className = 'connectly-preview-item';
+            item.style.animationDelay = (index * 0.04) + 's';
+
+            reader.onload = function(ev) {
+                item.innerHTML = `
+                    <img src="${ev.target.result}" alt="Preview ${index + 1}">
+                    <button type="button" class="connectly-preview-item-remove" data-index="${index}" title="Remove">
+                        <i class="bi bi-x"></i>
+                    </button>
+                `;
+                item.querySelector('.connectly-preview-item-remove')?.addEventListener('click', function() {
+                    previewFiles.splice(index, 1);
+                    renderPreviews();
+                    updateFileList();
+                });
+            };
+            reader.readAsDataURL(file);
+
+            previewGrid.appendChild(item);
+        });
+
+        // Show +N badge if more than maxShow
+        if (remaining > 0) {
+            const badge = document.createElement('div');
+            badge.className = 'connectly-preview-item';
+            badge.style.cssText = 'display:flex;align-items:center;justify-content:center;background:var(--feed-primary-subtle, rgba(37,99,235,0.08));border:2px dashed var(--feed-border)';
+            badge.innerHTML = `<span style="font-size:1.1rem;font-weight:700;color:var(--feed-primary, #2563EB);">+${remaining} more</span>`;
+            previewGrid.appendChild(badge);
+        }
+    }
+
+    function updateFileList() {
+        // Replace the file input's files with our managed list
+        // We can't directly set input.files, so we use DataTransfer
+        const dataTransfer = new DataTransfer();
+        previewFiles.forEach(file => dataTransfer.items.add(file));
+        composerInput.files = dataTransfer.files;
+    }
+
+    // Enable drag & drop on the label
+    const fileLabel = document.querySelector('.connectly-file-label');
+    if (fileLabel) {
+        ['dragenter', 'dragover', 'dragleave', 'drop'].forEach(eventName => {
+            fileLabel.addEventListener(eventName, preventDefaults, false);
+        });
+
+        function preventDefaults(e) {
+            e.preventDefault();
+            e.stopPropagation();
+        }
+
+        fileLabel.addEventListener('drop', function(e) {
+            const droppedFiles = Array.from(e.dataTransfer.files || []).filter(f => f.type.startsWith('image/'));
+            if (droppedFiles.length === 0) return;
+
+            previewFiles = previewFiles.concat(droppedFiles);
+            renderPreviews();
+            updateFileList();
+        });
+    }
+
+    // Auto-hide success/error alerts with SweetAlert
+    const successAlert = document.getElementById('successAlert');
+    const errorAlert = document.getElementById('errorAlert');
+
+    if (successAlert && typeof Swal !== 'undefined') {
+        const text = successAlert.textContent.trim().replace('×', '').trim();
         Swal.fire({
             toast: true,
             position: 'top-end',
-            icon: icon,
-            title: title,
+            icon: 'success',
+            title: text,
             showConfirmButton: false,
-            timer: 3000,
+            timer: 3500,
             timerProgressBar: true,
+            customClass: { popup: 'connectly-toast-popup' }
+        });
+        // Remove the DOM alert after showing toast
+        setTimeout(() => successAlert.remove(), 100);
+    }
+
+    if (errorAlert && typeof Swal !== 'undefined') {
+        const text = errorAlert.textContent.trim().replace('×', '').trim();
+        Swal.fire({
+            toast: true,
+            position: 'top-end',
+            icon: 'error',
+            title: text,
+            showConfirmButton: false,
+            timer: 4000,
+            timerProgressBar: true,
+            customClass: { popup: 'connectly-toast-popup' }
+        });
+        setTimeout(() => errorAlert.remove(), 100);
+    }
+});
+
+// ============================================================
+// SWEETALERT DELETE CONFIRMATION
+// ============================================================
+document.addEventListener('click', function(e) {
+    const deleteBtn = e.target.closest('[data-delete-post]');
+    if (deleteBtn) {
+        e.preventDefault();
+        const form = deleteBtn.closest('form');
+        if (!form) return;
+
+        if (typeof Swal === 'undefined') {
+            if (confirm('Delete this post?')) form.submit();
+            return;
+        }
+
+        Swal.fire({
+            title: 'Delete post?',
+            text: 'This action cannot be undone.',
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonText: 'Yes, delete it',
+            cancelButtonText: 'Cancel',
             customClass: {
-                popup: 'connectly-toast-popup'
+                popup: 'connectly-confirm-popup'
+            },
+            reverseButtons: true
+        }).then((result) => {
+            if (result.isConfirmed) {
+                form.submit();
             }
         });
     }
+});
 
-    document.addEventListener('submit', async function (event) {
-        const form = event.target;
-        if (!form.matches('[data-reaction-form]')) {
-            return;
-        }
-
-        event.preventDefault();
-
-        const picker = form.closest('.connectly-reaction-picker') || form.closest('.chatbox-reaction-picker');
-        if (!picker) {
-            return;
-        }
-
-        const card = picker.closest('.connectly-post-card') || picker.closest('.chatbox-feed-post-card');
-        const csrfToken = document.querySelector('meta[name="csrf-token"]')?.getAttribute('content') || '';
-        const buttons = picker.querySelectorAll('button');
-
-        buttons.forEach((button) => {
-            button.disabled = true;
-        });
-
-        try {
-            const response = await fetch(form.action, {
-                method: 'POST',
-                headers: {
-                    'Accept': 'application/json',
-                    'X-Requested-With': 'XMLHttpRequest',
-                    'X-CSRF-TOKEN': csrfToken,
-                },
-                body: new FormData(form),
-            });
-
-            if (!response.ok) {
-                throw new Error('Failed to submit reaction');
-            }
-
-            const data = await response.json();
-
-            if (!data.success) {
-                throw new Error('Invalid reaction response');
-            }
-
-            const reactionMeta = {
-                like: { label: 'Like', emoji: '👍' },
-                love: { label: 'Love', emoji: '❤️' },
-                haha: { label: 'Haha', emoji: '😆' },
-                wow: { label: 'Wow', emoji: '😮' },
-                sad: { label: 'Sad', emoji: '😢' },
-            };
-
-            const currentReaction = data.current_reaction;
-            const mainInput = picker.querySelector('.chatbox-main-reaction-input');
-            const mainButton = picker.querySelector('.chatbox-main-reaction-button');
-            const mainEmoji = picker.querySelector('.chatbox-main-reaction-emoji');
-            const mainLabel = picker.querySelector('.chatbox-main-reaction-label');
-            const mainCount = picker.querySelector('.chatbox-main-reaction-count');
-
-            if (mainInput) {
-                mainInput.value = currentReaction || 'like';
-            }
-
-            if (mainButton) {
-                mainButton.classList.toggle('btn-primary', !!currentReaction);
-                mainButton.classList.toggle('btn-outline-primary', !currentReaction);
-            }
-
-            const meta = reactionMeta[currentReaction] || reactionMeta.like;
-            if (mainEmoji) {
-                mainEmoji.textContent = currentReaction ? meta.emoji : reactionMeta.like.emoji;
-            }
-            if (mainLabel) {
-                mainLabel.textContent = currentReaction ? meta.label : 'Like';
-            }
-            if (mainCount) {
-                mainCount.textContent = String(data.total_reactions ?? 0);
-            }
-
-            picker.querySelectorAll('.connectly-reaction-option, .chatbox-reaction-option').forEach((optionButton) => {
-                optionButton.classList.toggle('active', optionButton.dataset.reactionKey === currentReaction);
-            });
-
-            if (card && data.reaction_counts) {
-                Object.keys(reactionMeta).forEach((reactionKey) => {
-                    const badge = card.querySelector(`[data-reaction-badge="${reactionKey}"]`);
-                    if (!badge) {
-                        return;
-                    }
-
-                    const count = Number(data.reaction_counts[reactionKey] || 0);
-                    const countEl = badge.querySelector('.chatbox-reaction-badge-count');
-                    if (countEl) {
-                        countEl.textContent = String(count);
-                    }
-
-                    badge.classList.toggle('d-none', count <= 0);
-                });
-            }
-        } catch (error) {
-            console.error(error);
-            chatboxToast('error', 'Could not update reaction. Please try again.');
-        } finally {
-            buttons.forEach((button) => {
-                button.disabled = false;
-            });
-        }
+// ============================================================
+// TOAST HELPER
+// ============================================================
+function chatboxToast(icon, title) {
+    if (typeof Swal === 'undefined') {
+        console.warn('SweetAlert2 not loaded');
+        return;
+    }
+    Swal.fire({
+        toast: true,
+        position: 'top-end',
+        icon: icon,
+        title: title,
+        showConfirmButton: false,
+        timer: 3000,
+        timerProgressBar: true,
+        customClass: { popup: 'connectly-toast-popup' }
     });
+}
 
-    const chatboxCommentReactionMeta = {
-        like: { label: 'Like', emoji: '👍' },
-        love: { label: 'Love', emoji: '❤️' },
-        haha: { label: 'Haha', emoji: '😆' },
-        wow: { label: 'Wow', emoji: '😮' },
-        sad: { label: 'Sad', emoji: '😢' },
-    };
+// ============================================================
+// REACTION SUBMIT HANDLER
+// ============================================================
+const chatboxCommentReactionMeta = {
+    like: { label: 'Like', emoji: '👍' },
+    love: { label: 'Love', emoji: '❤️' },
+    haha: { label: 'Haha', emoji: '😆' },
+    wow: { label: 'Wow', emoji: '😮' },
+    sad: { label: 'Sad', emoji: '😢' },
+};
 
-    function chatboxEscapeHtml(text) {
-        return String(text || '')
-            .replace(/&/g, '&amp;')
-            .replace(/</g, '&lt;')
-            .replace(/>/g, '&gt;')
-            .replace(/\"/g, '&quot;')
-            .replace(/'/g, '&#039;');
-    }
+function chatboxEscapeHtml(text) {
+    return String(text || '')
+        .replace(/&/g, '&amp;')
+        .replace(/</g, '&lt;')
+        .replace(/>/g, '&gt;')
+        .replace(/\"/g, '&quot;')
+        .replace(/'/g, '&#039;');
+}
 
-    function chatboxNl2br(text) {
-        return chatboxEscapeHtml(text).replace(/\n/g, '<br>');
-    }
+function chatboxNl2br(text) {
+    return chatboxEscapeHtml(text).replace(/\n/g, '<br>');
+}
 
-    function chatboxCommentCardHtml(comment, postId, parentForReply) {
-        const safeName = chatboxEscapeHtml(comment.user_name || 'User');
-        const safeTime = chatboxEscapeHtml(comment.created_at_human || 'Just now');
-        const safeText = chatboxNl2br(comment.comment || '');
-        const imageHtml = comment.image_url
-            ? `<div class="mt-2"><img src="${chatboxEscapeHtml(comment.image_url)}" alt="Comment image" class="img-fluid rounded connectly-comment-image"></div>`
-            : '';
+function chatboxCommentCardHtml(comment, postId, parentForReply) {
+    const safeName = chatboxEscapeHtml(comment.user_name || 'User');
+    const safeTime = chatboxEscapeHtml(comment.created_at_human || 'Just now');
+    const safeText = chatboxNl2br(comment.comment || '');
+    const imageHtml = comment.image_url
+        ? `<div class="mt-2"><img src="${chatboxEscapeHtml(comment.image_url)}" alt="Comment image" class="img-fluid rounded connectly-comment-image"></div>`
+        : '';
 
-        const reactionOptions = Object.entries(chatboxCommentReactionMeta).map(([key, meta]) => `
-            <form action="/feed/comments/${comment.id}/react" method="POST" class="d-inline" data-comment-reaction-form="option">
-                <input type="hidden" name="_token" value="${window.chatboxCsrfToken || ''}">
-                <input type="hidden" name="reaction_type" value="${key}">
-                <button type="submit" class="connectly-comment-reaction-option" title="${meta.label}" aria-label="${meta.label}" data-reaction-key="${key}">
-                    ${meta.emoji}
-                </button>
-            </form>
-        `).join('');
+    const reactionOptions = Object.entries(chatboxCommentReactionMeta).map(([key, meta]) => `
+        <form action="/feed/comments/${comment.id}/react" method="POST" class="d-inline" data-comment-reaction-form="option">
+            <input type="hidden" name="_token" value="${window.chatboxCsrfToken || ''}">
+            <input type="hidden" name="reaction_type" value="${key}">
+            <button type="submit" class="connectly-comment-reaction-option" title="${meta.label}" aria-label="${meta.label}" data-reaction-key="${key}">
+                ${meta.emoji}
+            </button>
+        </form>
+    `).join('');
 
-        const reactionBadges = Object.entries(chatboxCommentReactionMeta).map(([key, meta]) => `
-            <span class="badge rounded-pill connectly-reaction-badge d-none" data-comment-reaction-badge="${key}">
-                <span class="connectly-reaction-badge-emoji">${meta.emoji}</span>
-                <span class="chatbox-comment-reaction-badge-count">0</span>
-            </span>
-        `).join('');
+    const reactionBadges = Object.entries(chatboxCommentReactionMeta).map(([key, meta]) => `
+        <span class="badge rounded-pill connectly-reaction-badge d-none" data-comment-reaction-badge="${key}">
+            <span class="connectly-reaction-badge-emoji">${meta.emoji}</span>
+            <span class="chatbox-comment-reaction-badge-count">0</span>
+        </span>
+    `).join('');
 
-        return `
-            <div class="${comment.parent_id ? 'connectly-comment-reply-item mt-2' : 'connectly-comment-item'}" data-comment-card="${comment.id}">
-                <div class="d-flex align-items-center gap-2 mb-1">
-                    <strong>${safeName}</strong>
-                    <span class="text-muted small">#${comment.user_id}</span>
-                    <span class="text-muted small">${safeTime}</span>
-                </div>
-                ${safeText ? `<p class="mb-0 text-dark">${safeText}</p>` : ''}
-                ${imageHtml}
-
-                <div class="d-flex align-items-center gap-2 mt-2">
-                    <div class="connectly-comment-reaction-picker" data-comment-id="${comment.id}">
-                        <form action="/feed/comments/${comment.id}/react" method="POST" class="d-inline" data-comment-reaction-form="main">
-                            <input type="hidden" name="_token" value="${window.chatboxCsrfToken || ''}">
-                            <input type="hidden" name="reaction_type" value="like" class="chatbox-comment-main-reaction-input">
-                            <button type="submit" class="btn btn-sm connectly-comment-main-reaction-btn btn-outline-primary">
-                                <span class="me-1 chatbox-comment-main-reaction-emoji">👍</span>
-                                <span class="chatbox-comment-main-reaction-label">Like</span>
-                                (<span class="chatbox-comment-main-reaction-count">0</span>)
-                            </button>
-                        </form>
-                        <div class="connectly-comment-reaction-options" aria-label="Comment reaction options">
-                            ${reactionOptions}
-                        </div>
-                    </div>
-
-                    <button
-                        type="button"
-                        class="btn btn-sm connectly-reply-trigger"
-                        data-form-id="commentForm${postId}"
-                        data-parent-id="${parentForReply}"
-                    >
-                        Reply
-                    </button>
-                </div>
-
-                <div class="d-flex flex-wrap gap-2 mt-2 chatbox-comment-reaction-summary">
-                    ${reactionBadges}
-                </div>
-
-                ${comment.parent_id ? '' : `<div class="connectly-comment-replies mt-3 d-none" data-replies-for="${comment.id}"></div>`}
+    return `
+        <div class="${comment.parent_id ? 'connectly-comment-reply-item mt-2' : 'connectly-comment-item'}" data-comment-card="${comment.id}">
+            <div class="d-flex align-items-center gap-2 mb-1">
+                <strong><a href="#" class="text-decoration-none connectly-profile-link">${safeName}</a></strong>
+                <span class="text-muted small">${safeTime}</span>
             </div>
-        `;
+            ${safeText ? `<p class="mb-0 text-dark">${safeText}</p>` : ''}
+            ${imageHtml}
+
+            <div class="d-flex align-items-center gap-2 mt-2">
+                <div class="connectly-comment-reaction-picker" data-comment-id="${comment.id}">
+                    <form action="/feed/comments/${comment.id}/react" method="POST" class="d-inline" data-comment-reaction-form="main">
+                        <input type="hidden" name="_token" value="${window.chatboxCsrfToken || ''}">
+                        <input type="hidden" name="reaction_type" value="like" class="chatbox-comment-main-reaction-input">
+                        <button type="submit" class="btn btn-sm connectly-comment-main-reaction-btn btn-outline-primary">
+                            <span class="me-1 chatbox-comment-main-reaction-emoji">👍</span>
+                            <span class="chatbox-comment-main-reaction-label">Like</span>
+                            (<span class="chatbox-comment-main-reaction-count">0</span>)
+                        </button>
+                    </form>
+                    <div class="connectly-comment-reaction-options" aria-label="Comment reaction options">
+                        ${reactionOptions}
+                    </div>
+                </div>
+
+                <button
+                    type="button"
+                    class="btn btn-sm connectly-reply-trigger"
+                    data-form-id="commentForm${postId}"
+                    data-parent-id="${parentForReply}"
+                >
+                    Reply
+                </button>
+            </div>
+
+            <div class="d-flex flex-wrap gap-2 mt-2 chatbox-comment-reaction-summary">
+                ${reactionBadges}
+            </div>
+
+            ${comment.parent_id ? '' : `<div class="connectly-comment-replies mt-3 d-none" data-replies-for="${comment.id}"></div>`}
+        </div>
+    `;
+}
+
+document.addEventListener('submit', async function (event) {
+    const form = event.target;
+    if (!form.matches('[data-reaction-form]')) {
+        return;
     }
 
-    document.addEventListener('submit', async function (event) {
-        const form = event.target;
-        if (!form.matches('[data-comment-form-id]')) {
-            return;
-        }
+    event.preventDefault();
 
-        event.preventDefault();
+    const picker = form.closest('.connectly-reaction-picker') || form.closest('.chatbox-reaction-picker');
+    if (!picker) return;
 
-        const postId = form.dataset.commentFormId;
-        const modalBody = form.closest('.modal-body');
-        if (!postId || !modalBody) {
-            return;
-        }
+    const card = picker.closest('.connectly-post-card') || picker.closest('.chatbox-feed-post-card');
+    const csrfToken = document.querySelector('meta[name="csrf-token"]')?.getAttribute('content') || '';
+    const buttons = picker.querySelectorAll('button');
+    buttons.forEach((button) => { button.disabled = true; });
 
-        const csrfToken = document.querySelector('meta[name="csrf-token"]')?.getAttribute('content') || '';
-        window.chatboxCsrfToken = csrfToken;
-
-        const submitButton = form.querySelector('button[type="submit"]');
-        if (submitButton) submitButton.disabled = true;
-
-        try {
-            const response = await fetch(form.action, {
-                method: 'POST',
-                headers: {
-                    'Accept': 'application/json',
-                    'X-Requested-With': 'XMLHttpRequest',
-                    'X-CSRF-TOKEN': csrfToken,
-                },
-                body: new FormData(form),
-            });
-
-            const data = await response.json();
-            if (!response.ok || !data.success) {
-                const errorText = data?.message || 'Could not add comment.';
-                chatboxToast('error', errorText);
-                return;
-            }
-
-            const comment = data.comment;
-            const commentList = modalBody.querySelector(`#commentsList${postId}`);
-            const emptyState = modalBody.querySelector(`#commentsEmpty${postId}`);
-
-            if (comment.parent_id) {
-                const repliesWrap = modalBody.querySelector(`[data-replies-for="${comment.root_parent_id}"]`);
-                if (repliesWrap) {
-                    repliesWrap.classList.remove('d-none');
-                    repliesWrap.insertAdjacentHTML('afterbegin', chatboxCommentCardHtml(comment, postId, comment.root_parent_id));
-                }
-            } else if (commentList) {
-                commentList.classList.remove('d-none');
-                commentList.insertAdjacentHTML('afterbegin', chatboxCommentCardHtml(comment, postId, comment.id));
-            }
-
-            if (emptyState) {
-                emptyState.classList.add('d-none');
-            }
-
-            const countEl = document.querySelector(`[data-bs-target="#commentsModal${postId}"] .chatbox-comments-count`);
-            if (countEl) {
-                const nextCount = Number(countEl.textContent || '0') + 1;
-                countEl.textContent = String(nextCount);
-            }
-
-            form.reset();
-            const parentInput = form.querySelector('.chatbox-reply-parent-id');
-            const indicator = form.querySelector('.chatbox-reply-indicator');
-            if (parentInput) parentInput.value = '';
-            if (indicator) indicator.classList.add('d-none');
-        } catch (error) {
-            console.error(error);
-            chatboxToast('error', 'Could not add comment. Please try again.');
-        } finally {
-            if (submitButton) submitButton.disabled = false;
-        }
-    });
-
-    document.addEventListener('submit', async function (event) {
-        const form = event.target;
-        if (!form.matches('[data-comment-reaction-form]')) {
-            return;
-        }
-
-        event.preventDefault();
-
-        const picker = form.closest('.connectly-comment-reaction-picker') || form.closest('.chatbox-comment-reaction-picker');
-        if (!picker) {
-            return;
-        }
-
-        const card = picker.closest('[data-comment-card]');
-        const csrfToken = document.querySelector('meta[name="csrf-token"]')?.getAttribute('content') || '';
-        const buttons = picker.querySelectorAll('button');
-
-        buttons.forEach((button) => {
-            button.disabled = true;
+    try {
+        const response = await fetch(form.action, {
+            method: 'POST',
+            headers: {
+                'Accept': 'application/json',
+                'X-Requested-With': 'XMLHttpRequest',
+                'X-CSRF-TOKEN': csrfToken,
+            },
+            body: new FormData(form),
         });
 
-        try {
-            const response = await fetch(form.action, {
-                method: 'POST',
-                headers: {
-                    'Accept': 'application/json',
-                    'X-Requested-With': 'XMLHttpRequest',
-                    'X-CSRF-TOKEN': csrfToken,
-                },
-                body: new FormData(form),
-            });
+        if (!response.ok) throw new Error('Failed to submit reaction');
+        const data = await response.json();
+        if (!data.success) throw new Error('Invalid reaction response');
 
-            if (!response.ok) {
-                throw new Error('Failed to submit comment reaction');
-            }
+        const reactionMeta = {
+            like: { label: 'Like', emoji: '👍' },
+            love: { label: 'Love', emoji: '❤️' },
+            haha: { label: 'Haha', emoji: '😆' },
+            wow: { label: 'Wow', emoji: '😮' },
+            sad: { label: 'Sad', emoji: '😢' },
+        };
 
-            const data = await response.json();
-            const currentReaction = data.current_reaction;
+        const currentReaction = data.current_reaction;
+        const mainInput = picker.querySelector('.chatbox-main-reaction-input');
+        const mainButton = picker.querySelector('.chatbox-main-reaction-button');
+        const mainEmoji = picker.querySelector('.chatbox-main-reaction-emoji');
+        const mainLabel = picker.querySelector('.chatbox-main-reaction-label');
+        const mainCount = picker.querySelector('.chatbox-main-reaction-count');
 
-            const reactionMeta = {
-                like: { label: 'Like', emoji: '👍' },
-                love: { label: 'Love', emoji: '❤️' },
-                haha: { label: 'Haha', emoji: '😆' },
-                wow: { label: 'Wow', emoji: '😮' },
-                sad: { label: 'Sad', emoji: '😢' },
-            };
+        if (mainInput) mainInput.value = currentReaction || 'like';
+        if (mainButton) {
+            mainButton.classList.toggle('btn-primary', !!currentReaction);
+            mainButton.classList.toggle('btn-outline-primary', !currentReaction);
+        }
 
-            const mainInput = picker.querySelector('.chatbox-comment-main-reaction-input');
-            const mainButton = picker.querySelector('.chatbox-comment-main-reaction-button');
-            const mainEmoji = picker.querySelector('.chatbox-comment-main-reaction-emoji');
-            const mainLabel = picker.querySelector('.chatbox-comment-main-reaction-label');
-            const mainCount = picker.querySelector('.chatbox-comment-main-reaction-count');
+        const meta = reactionMeta[currentReaction] || reactionMeta.like;
+        if (mainEmoji) mainEmoji.textContent = currentReaction ? meta.emoji : reactionMeta.like.emoji;
+        if (mainLabel) mainLabel.textContent = currentReaction ? meta.label : 'Like';
+        if (mainCount) mainCount.textContent = String(data.total_reactions ?? 0);
 
-            if (mainInput) {
-                mainInput.value = currentReaction || 'like';
-            }
+        picker.querySelectorAll('.connectly-reaction-option, .chatbox-reaction-option').forEach((optionButton) => {
+            optionButton.classList.toggle('active', optionButton.dataset.reactionKey === currentReaction);
+        });
 
-            if (mainButton) {
-                mainButton.classList.toggle('btn-primary', !!currentReaction);
-                mainButton.classList.toggle('btn-outline-primary', !currentReaction);
-            }
-
-            const meta = reactionMeta[currentReaction] || reactionMeta.like;
-            if (mainEmoji) {
-                mainEmoji.textContent = currentReaction ? meta.emoji : reactionMeta.like.emoji;
-            }
-            if (mainLabel) {
-                mainLabel.textContent = currentReaction ? meta.label : 'Like';
-            }
-            if (mainCount) {
-                mainCount.textContent = String(data.total_reactions ?? 0);
-            }
-
-            picker.querySelectorAll('.connectly-comment-reaction-option, .chatbox-comment-reaction-option').forEach((optionButton) => {
-                optionButton.classList.toggle('active', optionButton.dataset.reactionKey === currentReaction);
-            });
-
-            if (card && data.reaction_counts) {
-                Object.keys(reactionMeta).forEach((reactionKey) => {
-                    const badge = card.querySelector(`[data-comment-reaction-badge="${reactionKey}"]`);
-                    if (!badge) {
-                        return;
-                    }
-
-                    const count = Number(data.reaction_counts[reactionKey] || 0);
-                    const countEl = badge.querySelector('.chatbox-comment-reaction-badge-count');
-                    if (countEl) {
-                        countEl.textContent = String(count);
-                    }
-
-                    badge.classList.toggle('d-none', count <= 0);
-                });
-            }
-        } catch (error) {
-            console.error(error);
-            chatboxToast('error', 'Could not update comment reaction. Please try again.');
-        } finally {
-            buttons.forEach((button) => {
-                button.disabled = false;
+        if (card && data.reaction_counts) {
+            Object.keys(reactionMeta).forEach((reactionKey) => {
+                const badge = card.querySelector(`[data-reaction-badge="${reactionKey}"]`);
+                if (!badge) return;
+                const count = Number(data.reaction_counts[reactionKey] || 0);
+                const countEl = badge.querySelector('.chatbox-reaction-badge-count');
+                if (countEl) countEl.textContent = String(count);
+                badge.classList.toggle('d-none', count <= 0);
             });
         }
-    });
+    } catch (error) {
+        console.error(error);
+        chatboxToast('error', 'Could not update reaction. Please try again.');
+    } finally {
+        buttons.forEach((button) => { button.disabled = false; });
+    }
+});
 
-    document.addEventListener('click', function (event) {
-        const replyButton = event.target.closest('.connectly-reply-trigger, .chatbox-reply-trigger');
-        if (replyButton) {
-            const formId = replyButton.dataset.formId;
-            const parentId = replyButton.dataset.parentId || '';
+document.addEventListener('submit', async function (event) {
+    const form = event.target;
+    if (!form.matches('[data-comment-form-id]')) {
+        return;
+    }
 
-            if (!formId) {
-                return;
-            }
+    event.preventDefault();
 
-            const form = document.getElementById(formId);
-            if (!form) {
-                return;
-            }
+    const postId = form.dataset.commentFormId;
+    const modalBody = form.closest('.modal-body');
+    if (!postId || !modalBody) return;
 
-            const parentInput = form.querySelector('.chatbox-reply-parent-id');
-            const indicator = form.querySelector('.chatbox-reply-indicator, .connectly-reply-indicator');
-            const textarea = form.querySelector('textarea[name="comment"]');
+    const csrfToken = document.querySelector('meta[name="csrf-token"]')?.getAttribute('content') || '';
+    window.chatboxCsrfToken = csrfToken;
+    const submitButton = form.querySelector('button[type="submit"]');
+    if (submitButton) submitButton.disabled = true;
 
-            if (parentInput) {
-                parentInput.value = parentId;
-            }
+    try {
+        const response = await fetch(form.action, {
+            method: 'POST',
+            headers: {
+                'Accept': 'application/json',
+                'X-Requested-With': 'XMLHttpRequest',
+                'X-CSRF-TOKEN': csrfToken,
+            },
+            body: new FormData(form),
+        });
 
-            if (indicator) {
-                indicator.classList.remove('d-none');
-            }
-
-            if (textarea) {
-                textarea.focus();
-            }
+        const data = await response.json();
+        if (!response.ok || !data.success) {
+            const errorText = data?.message || 'Could not add comment.';
+            chatboxToast('error', errorText);
             return;
         }
 
-        const cancelButton = event.target.closest('.chatbox-reply-cancel');
-        if (cancelButton) {
-            event.preventDefault();
-            const form = cancelButton.closest('form');
-            if (!form) {
-                return;
+        const comment = data.comment;
+        const commentList = modalBody.querySelector(`#commentsList${postId}`);
+        const emptyState = modalBody.querySelector(`#commentsEmpty${postId}`);
+
+        if (comment.parent_id) {
+            const repliesWrap = modalBody.querySelector(`[data-replies-for="${comment.root_parent_id}"]`);
+            if (repliesWrap) {
+                repliesWrap.classList.remove('d-none');
+                repliesWrap.insertAdjacentHTML('afterbegin', chatboxCommentCardHtml(comment, postId, comment.root_parent_id));
             }
+        } else if (commentList) {
+            commentList.classList.remove('d-none');
+            commentList.insertAdjacentHTML('afterbegin', chatboxCommentCardHtml(comment, postId, comment.id));
+        }
 
-            const parentInput = form.querySelector('.chatbox-reply-parent-id');
-            const indicator = form.querySelector('.chatbox-reply-indicator, .connectly-reply-indicator');
+        if (emptyState) emptyState.classList.add('d-none');
 
-            if (parentInput) {
-                parentInput.value = '';
-            }
+        const countEl = document.querySelector(`[data-bs-target="#commentsModal${postId}"] .chatbox-comments-count`);
+        if (countEl) {
+            const nextCount = Number(countEl.textContent || '0') + 1;
+            countEl.textContent = String(nextCount);
+        }
 
-            if (indicator) {
-                indicator.classList.add('d-none');
+        form.reset();
+        const parentInput = form.querySelector('.chatbox-reply-parent-id');
+        const indicator = form.querySelector('.chatbox-reply-indicator');
+        if (parentInput) parentInput.value = '';
+        if (indicator) indicator.classList.add('d-none');
+    } catch (error) {
+        console.error(error);
+        chatboxToast('error', 'Could not add comment. Please try again.');
+    } finally {
+        if (submitButton) submitButton.disabled = false;
+    }
+});
+
+document.addEventListener('submit', async function (event) {
+    const form = event.target;
+    if (!form.matches('[data-comment-reaction-form]')) {
+        return;
+    }
+
+    event.preventDefault();
+
+    const picker = form.closest('.connectly-comment-reaction-picker') || form.closest('.chatbox-comment-reaction-picker');
+    if (!picker) return;
+
+    const card = picker.closest('[data-comment-card]');
+    const csrfToken = document.querySelector('meta[name="csrf-token"]')?.getAttribute('content') || '';
+    const buttons = picker.querySelectorAll('button');
+    buttons.forEach((button) => { button.disabled = true; });
+
+    try {
+        const response = await fetch(form.action, {
+            method: 'POST',
+            headers: {
+                'Accept': 'application/json',
+                'X-Requested-With': 'XMLHttpRequest',
+                'X-CSRF-TOKEN': csrfToken,
+            },
+            body: new FormData(form),
+        });
+
+        if (!response.ok) throw new Error('Failed to submit comment reaction');
+        const data = await response.json();
+
+        const currentReaction = data.current_reaction;
+        const reactionMeta = {
+            like: { label: 'Like', emoji: '👍' },
+            love: { label: 'Love', emoji: '❤️' },
+            haha: { label: 'Haha', emoji: '😆' },
+            wow: { label: 'Wow', emoji: '😮' },
+            sad: { label: 'Sad', emoji: '😢' },
+        };
+
+        const mainInput = picker.querySelector('.chatbox-comment-main-reaction-input');
+        const mainButton = picker.querySelector('.chatbox-comment-main-reaction-button');
+        const mainEmoji = picker.querySelector('.chatbox-comment-main-reaction-emoji');
+        const mainLabel = picker.querySelector('.chatbox-comment-main-reaction-label');
+        const mainCount = picker.querySelector('.chatbox-comment-main-reaction-count');
+
+        if (mainInput) mainInput.value = currentReaction || 'like';
+        if (mainButton) {
+            mainButton.classList.toggle('btn-primary', !!currentReaction);
+            mainButton.classList.toggle('btn-outline-primary', !currentReaction);
+        }
+
+        const meta = reactionMeta[currentReaction] || reactionMeta.like;
+        if (mainEmoji) mainEmoji.textContent = currentReaction ? meta.emoji : reactionMeta.like.emoji;
+        if (mainLabel) mainLabel.textContent = currentReaction ? meta.label : 'Like';
+        if (mainCount) mainCount.textContent = String(data.total_reactions ?? 0);
+
+        picker.querySelectorAll('.connectly-comment-reaction-option').forEach((optionButton) => {
+            optionButton.classList.toggle('active', optionButton.dataset.reactionKey === currentReaction);
+        });
+
+        if (card && data.reaction_counts) {
+            Object.keys(reactionMeta).forEach((reactionKey) => {
+                const badge = card.querySelector(`[data-comment-reaction-badge="${reactionKey}"]`);
+                if (!badge) return;
+                const count = Number(data.reaction_counts[reactionKey] || 0);
+                const countEl = badge.querySelector('.chatbox-comment-reaction-badge-count');
+                if (countEl) countEl.textContent = String(count);
+                badge.classList.toggle('d-none', count <= 0);
+            });
+        }
+    } catch (error) {
+        console.error(error);
+        chatboxToast('error', 'Could not update comment reaction. Please try again.');
+    } finally {
+        buttons.forEach((button) => { button.disabled = false; });
+    }
+});
+
+document.addEventListener('click', function (event) {
+    const replyButton = event.target.closest('.connectly-reply-trigger, .chatbox-reply-trigger');
+    if (replyButton) {
+        const formId = replyButton.dataset.formId;
+        const parentId = replyButton.dataset.parentId || '';
+        if (!formId) return;
+
+        const form = document.getElementById(formId);
+        if (!form) return;
+
+        const parentInput = form.querySelector('.chatbox-reply-parent-id');
+        const indicator = form.querySelector('.chatbox-reply-indicator, .connectly-reply-indicator');
+        const textarea = form.querySelector('textarea[name="comment"]');
+
+        if (parentInput) parentInput.value = parentId;
+        if (indicator) indicator.classList.remove('d-none');
+        if (textarea) textarea.focus();
+        return;
+    }
+
+    const cancelButton = event.target.closest('.chatbox-reply-cancel');
+    if (cancelButton) {
+        event.preventDefault();
+        const form = cancelButton.closest('form');
+        if (!form) return;
+
+        const parentInput = form.querySelector('.chatbox-reply-parent-id');
+        const indicator = form.querySelector('.chatbox-reply-indicator, .connectly-reply-indicator');
+        if (parentInput) parentInput.value = '';
+        if (indicator) indicator.classList.add('d-none');
+    }
+});
+
+// ============================================================
+// FILE INPUT LABEL UPDATE
+// ============================================================
+document.addEventListener('change', function(e) {
+    if (e.target.matches('.chatbox-file-input') || e.target.matches('.connectly-file-input')) {
+        const wrapper = e.target.closest('.connectly-file-upload') || e.target.closest('.chatbox-file-input-wrapper');
+        const label = wrapper?.querySelector('.connectly-file-label span, .chatbox-file-label span');
+        if (label && e.target.files.length > 0) {
+            const count = e.target.files.length;
+            label.textContent = count + ' image' + (count > 1 ? 's' : '') + ' selected';
+        } else if (label) {
+            const placeholder = wrapper?.querySelector('.connectly-file-label span');
+            if (placeholder && !placeholder.closest('.connectly-file-upload')) {
+                // Comment image label
+                placeholder.textContent = 'Add an image (optional)';
+            } else if (placeholder) {
+                placeholder.textContent = 'Add images (drag & drop or click)';
             }
         }
-    });
+    }
+});
+</script>
+
+{{-- ===== IMAGE LIGHTBOX MODAL (single instance) ===== --}}
+<div class="modal fade" id="imageLightboxModal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-xl">
+        <div class="modal-content" style="background:transparent !important;border:none !important;box-shadow:none !important;">
+            <div class="modal-body text-center p-0" style="position:relative;">
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close" style="position:absolute;top:10px;right:10px;z-index:10;filter:invert(1);opacity:0.8;"></button>
+                <img id="lightboxImage" src="" alt="Full size image" class="img-fluid rounded" style="max-height:90vh;box-shadow:0 20px 80px rgba(0,0,0,0.4);border-radius:12px;">
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+// ============================================================
+// IMAGE LIGHTBOX
+// ============================================================
+function openImageModal(src) {
+    const modal = document.getElementById('imageLightboxModal');
+    const img = document.getElementById('lightboxImage');
+    if (modal && img) {
+        img.src = src;
+        const bsModal = new bootstrap.Modal(modal);
+        bsModal.show();
+    }
+}
+
+// ============================================================
+// EDIT MODAL IMAGE PREVIEW (delegated, defined once)
+// ============================================================
+document.addEventListener('change', function(e) {
+    if (e.target.matches('.connectly-edit-image-input')) {
+        const containerId = e.target.dataset.previewContainer;
+        const container = document.getElementById(containerId);
+        if (!container) return;
+
+        container.innerHTML = '';
+        const files = Array.from(e.target.files || []);
+        if (files.length === 0) return;
+
+        files.forEach((file, index) => {
+            const reader = new FileReader();
+            const item = document.createElement('div');
+            item.className = 'connectly-edit-preview-item';
+            item.style.animation = 'previewItemIn 0.25s ease backwards';
+            item.style.animationDelay = (index * 0.05) + 's';
+
+            reader.onload = function(ev) {
+                item.innerHTML = `<img src="${ev.target.result}" alt="New image ${index + 1}">`;
+            };
+            reader.readAsDataURL(file);
+            container.appendChild(item);
+        });
+    }
+});
 </script>
 
 @if (session('open_modal'))

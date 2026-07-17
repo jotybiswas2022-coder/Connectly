@@ -11,12 +11,13 @@ class Post extends Model
     protected $fillable = [
         'user_id',
         'content',
-        'image_path',
+        'images',
         'is_pinned',
     ];
 
     protected $casts = [
         'is_pinned' => 'boolean',
+        'images' => 'array',
     ];
 
     public function user(): BelongsTo
