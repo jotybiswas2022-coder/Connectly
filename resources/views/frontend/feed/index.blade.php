@@ -249,6 +249,12 @@
     min-height: 100vh;
     background: linear-gradient(135deg, var(--feed-bg) 0%, var(--feed-bg-alt) 50%, #fdf4ff 100%);
     position: relative;
+    z-index: 1;
+}
+
+.connectly-feed-page > .container {
+    position: relative;
+    z-index: 2;
 }
 
 /* ----- Alert ----- */
@@ -1672,6 +1678,12 @@
 }
 
 /* ===== PREMIUM SCROLLBAR ===== */
+/* Firefox */
+.connectly-feed-page {
+    scrollbar-width: thin;
+    scrollbar-color: var(--feed-border) transparent;
+}
+
 ::-webkit-scrollbar {
     width: 8px;
     height: 8px;
