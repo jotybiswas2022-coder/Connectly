@@ -1,3 +1,18 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="csrf-token" content="{{ csrf_token() }}">
+    <title>Verify Email — Connectly</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css" rel="stylesheet">
+</head>
+<body>
+
 <div class="clv-page">
 
     {{-- Orbs --}}
@@ -248,3 +263,5 @@ document.addEventListener('DOMContentLoaded', function() {
 ::-webkit-scrollbar-thumb { background:rgba(255,255,255,0.08); border-radius:3px; }
 ::-webkit-scrollbar-thumb:hover { background:rgba(255,255,255,0.12); }
 </style>
+</body>
+</html>
