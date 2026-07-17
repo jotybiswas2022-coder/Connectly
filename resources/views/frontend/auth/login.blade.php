@@ -108,6 +108,13 @@
 
                 {{-- Card Header --}}
                 <div class="cl-card-header">
+                    {{-- Mobile brand indicator (hidden on desktop) --}}
+                    <a href="/" class="cl-mobile-brand" aria-label="Connectly Home">
+                        <div class="cl-mobile-brand-icon">
+                            <i class="bi bi-diagram-3-fill"></i>
+                        </div>
+                        <span class="cl-mobile-brand-name">Connectly</span>
+                    </a>
                     <div class="cl-card-icon">
                         <i class="bi bi-person-circle"></i>
                     </div>
@@ -734,6 +741,11 @@ document.addEventListener('DOMContentLoaded', function() {
     text-align: center;
 }
 
+/* ===================== MOBILE BRAND INDICATOR ===================== */
+.cl-mobile-brand {
+    display: none;
+}
+
 /* ===================== LOGIN CARD (RIGHT) ===================== */
 .cl-login-card-wrapper {
     flex: 1;
@@ -1069,6 +1081,26 @@ document.addEventListener('DOMContentLoaded', function() {
     to { transform: rotate(360deg); }
 }
 
+/* ===================== MOBILE ANIMATIONS ===================== */
+@keyframes cl-icon-breathe {
+    0%,100% {
+        box-shadow: 0 0 0 0 rgba(37,99,235,0.15), 0 4px 16px rgba(37,99,235,0.1);
+        transform: scale(1);
+    }
+    50% {
+        box-shadow: 0 0 0 8px rgba(37,99,235,0.05), 0 4px 24px rgba(37,99,235,0.15);
+        transform: scale(1.03);
+    }
+}
+@keyframes cl-btn-glow-pulse {
+    0%,100% {
+        box-shadow: 0 4px 16px rgba(37,99,235,0.3);
+    }
+    50% {
+        box-shadow: 0 4px 28px rgba(37,99,235,0.5), 0 0 40px rgba(37,99,235,0.1);
+    }
+}
+
 /* ===================== SIGN UP ROW ===================== */
 .cl-signup-row {
     text-align: center;
@@ -1146,6 +1178,36 @@ document.addEventListener('DOMContentLoaded', function() {
     }
     .cl-login-card { padding: 32px 24px; }
     .cl-card-title { font-size: 1.4rem; }
+    .cl-mobile-brand {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 8px;
+        text-decoration: none;
+        margin-bottom: 20px;
+        padding-bottom: 20px;
+        border-bottom: 1px solid rgba(255,255,255,0.06);
+    }
+    .cl-mobile-brand-icon {
+        width: 32px;
+        height: 32px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        background: linear-gradient(135deg, var(--clr-primary), var(--clr-dark));
+        border-radius: 9px;
+        font-size: 1rem;
+        color: #fff;
+    }
+    .cl-mobile-brand-name {
+        font-size: 1.1rem;
+        font-weight: 700;
+        background: linear-gradient(135deg, var(--clr-light), var(--clr-primary));
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        background-clip: text;
+        letter-spacing: -0.3px;
+    }
 }@media (max-width: 480px) {
     .cl-login-page {
         min-height: 100vh;
@@ -1156,20 +1218,49 @@ document.addEventListener('DOMContentLoaded', function() {
         justify-content: center;
     }
     .cl-login-wrapper {
-        padding: 24px 16px;
+        padding: 20px 12px;
         gap: 0;
         min-height: auto;
     }
-    .cl-login-card { padding: 28px 20px; border-radius: 20px; }
-    .cl-login-card::before { border-radius: 20px; }
-    .cl-card-icon { width: 50px; height: 50px; font-size: 1.25rem; border-radius: 14px; margin-bottom: 16px; }
+    .cl-login-card {
+        padding: 28px 20px 24px;
+        border-radius: 22px;
+        transform-origin: bottom center;
+        transition: opacity 0.5s cubic-bezier(.16,1,.3,1), transform 0.6s cubic-bezier(.16,1,.3,1);
+    }
+    .cl-login-card::before { border-radius: 22px; }
+    .cl-login-card.cl-card-visible {
+        opacity: 1;
+        transform: translateY(0) scale(1);
+    }
+    .cl-card-icon {
+        width: 50px;
+        height: 50px;
+        font-size: 1.25rem;
+        border-radius: 14px;
+        margin-bottom: 16px;
+        animation: cl-icon-breathe 3s ease-in-out infinite;
+    }
     .cl-card-title { font-size: 1.35rem; margin-bottom: 6px; }
-    .cl-card-subtitle { font-size: 0.85rem; }
+    .cl-card-subtitle { font-size: 0.85rem; line-height: 1.4; }
     .cl-card-header { margin-bottom: 28px; }
+    .cl-mobile-brand { margin-bottom: 16px; padding-bottom: 16px; }
+    .cl-mobile-brand-icon { width: 28px; height: 28px; font-size: 0.85rem; border-radius: 8px; }
+    .cl-mobile-brand-name { font-size: 1rem; }
     .cl-input-group { margin-bottom: 18px; }
-    .cl-input { padding: 13px 42px 13px 42px; font-size: 0.9rem; border-radius: 11px; }
+    .cl-input { padding: 13px 42px 13px 42px; font-size: 0.9rem; border-radius: 12px; }
+    .cl-input:focus {
+        border-color: var(--clr-primary);
+        background: rgba(37,99,235,0.06);
+        box-shadow: 0 0 0 3px var(--clr-input-focus), 0 0 20px rgba(37,99,235,0.08);
+    }
     .cl-input-label { font-size: 0.82rem; margin-bottom: 7px; }
-    .cl-submit-btn { padding: 14px 22px; font-size: 0.95rem; border-radius: 11px; }
+    .cl-submit-btn {
+        padding: 14px 22px;
+        font-size: 0.95rem;
+        border-radius: 12px;
+        animation: cl-btn-glow-pulse 3s ease-in-out infinite;
+    }
     .cl-options-row { flex-direction: column; gap: 14px; align-items: flex-start; margin-bottom: 24px; }
     .cl-checkbox-label { font-size: 0.82rem; }
     .cl-forgot-link { font-size: 0.82rem; }
@@ -1183,18 +1274,21 @@ document.addEventListener('DOMContentLoaded', function() {
     .cl-grid-overlay { background-size: 40px 40px; mask-image: none; -webkit-mask-image: none; }
 }
 @media (max-width: 375px) {
-    .cl-login-wrapper { padding: 20px 14px; }
-    .cl-login-card { padding: 24px 16px; border-radius: 18px; }
-    .cl-login-card::before { border-radius: 18px; }
+    .cl-login-wrapper { padding: 16px 12px; }
+    .cl-login-card { padding: 24px 16px 20px; border-radius: 20px; }
+    .cl-login-card::before { border-radius: 20px; }
     .cl-card-icon { width: 44px; height: 44px; font-size: 1.1rem; border-radius: 12px; margin-bottom: 14px; }
     .cl-card-title { font-size: 1.2rem; margin-bottom: 5px; }
     .cl-card-subtitle { font-size: 0.8rem; }
     .cl-card-header { margin-bottom: 24px; }
+    .cl-mobile-brand { margin-bottom: 14px; padding-bottom: 14px; }
+    .cl-mobile-brand-icon { width: 26px; height: 26px; font-size: 0.8rem; border-radius: 7px; }
+    .cl-mobile-brand-name { font-size: 0.95rem; }
     .cl-input-group { margin-bottom: 16px; }
-    .cl-input { padding: 11px 36px 11px 36px; font-size: 0.86rem; border-radius: 10px; }
+    .cl-input { padding: 11px 36px 11px 36px; font-size: 0.86rem; border-radius: 11px; }
     .cl-input-icon { left: 10px; font-size: 0.88rem; }
     .cl-input-label { font-size: 0.8rem; margin-bottom: 6px; }
-    .cl-submit-btn { padding: 12px 18px; font-size: 0.9rem; border-radius: 10px; }
+    .cl-submit-btn { padding: 12px 18px; font-size: 0.9rem; border-radius: 11px; }
     .cl-options-row { margin-bottom: 22px; gap: 12px; }
     .cl-checkbox-label { font-size: 0.8rem; }
     .cl-checkbox-mark { width: 16px; height: 16px; }
@@ -1206,18 +1300,21 @@ document.addEventListener('DOMContentLoaded', function() {
     .cl-bubble { display: none; }
 }
 @media (max-width: 320px) {
-    .cl-login-wrapper { padding: 16px 10px; }
-    .cl-login-card { padding: 20px 12px; border-radius: 16px; }
-    .cl-login-card::before { border-radius: 16px; }
+    .cl-login-wrapper { padding: 12px 8px; }
+    .cl-login-card { padding: 20px 12px 16px; border-radius: 18px; }
+    .cl-login-card::before { border-radius: 18px; }
     .cl-card-icon { width: 40px; height: 40px; font-size: 1rem; border-radius: 11px; margin-bottom: 12px; }
     .cl-card-title { font-size: 1.05rem; }
     .cl-card-subtitle { font-size: 0.76rem; }
     .cl-card-header { margin-bottom: 20px; }
+    .cl-mobile-brand { margin-bottom: 12px; padding-bottom: 12px; }
+    .cl-mobile-brand-icon { width: 24px; height: 24px; font-size: 0.75rem; border-radius: 6px; }
+    .cl-mobile-brand-name { font-size: 0.85rem; }
     .cl-input-group { margin-bottom: 14px; }
-    .cl-input { padding: 10px 32px 10px 32px; font-size: 0.82rem; border-radius: 9px; }
+    .cl-input { padding: 10px 32px 10px 32px; font-size: 0.82rem; border-radius: 10px; }
     .cl-input-icon { left: 8px; font-size: 0.82rem; }
     .cl-input-label { font-size: 0.76rem; }
-    .cl-submit-btn { padding: 11px 16px; font-size: 0.86rem; border-radius: 9px; }
+    .cl-submit-btn { padding: 11px 16px; font-size: 0.86rem; border-radius: 10px; }
     .cl-signup-row { font-size: 0.76rem; }
     .cl-card-footer { margin-top: 16px; padding-top: 14px; }
     .cl-card-footer span { font-size: 0.68rem; }
