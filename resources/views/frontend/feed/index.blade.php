@@ -3,16 +3,6 @@
 @section('content')
 
 <div class="connectly-feed-page">
-    {{-- Animated background orbs --}}
-    <div class="connectly-bg-orbs" aria-hidden="true">
-        <div class="connectly-orb connectly-orb-1"></div>
-        <div class="connectly-orb connectly-orb-2"></div>
-        <div class="connectly-orb connectly-orb-3"></div>
-        <div class="connectly-orb connectly-orb-4"></div>
-        <div class="connectly-orb connectly-orb-5"></div>
-    </div>
-    {{-- Subtle noise texture overlay --}}
-    <div class="connectly-noise-overlay" aria-hidden="true"></div>
 
     <div class="container py-4">
         @if (session('success'))
@@ -286,104 +276,6 @@
 @keyframes connectlyAlertSlideIn {
     from { transform: translateY(-10px); opacity: 0; }
     to { transform: translateY(0); opacity: 1; }
-}
-
-/* ===== ANIMATED BACKGROUND ORBS ===== */
-.connectly-bg-orbs {
-    position: fixed;
-    inset: 0;
-    overflow: hidden;
-    pointer-events: none;
-    z-index: 0;
-}
-
-.connectly-orb {
-    position: absolute;
-    border-radius: 50%;
-    filter: blur(80px);
-    opacity: 0.4;
-    will-change: transform;
-}
-
-.connectly-orb-1 {
-    width: 600px;
-    height: 600px;
-    background: radial-gradient(circle, rgba(37,99,235,0.15), transparent 70%);
-    top: -200px;
-    left: -150px;
-    animation: orbFloat1 20s ease-in-out infinite;
-}
-
-.connectly-orb-2 {
-    width: 500px;
-    height: 500px;
-    background: radial-gradient(circle, rgba(124,58,237,0.12), transparent 70%);
-    top: 40%;
-    right: -200px;
-    animation: orbFloat2 25s ease-in-out infinite;
-}
-
-.connectly-orb-3 {
-    width: 400px;
-    height: 400px;
-    background: radial-gradient(circle, rgba(6,182,212,0.1), transparent 70%);
-    bottom: -150px;
-    left: 30%;
-    animation: orbFloat3 18s ease-in-out infinite;
-}
-
-.connectly-orb-4 {
-    width: 350px;
-    height: 350px;
-    background: radial-gradient(circle, rgba(244,63,94,0.08), transparent 70%);
-    top: 15%;
-    left: 50%;
-    animation: orbFloat4 22s ease-in-out infinite;
-}
-
-.connectly-orb-5 {
-    width: 300px;
-    height: 300px;
-    background: radial-gradient(circle, rgba(245,158,11,0.08), transparent 70%);
-    bottom: 20%;
-    right: 10%;
-    animation: orbFloat1 28s ease-in-out infinite reverse;
-}
-
-@keyframes orbFloat1 {
-    0%, 100% { transform: translate(0, 0) scale(1); }
-    33% { transform: translate(80px, -60px) scale(1.1); }
-    66% { transform: translate(-40px, 40px) scale(0.9); }
-}
-
-@keyframes orbFloat2 {
-    0%, 100% { transform: translate(0, 0) scale(1); }
-    25% { transform: translate(-60px, 80px) scale(1.15); }
-    50% { transform: translate(-100px, -40px) scale(0.85); }
-    75% { transform: translate(-30px, 60px) scale(1.05); }
-}
-
-@keyframes orbFloat3 {
-    0%, 100% { transform: translate(0, 0) scale(1) rotate(0deg); }
-    50% { transform: translate(60px, -80px) scale(1.2) rotate(180deg); }
-}
-
-@keyframes orbFloat4 {
-    0%, 100% { transform: translate(0, 0) scale(1); }
-    33% { transform: translate(-70px, -50px) scale(0.95); }
-    66% { transform: translate(50px, 30px) scale(1.1); }
-}
-
-/* ===== NOISE TEXTURE OVERLAY ===== */
-.connectly-noise-overlay {
-    position: fixed;
-    inset: 0;
-    z-index: 1;
-    pointer-events: none;
-    opacity: 0.015;
-    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)'/%3E%3C/svg%3E");
-    background-repeat: repeat;
-    background-size: 256px 256px;
 }
 
 /* ===== MOBILE SEARCH (STICKY) ===== */
@@ -662,28 +554,9 @@
     border: 1px solid var(--feed-border);
     padding: 1.25rem 1.35rem;
     position: relative;
-    overflow: hidden;
     transition: all var(--feed-transition);
     animation: feedCardSlideUp 0.5s ease-out backwards;
     box-shadow: var(--feed-shadow-sm);
-    transform: perspective(1000px) rotateX(0deg);
-    transform-style: preserve-3d;
-    will-change: transform, box-shadow;
-}
-
-.connectly-post-card::after {
-    content: '';
-    position: absolute;
-    inset: 0;
-    border-radius: var(--feed-radius);
-    background: linear-gradient(135deg, transparent 40%, rgba(37,99,235,0.02) 100%);
-    opacity: 0;
-    transition: opacity 0.4s ease;
-    pointer-events: none;
-}
-
-.connectly-post-card:hover::after {
-    opacity: 1;
 }
 
 .connectly-post-card:nth-child(1) { animation-delay: 0.08s; }
@@ -693,9 +566,9 @@
 .connectly-post-card:nth-child(5) { animation-delay: 0.40s; }
 
 .connectly-post-card:hover {
-    border-color: rgba(37,99,235,0.12);
-    box-shadow: var(--feed-shadow-lg), var(--feed-shadow-glow);
-    transform: perspective(1000px) rotateX(2deg) translateY(-4px) scale(1.005);
+    border-color: var(--feed-border-focus);
+    box-shadow: var(--feed-shadow-md);
+    transform: translateY(-2px);
 }
 
 @keyframes feedCardSlideUp {
@@ -1810,10 +1683,10 @@ document.addEventListener('DOMContentLoaded', function() {
         });
 
         postCards.forEach((card, index) => {
-            // Reset initial state for observer to reveal
+            // Reset initial state for observer to reveal (flat 2D entrance)
             card.style.opacity = '0';
-            card.style.transform = 'perspective(1000px) rotateX(5deg) translateY(20px)';
-            card.style.transition = `all 0.6s ease-out ${index * 0.08}s`;
+            card.style.transform = 'translateY(24px)';
+            card.style.transition = `opacity 0.6s ease-out ${index * 0.08}s, transform 0.6s ease-out ${index * 0.08}s`;
             observer.observe(card);
         });
     }
