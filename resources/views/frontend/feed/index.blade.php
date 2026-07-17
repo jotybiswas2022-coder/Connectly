@@ -1058,12 +1058,18 @@
     box-shadow: 0 6px 18px rgba(37,99,235,0.35) !important;
     transform: translateY(-1px);
 }
-.modal-body .btn-outline-warning {
+.modal-body .btn-outline-warning,
+.modal-body .btn-warning {
     color: #fbbf24 !important;
     border-color: rgba(251,191,36,0.3) !important;
 }
-.modal-body .btn-outline-warning:hover {
+.modal-body .btn-outline-warning:hover,
+.modal-body .btn-warning:hover {
     background: rgba(251,191,36,0.1) !important;
+}
+.modal-body .btn-warning {
+    background: rgba(251,191,36,0.15) !important;
+    border-color: rgba(251,191,36,0.3) !important;
 }
 .modal-body .btn-outline-secondary {
     color: var(--feed-muted) !important;
