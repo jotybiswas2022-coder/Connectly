@@ -869,7 +869,7 @@ function createCommentHtml(data, postId) {
                 <div class="d-flex align-items-center gap-2 mt-2">
                     <div class="connectly-comment-react" data-comment-id="${c.id}">
                         <form action="/feed/comments/${c.id}/react" method="POST" data-comment-reaction-form="main">
-                            <input type="hidden" name="_token" value="${document.querySelector('meta[name=\\'csrf-token\\']')?.getAttribute('content') || ''}">
+                            <input type="hidden" name="_token" value="${document.querySelector('meta[name="csrf-token"]').getAttribute('content')}">
                             <input type="hidden" name="reaction_type" value="like" class="connectly-comment-react-input">
                             <button type="submit" class="connectly-comment-react-btn">
                                 <span class="connectly-comment-react-emoji">👍</span>
@@ -879,27 +879,27 @@ function createCommentHtml(data, postId) {
                         </form>
                         <div class="connectly-comment-react-float" aria-label="Reaction options">
                             <form action="/feed/comments/${c.id}/react" method="POST" data-comment-reaction-form="option">
-                                <input type="hidden" name="_token" value="${document.querySelector('meta[name=\\'csrf-token\\']')?.getAttribute('content') || ''}">
+                                <input type="hidden" name="_token" value="${document.querySelector('meta[name="csrf-token"]').getAttribute('content')}">
                                 <input type="hidden" name="reaction_type" value="like">
                                 <button type="submit" class="connectly-comment-react-emojibtn" data-reaction-key="like" title="Like">👍</button>
                             </form>
                             <form action="/feed/comments/${c.id}/react" method="POST" data-comment-reaction-form="option">
-                                <input type="hidden" name="_token" value="${document.querySelector('meta[name=\\'csrf-token\\']')?.getAttribute('content') || ''}">
+                                <input type="hidden" name="_token" value="${document.querySelector('meta[name="csrf-token"]').getAttribute('content')}">
                                 <input type="hidden" name="reaction_type" value="love">
                                 <button type="submit" class="connectly-comment-react-emojibtn" data-reaction-key="love" title="Love">❤️</button>
                             </form>
                             <form action="/feed/comments/${c.id}/react" method="POST" data-comment-reaction-form="option">
-                                <input type="hidden" name="_token" value="${document.querySelector('meta[name=\\'csrf-token\\']')?.getAttribute('content') || ''}">
+                                <input type="hidden" name="_token" value="${document.querySelector('meta[name="csrf-token"]').getAttribute('content')}">
                                 <input type="hidden" name="reaction_type" value="haha">
                                 <button type="submit" class="connectly-comment-react-emojibtn" data-reaction-key="haha" title="Haha">😆</button>
                             </form>
                             <form action="/feed/comments/${c.id}/react" method="POST" data-comment-reaction-form="option">
-                                <input type="hidden" name="_token" value="${document.querySelector('meta[name=\\'csrf-token\\']')?.getAttribute('content') || ''}">
+                                <input type="hidden" name="_token" value="${document.querySelector('meta[name="csrf-token"]').getAttribute('content')}">
                                 <input type="hidden" name="reaction_type" value="wow">
                                 <button type="submit" class="connectly-comment-react-emojibtn" data-reaction-key="wow" title="Wow">😮</button>
                             </form>
                             <form action="/feed/comments/${c.id}/react" method="POST" data-comment-reaction-form="option">
-                                <input type="hidden" name="_token" value="${document.querySelector('meta[name=\\'csrf-token\\']')?.getAttribute('content') || ''}">
+                                <input type="hidden" name="_token" value="${document.querySelector('meta[name="csrf-token"]').getAttribute('content')}">
                                 <input type="hidden" name="reaction_type" value="sad">
                                 <button type="submit" class="connectly-comment-react-emojibtn" data-reaction-key="sad" title="Sad">😢</button>
                             </form>
@@ -946,7 +946,7 @@ function createReplyHtml(data, postId) {
                 <div class="d-flex align-items-center gap-2 mt-2">
                     <div class="connectly-comment-react" data-comment-id="${c.id}">
                         <form action="/feed/comments/${c.id}/react" method="POST" data-comment-reaction-form="main">
-                            <input type="hidden" name="_token" value="${document.querySelector('meta[name=\\'csrf-token\\']')?.getAttribute('content') || ''}">
+                            <input type="hidden" name="_token" value="${document.querySelector('meta[name="csrf-token"]').getAttribute('content')}">
                             <input type="hidden" name="reaction_type" value="like" class="connectly-comment-react-input">
                             <button type="submit" class="connectly-comment-react-btn">
                                 <span class="connectly-comment-react-emoji">👍</span>
@@ -956,27 +956,27 @@ function createReplyHtml(data, postId) {
                         </form>
                         <div class="connectly-comment-react-float" aria-label="Reaction options">
                             <form action="/feed/comments/${c.id}/react" method="POST" data-comment-reaction-form="option">
-                                <input type="hidden" name="_token" value="${document.querySelector('meta[name=\\'csrf-token\\']')?.getAttribute('content') || ''}">
+                                <input type="hidden" name="_token" value="${document.querySelector('meta[name="csrf-token"]').getAttribute('content')}">
                                 <input type="hidden" name="reaction_type" value="like">
                                 <button type="submit" class="connectly-comment-react-emojibtn" data-reaction-key="like" title="Like">👍</button>
                             </form>
                             <form action="/feed/comments/${c.id}/react" method="POST" data-comment-reaction-form="option">
-                                <input type="hidden" name="_token" value="${document.querySelector('meta[name=\\'csrf-token\\']')?.getAttribute('content') || ''}">
+                                <input type="hidden" name="_token" value="${document.querySelector('meta[name="csrf-token"]').getAttribute('content')}">
                                 <input type="hidden" name="reaction_type" value="love">
                                 <button type="submit" class="connectly-comment-react-emojibtn" data-reaction-key="love" title="Love">❤️</button>
                             </form>
                             <form action="/feed/comments/${c.id}/react" method="POST" data-comment-reaction-form="option">
-                                <input type="hidden" name="_token" value="${document.querySelector('meta[name=\\'csrf-token\\']')?.getAttribute('content') || ''}">
+                                <input type="hidden" name="_token" value="${document.querySelector('meta[name="csrf-token"]').getAttribute('content')}">
                                 <input type="hidden" name="reaction_type" value="haha">
                                 <button type="submit" class="connectly-comment-react-emojibtn" data-reaction-key="haha" title="Haha">😆</button>
                             </form>
                             <form action="/feed/comments/${c.id}/react" method="POST" data-comment-reaction-form="option">
-                                <input type="hidden" name="_token" value="${document.querySelector('meta[name=\\'csrf-token\\']')?.getAttribute('content') || ''}">
+                                <input type="hidden" name="_token" value="${document.querySelector('meta[name="csrf-token"]').getAttribute('content')}">
                                 <input type="hidden" name="reaction_type" value="wow">
                                 <button type="submit" class="connectly-comment-react-emojibtn" data-reaction-key="wow" title="Wow">😮</button>
                             </form>
                             <form action="/feed/comments/${c.id}/react" method="POST" data-comment-reaction-form="option">
-                                <input type="hidden" name="_token" value="${document.querySelector('meta[name=\\'csrf-token\\']')?.getAttribute('content') || ''}">
+                                <input type="hidden" name="_token" value="${document.querySelector('meta[name="csrf-token"]').getAttribute('content')}">
                                 <input type="hidden" name="reaction_type" value="sad">
                                 <button type="submit" class="connectly-comment-react-emojibtn" data-reaction-key="sad" title="Sad">😢</button>
                             </form>
