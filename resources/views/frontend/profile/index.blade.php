@@ -225,48 +225,24 @@
 
             <!-- Right Column: Posts -->
             <div class="col-xl-8">
-                <div class="chatbox-profile-posts-header connectly-profile-posts-header">
-                    <div class="d-flex align-items-center gap-2">
-                        <i class="bi bi-file-text-fill chatbox-posts-header-icon connectly-posts-header-icon"></i>
-                        <h5 class="mb-0 fw-bold connectly-posts-header-title">Posts</h5>
-                    </div>
-                    <div class="d-flex align-items-center gap-2">
-                        <form action="{{ route('search') }}" method="GET" class="chatbox-profile-search-form">
-                            <div class="chatbox-profile-search-group connectly-profile-search-group">
-                                <i class="bi bi-search chatbox-profile-search-icon"></i>
-                                <input
-                                    type="text"
-                                    name="q"
-                                    class="chatbox-profile-search-input"
-                                    placeholder="Search..."
-                                    autocomplete="off"
-                                >
+                <div class="mt-4 d-flex flex-column gap-3">
+                    @forelse ($posts as $post)
+                        @include('frontend.partials.post', ['post' => $post, 'showPinButton' => $isOwner])
+                    @empty
+                        <div class="connectly-empty-state text-center py-5">
+                            <div class="connectly-empty-icon">
+                                <i class="bi bi-journal-text"></i>
                             </div>
-                        </form>
-                        <span class="chatbox-posts-count-badge connectly-posts-count-badge">{{ $posts->count() }} posts</span>
-                    </div>
-                </div>
-
-                <div class="chatbox-profile-posts-container connectly-profile-posts-container">
-                    <div class="d-flex flex-column gap-3 mt-3">
-                        @forelse ($posts as $post)
-                            @include('frontend.partials.post', ['post' => $post, 'showPinButton' => $isOwner])
-                        @empty
-                            <div class="chatbox-profile-empty-state connectly-profile-empty-state">
-                                <div class="chatbox-profile-empty-icon connectly-profile-empty-icon">
-                                    <i class="bi bi-journal-text"></i>
-                                </div>
-                                <h6 class="fw-bold mb-1">No posts yet</h6>
-                                <p class="text-muted small mb-0">
-                                    @if($isOwner)
-                                        Share your first post from the Feed page!
-                                    @else
-                                        {{ $user->name }} hasn't posted anything yet.
-                                    @endif
-                                </p>
-                            </div>
-                        @endforelse
-                    </div>
+                            <h5 class="fw-bold mt-3">No posts yet</h5>
+                            <p class="text-muted mb-0">
+                                @if($isOwner)
+                                    Share your first post with the community!
+                                @else
+                                    {{ $user->name }} hasn't posted anything yet.
+                                @endif
+                            </p>
+                        </div>
+                    @endforelse
                 </div>
             </div>
         </div>
@@ -741,186 +717,409 @@
     width: 100%;
 }
 
-.connectly-profile-posts-header {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
+.connectly-post-card {
     background: var(--profile-surface);
-    border: 1px solid var(--profile-border);
     border-radius: var(--profile-radius);
-    padding: 1.1rem 1.35rem;
-    box-shadow: var(--profile-shadow-sm);
-    transition: box-shadow var(--profile-transition);
-}
-
-.connectly-profile-posts-header:hover {
-    box-shadow: var(--profile-shadow);
-}
-
-.connectly-posts-header-icon {
-    font-size: 1.25rem;
-    color: var(--profile-primary);
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    width: 34px;
-    height: 34px;
-    background: var(--profile-primary-subtle);
-    border-radius: 10px;
-}
-
-.connectly-posts-header-title {
-    font-size: 0.95rem;
-    color: var(--profile-text);
-    letter-spacing: -0.01em;
-}
-
-.connectly-posts-count-badge {
-    background: linear-gradient(135deg, var(--profile-primary-subtle), rgba(0,113,227,0.03));
-    color: var(--profile-primary);
-    font-size: 0.72rem;
-    font-weight: 600;
-    padding: 5px 14px;
-    border-radius: 999px;
-    border: 1px solid rgba(0,113,227,0.1);
-    flex-shrink: 0;
-}
-
-.connectly-profile-search-form {
-    display: flex;
-    align-items: center;
-}
-
-.connectly-profile-search-group {
+    border: 1px solid var(--profile-border);
+    padding: 1.25rem 1.35rem;
     position: relative;
-    display: flex;
-    align-items: center;
-    background: var(--profile-surface-hover);
-    border: 1.5px solid var(--profile-border);
-    border-radius: var(--profile-radius-xs);
-    transition: all 0.25s ease;
-    width: 180px;
+    transition: all var(--profile-transition);
+    animation: profileCardSlideUp 0.5s ease-out backwards;
+    box-shadow: var(--profile-shadow-sm);
 }
 
-.connectly-profile-search-group:focus-within {
+.connectly-post-card:hover {
     border-color: var(--profile-border-focus);
-    background: var(--profile-surface);
-    box-shadow: 0 0 0 4px rgba(0,113,227,0.08);
-    width: 220px;
+    box-shadow: var(--profile-shadow-md);
 }
 
-.connectly-profile-search-icon {
-    position: absolute;
-    left: 12px;
-    color: var(--profile-muted-light);
-    font-size: 0.8rem;
-    pointer-events: none;
-    transition: color 0.25s ease;
-}
-
-.connectly-profile-search-group:focus-within .connectly-profile-search-icon {
-    color: var(--profile-primary);
-}
-
-.connectly-profile-search-input {
-    border: none;
-    outline: none;
-    padding: 0.45rem 0.75rem 0.45rem 2.1rem;
-    font-size: 0.8rem;
-    color: var(--profile-text);
-    background: transparent;
-    border-radius: 10px;
-    width: 100%;
-    font-family: inherit;
-}
-
-.connectly-profile-search-input::placeholder {
-    color: var(--profile-muted-light);
-}
-
-.connectly-profile-posts-container .connectly-post-card,
-.connectly-profile-posts-container .chatbox-feed-post-card {
-    padding: 1.25rem;
-    border-radius: var(--profile-radius);
-    border: 1px solid var(--profile-border);
-    background: var(--profile-surface);
-    box-shadow: var(--profile-shadow-sm);
-    transition: box-shadow var(--profile-transition), border-color var(--profile-transition), transform var(--profile-transition);
-    position: relative;
-    overflow: hidden;
-}
-
-.connectly-profile-posts-container .connectly-post-card::before,
-.connectly-profile-posts-container .chatbox-feed-post-card::before {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: 0;
-    right: 0;
-    height: 1px;
-    background: linear-gradient(90deg, transparent, rgba(0,113,227,0.06), transparent);
-    opacity: 0;
-    transition: opacity var(--profile-transition);
-}
-
-.connectly-profile-posts-container .connectly-post-card:hover,
-.connectly-profile-posts-container .chatbox-feed-post-card:hover {
-    box-shadow: var(--profile-shadow);
-    border-color: #d2d2d7;
-    transform: translateY(-1px);
-}
-
-.connectly-profile-posts-container .connectly-post-card:hover::before,
-.connectly-profile-posts-container .chatbox-feed-post-card:hover::before {
-    opacity: 1;
-}
-
-.connectly-profile-posts-container .connectly-post-card.pinned,
-.connectly-profile-posts-container .chatbox-feed-post-card[data-pinned="true"] {
-    border-color: #fde68a;
-    background: linear-gradient(135deg, #fffbeb 0%, #ffffff 100%);
-}
-
-.connectly-profile-posts-container > div {
-    animation: profileStaggerIn 0.5s ease-out both;
-}
-
-.connectly-profile-posts-container > div:nth-child(1) { animation-delay: 0.03s; }
-.connectly-profile-posts-container > div:nth-child(2) { animation-delay: 0.06s; }
-.connectly-profile-posts-container > div:nth-child(3) { animation-delay: 0.09s; }
-
-@keyframes profileStaggerIn {
-    from { opacity: 0; transform: translateY(16px); }
+@keyframes profileCardSlideUp {
+    from { opacity: 0; transform: translateY(24px); }
     to { opacity: 1; transform: translateY(0); }
 }
 
+/* ===== POST CARD ANIMATION DELAYS ===== */
+.connectly-post-card:nth-child(1) { animation-delay: 0.08s; }
+.connectly-post-card:nth-child(2) { animation-delay: 0.16s; }
+.connectly-post-card:nth-child(3) { animation-delay: 0.24s; }
+.connectly-post-card:nth-child(4) { animation-delay: 0.32s; }
+.connectly-post-card:nth-child(5) { animation-delay: 0.40s; }
+
+/* ===== POST TEXT ===== */
+.connectly-post-text {
+    color: var(--profile-text-secondary);
+    line-height: 1.7;
+    white-space: pre-line;
+    font-size: 0.92rem;
+}
+
+/* ===== POST IMAGE GRID ===== */
+.connectly-post-image-grid {
+    display: grid;
+    gap: 0.4rem;
+    border-radius: var(--profile-radius-sm);
+    overflow: hidden;
+}
+
+.connectly-post-image-grid:not(.d-none) {
+    margin-bottom: 0.75rem;
+}
+
+.connectly-post-image-grid.grid-1 {
+    grid-template-columns: 1fr;
+    max-height: 400px;
+}
+
+.connectly-post-image-grid.grid-2 {
+    grid-template-columns: 1fr 1fr;
+    max-height: 280px;
+}
+
+.connectly-post-image-grid.grid-3 {
+    grid-template-columns: 1fr 1fr;
+    grid-template-rows: 1fr 1fr;
+    max-height: 320px;
+}
+.connectly-post-image-grid.grid-3 .connectly-post-image-item:nth-child(1) {
+    grid-row: span 2;
+}
+
+.connectly-post-image-grid.grid-4,
+.connectly-post-image-grid.grid-many {
+    grid-template-columns: 1fr 1fr;
+    grid-template-rows: 1fr 1fr;
+    max-height: 320px;
+}
+
+.connectly-post-image-item {
+    position: relative;
+    overflow: hidden;
+    border-radius: 6px;
+    background: var(--profile-surface-hover);
+    cursor: pointer;
+}
+
+.connectly-post-image-item img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform 0.4s ease;
+}
+
+.connectly-post-image-item:hover img {
+    transform: scale(1.03);
+}
+
+.connectly-post-image-overlay {
+    position: absolute;
+    inset: 0;
+    background: rgba(0,0,0,0.5);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #fff;
+    font-size: 1.2rem;
+    font-weight: 700;
+    cursor: pointer;
+}
+
+/* ===== PROFILE LINK ===== */
+.connectly-profile-link {
+    color: var(--profile-text);
+    font-weight: 600;
+    transition: color 0.2s ease;
+}
+
+.connectly-profile-link:hover {
+    color: var(--profile-primary);
+}
+
+/* ===== REACTION BUTTON ===== */
+.connectly-reaction-wrap {
+    position: relative;
+    display: inline-flex;
+    align-items: center;
+}
+
+.connectly-react-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.35rem;
+    padding: 0.35rem 0.85rem;
+    border-radius: 999px;
+    border: 1.5px solid var(--profile-border);
+    background: var(--profile-surface);
+    color: var(--profile-muted);
+    font-size: 0.8rem;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.2s cubic-bezier(.4,0,.2,1);
+    font-family: inherit;
+}
+
+.connectly-react-btn:hover {
+    border-color: var(--profile-primary);
+    color: var(--profile-primary);
+    background: var(--profile-primary-subtle);
+}
+
+.connectly-react-btn.is-reacted {
+    background: var(--profile-primary);
+    border-color: var(--profile-primary);
+    color: #fff;
+    box-shadow: 0 2px 8px rgba(0,113,227,0.2);
+}
+
+.connectly-react-btn.is-reacted:hover {
+    background: var(--profile-primary-dark);
+    border-color: var(--profile-primary-dark);
+    color: #fff;
+}
+
+.connectly-react-emoji {
+    font-size: 0.95rem;
+    line-height: 1;
+}
+
+.connectly-react-count {
+    font-weight: 600;
+}
+
+.connectly-react-count::before {
+    content: '(';
+}
+
+.connectly-react-count::after {
+    content: ')';
+}
+
+.connectly-react-float {
+    position: absolute;
+    left: 0;
+    bottom: calc(100% + 6px);
+    display: flex;
+    gap: 0.2rem;
+    padding: 0.35rem 0.45rem;
+    background: var(--profile-surface);
+    backdrop-filter: blur(16px);
+    -webkit-backdrop-filter: blur(16px);
+    border: 1px solid var(--profile-border);
+    border-radius: 999px;
+    box-shadow: 0 8px 24px rgba(0,0,0,0.08);
+    opacity: 0;
+    visibility: hidden;
+    pointer-events: none;
+    transform: translateY(8px) scale(0.92);
+    transition: all 0.2s cubic-bezier(.16,1,.3,1);
+    z-index: 25;
+}
+
+.connectly-react-float::after {
+    content: '';
+    position: absolute;
+    left: 0;
+    right: 0;
+    bottom: -12px;
+    height: 12px;
+}
+
+.connectly-reaction-wrap:hover .connectly-react-float,
+.connectly-reaction-wrap:focus-within .connectly-react-float,
+.connectly-react-float:hover {
+    opacity: 1;
+    visibility: visible;
+    pointer-events: auto;
+    transform: translateY(0) scale(1);
+}
+
+.connectly-react-emojibtn {
+    border: none;
+    background: transparent;
+    border-radius: 50%;
+    width: 34px;
+    height: 34px;
+    font-size: 1.2rem;
+    line-height: 1;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    transition: transform 0.15s ease, background 0.15s ease;
+    cursor: pointer;
+}
+
+.connectly-react-emojibtn:hover {
+    transform: scale(1.3);
+    background: rgba(0,113,227,0.08);
+}
+
+.connectly-react-emojibtn.active {
+    background: rgba(0,113,227,0.12);
+    transform: scale(1.15);
+}
+
+/* ===== COMMENT BUTTON ===== */
+.connectly-comment-link {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.35rem;
+    padding: 0.35rem 0.85rem;
+    border-radius: 999px;
+    border: 1.5px solid var(--profile-border);
+    background: var(--profile-surface);
+    color: var(--profile-muted);
+    font-size: 0.8rem;
+    font-weight: 500;
+    text-decoration: none;
+    transition: all 0.2s cubic-bezier(.4,0,.2,1);
+}
+
+.connectly-comment-link:hover {
+    border-color: var(--profile-primary);
+    color: var(--profile-primary);
+    background: var(--profile-primary-subtle);
+}
+
+.connectly-comment-link i {
+    font-size: 0.9rem;
+}
+
+.connectly-comment-count {
+    font-weight: 600;
+}
+
+.connectly-comment-count::before {
+    content: '(';
+}
+
+.connectly-comment-count::after {
+    content: ')';
+}
+
+/* ===== REACTION BADGES ===== */
+.connectly-reaction-badge {
+    background: var(--profile-surface-hover) !important;
+    border: 1px solid var(--profile-border) !important;
+    color: var(--profile-muted) !important;
+    font-weight: 500 !important;
+    font-size: 0.75rem !important;
+    padding: 0.2rem 0.65rem !important;
+    border-radius: 999px !important;
+}
+
+/* ===== PINNED BADGE ===== */
 .connectly-pinned-badge {
     display: inline-flex;
     align-items: center;
-    gap: 4px;
-    background: linear-gradient(135deg, #fef3c7, #fde68a);
-    color: #b45309;
-    font-size: 0.65rem;
+    gap: 3px;
+    background: rgba(245,158,11,0.1);
+    color: #d97706;
+    font-size: 0.7rem;
     font-weight: 600;
-    padding: 3px 11px;
-    border-radius: 999px;
-    border: 1px solid #fde68a;
-    letter-spacing: 0.01em;
+    padding: 2px 10px;
+    border-radius: 12px;
+    border: 1px solid rgba(245,158,11,0.2);
 }
 
-.connectly-profile-empty-state {
+/* ===== POST ACTIONS DROPDOWN ===== */
+.connectly-post-actions {
+    position: relative;
+}
+
+.connectly-post-actions-trigger {
+    width: 32px;
+    height: 32px;
+    border: none;
+    background: transparent;
+    border-radius: 50%;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--profile-muted-light);
+    cursor: pointer;
+    transition: all var(--profile-transition);
+}
+
+.connectly-post-actions-trigger:hover {
+    background: var(--profile-surface-hover);
+    color: var(--profile-text);
+}
+
+.connectly-post-actions-trigger:active {
+    transform: scale(0.92);
+}
+
+.connectly-post-actions-trigger[aria-expanded="true"] {
+    background: var(--profile-surface-hover);
+    color: var(--profile-primary);
+}
+
+.connectly-post-dropdown {
+    border-radius: var(--profile-radius-sm);
+    border: 1px solid var(--profile-border);
+    padding: 0.35rem;
+    box-shadow: var(--profile-shadow-lg);
+    min-width: 150px;
+    animation: connectlyDropdownIn 0.15s ease-out;
+    transform-origin: top right;
+}
+
+@keyframes connectlyDropdownIn {
+    from {
+        opacity: 0;
+        transform: scale(0.92) translateY(-4px);
+    }
+    to {
+        opacity: 1;
+        transform: scale(1) translateY(0);
+    }
+}
+
+.connectly-dropdown-item {
+    border-radius: 8px;
+    padding: 0.45rem 0.85rem;
+    font-size: 0.85rem;
+    font-weight: 500;
+    color: var(--profile-text);
+    transition: all 0.15s ease;
+}
+
+.connectly-dropdown-item:hover {
+    background: var(--profile-primary-subtle);
+    color: var(--profile-primary);
+}
+
+.connectly-dropdown-item i {
+    font-size: 0.9rem;
+}
+
+.connectly-dropdown-danger {
+    color: #dc2626 !important;
+}
+
+.connectly-dropdown-danger:hover {
+    background: rgba(239,68,68,0.08) !important;
+    color: #dc2626 !important;
+}
+
+.connectly-post-dropdown .dropdown-divider {
+    margin: 0.25rem 0;
+    border-top-color: var(--profile-border-light);
+}
+
+/* ===== EMPTY STATE ===== */
+.connectly-empty-state {
     text-align: center;
     padding: 3.5rem 1.5rem;
     background: var(--profile-surface);
-    border: 1px solid var(--profile-border);
+    border: 2px dashed var(--profile-border);
     border-radius: var(--profile-radius);
     box-shadow: var(--profile-shadow-sm);
-    animation: profileStaggerIn 0.5s ease-out;
 }
 
-.connectly-profile-empty-icon {
+.connectly-empty-icon {
     width: 64px;
     height: 64px;
+    margin: 0 auto;
     display: inline-flex;
     align-items: center;
     justify-content: center;
@@ -928,13 +1127,10 @@
     border-radius: 50%;
     font-size: 1.5rem;
     color: var(--profile-primary);
-    margin-bottom: 1rem;
-    border: 1px solid rgba(0,113,227,0.08);
-    transition: transform 0.3s ease;
 }
 
-.connectly-profile-empty-state:hover .connectly-profile-empty-icon {
-    transform: scale(1.08);
+.connectly-empty-state h5 {
+    color: var(--profile-text);
 }
 
 .connectly-toast-popup {
@@ -960,85 +1156,6 @@
 
 .connectly-toast-popup.swal2-icon-error {
     border-left: 4px solid #ef4444 !important;
-}
-
-.post-actions-wrap {
-    position: relative;
-}
-
-.post-actions-trigger {
-    width: 34px;
-    height: 34px;
-    border: none;
-    background: transparent;
-    border-radius: 50%;
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    color: var(--profile-muted-light);
-    cursor: pointer;
-    transition: all 0.25s cubic-bezier(.4,0,.2,1);
-}
-
-.post-actions-trigger:hover {
-    background: var(--profile-surface-hover);
-    color: var(--profile-text);
-}
-
-.post-actions-trigger:active {
-    transform: scale(0.92);
-}
-
-.post-actions-trigger[aria-expanded="true"] {
-    background: var(--profile-primary-subtle);
-    color: var(--profile-primary);
-}
-
-.post-actions-dropdown {
-    border-radius: var(--profile-radius-sm);
-    border: 1px solid var(--profile-border);
-    padding: 0.35rem;
-    box-shadow: var(--profile-shadow-lg);
-    min-width: 150px;
-    animation: profileDropdownIn 0.2s ease-out;
-    transform-origin: top right;
-}
-
-@keyframes profileDropdownIn {
-    from { opacity: 0; transform: scale(0.92) translateY(-4px); }
-    to { opacity: 1; transform: scale(1) translateY(0); }
-}
-
-.post-dropdown-item {
-    border-radius: 8px;
-    padding: 0.45rem 0.85rem;
-    font-size: 0.82rem;
-    font-weight: 500;
-    color: var(--profile-text);
-    transition: all 0.15s ease;
-}
-
-.post-dropdown-item:hover {
-    background: var(--profile-primary-subtle);
-    color: var(--profile-primary);
-}
-
-.post-dropdown-item i {
-    font-size: 0.9rem;
-}
-
-.post-dropdown-danger {
-    color: #dc2626 !important;
-}
-
-.post-dropdown-danger:hover {
-    background: rgba(239,68,68,0.08) !important;
-    color: #dc2626 !important;
-}
-
-.post-actions-dropdown .dropdown-divider {
-    margin: 0.25rem 0;
-    border-top-color: var(--profile-border-light);
 }
 
 @media (max-width: 991.98px) {
@@ -1071,10 +1188,6 @@
         font-size: 1rem;
     }
 
-    .connectly-profile-posts-header {
-        border-radius: 20px;
-        padding: 0.9rem 1rem;
-    }
 }
 
 @media (max-width: 575.98px) {
@@ -1082,19 +1195,7 @@
         padding-bottom: 1rem;
     }
 
-    .connectly-profile-posts-header {
-        flex-direction: column;
-        gap: 10px;
-        text-align: center;
-        border-radius: 16px;
-    }
-
-    .connectly-profile-search-group,
-    .connectly-profile-search-group:focus-within {
-        width: 100%;
-    }
-
-    .connectly-profile-empty-state {
+    .connectly-empty-state {
         padding: 2.5rem 1rem;
         border-radius: 20px;
     }
@@ -1142,14 +1243,6 @@
 .chatbox-btn-primary { display: inline-flex; align-items: center; justify-content: center; gap: 6px; padding: 0.65rem 1.25rem; background: var(--profile-primary); color: #fff; font-size: 0.85rem; font-weight: 600; border: none; border-radius: var(--profile-radius-xs); cursor: pointer; transition: all 0.25s cubic-bezier(.4,0,.2,1); box-shadow: 0 4px 12px rgba(0,113,227,0.2); text-decoration: none; }
 .chatbox-btn-primary:hover { background: var(--profile-primary-dark); transform: translateY(-1px); box-shadow: 0 6px 18px rgba(0,113,227,0.28); color: #fff; }
 .chatbox-btn-full { width: 100%; }
-.chatbox-profile-posts-header { display: flex; align-items: center; justify-content: space-between; background: var(--profile-surface); border: 1px solid var(--profile-border); border-radius: var(--profile-radius); padding: 1rem 1.25rem; box-shadow: var(--profile-shadow); }
-.chatbox-posts-header-icon { font-size: 1.2rem; color: var(--profile-primary); }
-.chatbox-posts-count-badge { background: var(--profile-primary-subtle); color: var(--profile-primary); font-size: 0.75rem; font-weight: 600; padding: 4px 12px; border-radius: 999px; border: 1px solid rgba(0,113,227,0.12); }
-.chatbox-profile-search-form { display: flex; align-items: center; }
-.chatbox-profile-search-group { position: relative; display: flex; align-items: center; background: var(--profile-surface-hover); border: 1.5px solid var(--profile-border); border-radius: var(--profile-radius-xs); transition: all 0.2s ease; width: 180px; }
-.chatbox-profile-search-group:focus-within { border-color: var(--profile-border-focus); background: var(--profile-surface); box-shadow: 0 0 0 3px rgba(0,113,227,0.1); width: 220px; }
-.chatbox-profile-search-icon { position: absolute; left: 10px; color: var(--profile-muted-light); font-size: 0.8rem; pointer-events: none; }
-.chatbox-profile-search-input { border: none; outline: none; padding: 0.4rem 0.7rem 0.4rem 2rem; font-size: 0.8rem; color: var(--profile-text); background: transparent; border-radius: 8px; width: 100%; }
 .chatbox-profile-empty-state { text-align: center; padding: 3rem 1.5rem; background: var(--profile-surface); border: 1px solid var(--profile-border); border-radius: var(--profile-radius); box-shadow: var(--profile-shadow); }
 .chatbox-profile-empty-icon { width: 56px; height: 56px; display: inline-flex; align-items: center; justify-content: center; background: var(--profile-primary-subtle); border-radius: 50%; font-size: 1.4rem; color: var(--profile-primary); margin-bottom: 0.75rem; }
 .chatbox-toast-popup { border-radius: var(--profile-radius-xs) !important; box-shadow: var(--profile-shadow-lg) !important; font-family: inherit !important; }
@@ -1162,13 +1255,10 @@
 .chatbox-pinned-badge { display: inline-flex; align-items: center; gap: 3px; background: #fef3c7; color: #b45309; font-size: 0.68rem; font-weight: 600; padding: 2px 10px; border-radius: 999px; border: 1px solid #fde68a; }
 .chatbox-profile-link { font-weight: 600; color: var(--profile-primary-dark); transition: color 0.2s ease; }
 .chatbox-profile-link:hover { color: var(--profile-primary); }
-.chatbox-feed-avatar { width: 42px; height: 42px; border: 2px solid var(--profile-border-light); background: linear-gradient(135deg, var(--profile-primary) 0%, var(--profile-primary-dark) 100%); }
+.chatbox-feed-avatar { width: 42px; height: 42px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: 600; font-size: 1rem; color: #ffffff; flex-shrink: 0; border: 2px solid var(--profile-border-light); background: linear-gradient(135deg, var(--profile-primary) 0%, var(--profile-primary-dark) 100%); }
 .chatbox-feed-avatar-alt { background: linear-gradient(135deg, #6b7280 0%, #374151 100%); }
-.chatbox-feed-avatar-image { border-color: var(--profile-border-light); }
-.chatbox-feed-post-card { padding: 1.25rem; border-radius: var(--profile-radius); border: 1px solid var(--profile-border); background: var(--profile-surface); box-shadow: var(--profile-shadow); transition: box-shadow 0.25s ease, border-color 0.25s ease; }
-.chatbox-feed-post-card:hover { box-shadow: var(--profile-shadow-md); border-color: #d2d2d7; }
-.chatbox-feed-post-text { font-size: 0.95rem; line-height: 1.75; color: var(--profile-text); }
-.chatbox-feed-post-image { border-radius: var(--profile-radius-xs); border: 1px solid var(--profile-border-light); }
+.chatbox-feed-avatar-image { object-fit: cover; background: var(--profile-surface); border-color: var(--profile-border-light); }
+.chatbox-feed-post-text { font-size: 0.92rem; line-height: 1.7; color: var(--profile-text-secondary); white-space: pre-line; }
 .chatbox-file-input.has-file ~ .chatbox-file-label span { color: var(--profile-primary); }
 </style>
 
