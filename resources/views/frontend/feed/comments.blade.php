@@ -134,7 +134,8 @@
                                 </div>
                                 <button type="button" class="connectly-comments-reply-btn chatbox-reply-trigger"
                                         data-form-id="commentForm{{ $post->id }}"
-                                        data-parent-id="{{ $comment->id }}">
+                                        data-parent-id="{{ $comment->id }}"
+                                        data-reply-to-name="{{ $comment->user->name }}">
                                     <i class="bi bi-reply"></i> Reply
                                 </button>
                             </div>
@@ -220,6 +221,12 @@
                                                                     </form>
                                                                 @endforeach
                                                             </div>
+                                                            <button type="button" class="connectly-comments-reply-btn chatbox-reply-trigger"
+                                                                    data-form-id="commentForm{{ $post->id }}"
+                                                                    data-parent-id="{{ $reply->id }}"
+                                                                    data-reply-to-name="{{ $reply->user->name }}">
+                                                                <i class="bi bi-reply"></i> Reply
+                                                            </button>
                                                         </div>
                                                     </div>
                                                     <div class="d-flex flex-wrap gap-2 mt-2 chatbox-comment-reaction-summary">
@@ -833,7 +840,167 @@
 }
 </style>
 
+@php
+    $commentFormId = 'commentForm' . $post->id;
+@endphp
+
 <script>
+function createCommentHtml(data, postId) {
+    const c = data.comment;
+    const avatarHtml = c.user_avatar_url
+        ? `<img src="${c.user_avatar_url}" alt="" class="connectly-comments-item-avatar">`
+        : `<div class="connectly-comments-item-avatar connectly-comments-item-avatar-alt">${c.user_name.charAt(0).toUpperCase()}</div>`;
+    const avatarSmallHtml = c.user_avatar_url
+        ? `<img src="${c.user_avatar_url}" alt="" class="connectly-comments-item-avatar" style="width:24px;height:24px;">`
+        : `<div class="connectly-comments-item-avatar connectly-comments-item-avatar-alt" style="width:24px;height:24px;font-size:10px;">${c.user_name.charAt(0).toUpperCase()}</div>`;
+    const commentText = c.comment ? `<p class="connectly-comments-item-text">${c.comment.replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/\n/g, '<br>')}</p>` : '';
+    const imageHtml = c.image_url ? `<img src="${c.image_url}" alt="" class="connectly-comments-item-image" onclick="openImageModal(this.src)">` : '';
+
+    return `<div class="connectly-comments-item" data-comment-card="${c.id}">
+        <div class="d-flex align-items-start gap-2">
+            ${avatarHtml}
+            <div class="flex-grow-1 min-w-0">
+                <div class="d-flex align-items-center gap-2 flex-wrap">
+                    <a href="/${c.user_id}/profile" class="connectly-comments-item-user">${c.user_name}</a>
+                    <span class="text-muted" style="font-size:0.7rem;">${c.created_at_human}</span>
+                </div>
+                ${commentText}
+                ${imageHtml}
+                <div class="d-flex align-items-center gap-2 mt-2">
+                    <div class="connectly-comment-react" data-comment-id="${c.id}">
+                        <form action="/feed/comments/${c.id}/react" method="POST" data-comment-reaction-form="main">
+                            <input type="hidden" name="_token" value="${document.querySelector('meta[name=\\'csrf-token\\']')?.getAttribute('content') || ''}">
+                            <input type="hidden" name="reaction_type" value="like" class="connectly-comment-react-input">
+                            <button type="submit" class="connectly-comment-react-btn">
+                                <span class="connectly-comment-react-emoji">👍</span>
+                                <span class="connectly-comment-react-label">Like</span>
+                                <span class="connectly-comment-react-count">0</span>
+                            </button>
+                        </form>
+                        <div class="connectly-comment-react-float" aria-label="Reaction options">
+                            <form action="/feed/comments/${c.id}/react" method="POST" data-comment-reaction-form="option">
+                                <input type="hidden" name="_token" value="${document.querySelector('meta[name=\\'csrf-token\\']')?.getAttribute('content') || ''}">
+                                <input type="hidden" name="reaction_type" value="like">
+                                <button type="submit" class="connectly-comment-react-emojibtn" data-reaction-key="like" title="Like">👍</button>
+                            </form>
+                            <form action="/feed/comments/${c.id}/react" method="POST" data-comment-reaction-form="option">
+                                <input type="hidden" name="_token" value="${document.querySelector('meta[name=\\'csrf-token\\']')?.getAttribute('content') || ''}">
+                                <input type="hidden" name="reaction_type" value="love">
+                                <button type="submit" class="connectly-comment-react-emojibtn" data-reaction-key="love" title="Love">❤️</button>
+                            </form>
+                            <form action="/feed/comments/${c.id}/react" method="POST" data-comment-reaction-form="option">
+                                <input type="hidden" name="_token" value="${document.querySelector('meta[name=\\'csrf-token\\']')?.getAttribute('content') || ''}">
+                                <input type="hidden" name="reaction_type" value="haha">
+                                <button type="submit" class="connectly-comment-react-emojibtn" data-reaction-key="haha" title="Haha">😆</button>
+                            </form>
+                            <form action="/feed/comments/${c.id}/react" method="POST" data-comment-reaction-form="option">
+                                <input type="hidden" name="_token" value="${document.querySelector('meta[name=\\'csrf-token\\']')?.getAttribute('content') || ''}">
+                                <input type="hidden" name="reaction_type" value="wow">
+                                <button type="submit" class="connectly-comment-react-emojibtn" data-reaction-key="wow" title="Wow">😮</button>
+                            </form>
+                            <form action="/feed/comments/${c.id}/react" method="POST" data-comment-reaction-form="option">
+                                <input type="hidden" name="_token" value="${document.querySelector('meta[name=\\'csrf-token\\']')?.getAttribute('content') || ''}">
+                                <input type="hidden" name="reaction_type" value="sad">
+                                <button type="submit" class="connectly-comment-react-emojibtn" data-reaction-key="sad" title="Sad">😢</button>
+                            </form>
+                        </div>
+                    </div>
+                    <button type="button" class="connectly-comments-reply-btn chatbox-reply-trigger"
+                            data-form-id="${c.parent_id ? 'commentForm' + postId : 'commentForm' + postId}"
+                            data-parent-id="${c.id}"
+                            data-reply-to-name="${c.user_name}">
+                        <i class="bi bi-reply"></i> Reply
+                    </button>
+                </div>
+                <div class="d-flex flex-wrap gap-2 mt-2 chatbox-comment-reaction-summary">
+                    <span class="badge rounded-pill text-bg-light border connectly-reaction-badge d-none" data-comment-reaction-badge="like"><span class="chatbox-comment-reaction-badge-emoji">👍</span> <span class="chatbox-comment-reaction-badge-count">0</span></span>
+                    <span class="badge rounded-pill text-bg-light border connectly-reaction-badge d-none" data-comment-reaction-badge="love"><span class="chatbox-comment-reaction-badge-emoji">❤️</span> <span class="chatbox-comment-reaction-badge-count">0</span></span>
+                    <span class="badge rounded-pill text-bg-light border connectly-reaction-badge d-none" data-comment-reaction-badge="haha"><span class="chatbox-comment-reaction-badge-emoji">😆</span> <span class="chatbox-comment-reaction-badge-count">0</span></span>
+                    <span class="badge rounded-pill text-bg-light border connectly-reaction-badge d-none" data-comment-reaction-badge="wow"><span class="chatbox-comment-reaction-badge-emoji">😮</span> <span class="chatbox-comment-reaction-badge-count">0</span></span>
+                    <span class="badge rounded-pill text-bg-light border connectly-reaction-badge d-none" data-comment-reaction-badge="sad"><span class="chatbox-comment-reaction-badge-emoji">😢</span> <span class="chatbox-comment-reaction-badge-count">0</span></span>
+                </div>
+                ${c.parent_id ? '' : `<div class="connectly-comments-replies d-none" data-replies-for="${c.id}"></div>`}
+            </div>
+        </div>
+    </div>`;
+}
+
+function createReplyHtml(data, postId) {
+    const c = data.comment;
+    const avatarSmallHtml = c.user_avatar_url
+        ? `<img src="${c.user_avatar_url}" alt="" class="connectly-comments-item-avatar" style="width:24px;height:24px;">`
+        : `<div class="connectly-comments-item-avatar connectly-comments-item-avatar-alt" style="width:24px;height:24px;font-size:10px;">${c.user_name.charAt(0).toUpperCase()}</div>`;
+    const commentText = c.comment ? `<p class="connectly-comments-item-text">${c.comment.replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/\n/g, '<br>')}</p>` : '';
+    const imageHtml = c.image_url ? `<img src="${c.image_url}" alt="" class="connectly-comments-item-image" onclick="openImageModal(this.src)">` : '';
+
+    return `<div class="connectly-comments-reply-item" data-comment-card="${c.id}">
+        <div class="d-flex align-items-start gap-2">
+            ${avatarSmallHtml}
+            <div class="flex-grow-1 min-w-0">
+                <div class="d-flex align-items-center gap-2 flex-wrap">
+                    <a href="/${c.user_id}/profile" class="connectly-comments-item-user">${c.user_name}</a>
+                    <span class="text-muted" style="font-size:0.7rem;">${c.created_at_human}</span>
+                </div>
+                ${commentText}
+                ${imageHtml}
+                <div class="d-flex align-items-center gap-2 mt-2">
+                    <div class="connectly-comment-react" data-comment-id="${c.id}">
+                        <form action="/feed/comments/${c.id}/react" method="POST" data-comment-reaction-form="main">
+                            <input type="hidden" name="_token" value="${document.querySelector('meta[name=\\'csrf-token\\']')?.getAttribute('content') || ''}">
+                            <input type="hidden" name="reaction_type" value="like" class="connectly-comment-react-input">
+                            <button type="submit" class="connectly-comment-react-btn">
+                                <span class="connectly-comment-react-emoji">👍</span>
+                                <span class="connectly-comment-react-label">Like</span>
+                                <span class="connectly-comment-react-count">0</span>
+                            </button>
+                        </form>
+                        <div class="connectly-comment-react-float" aria-label="Reaction options">
+                            <form action="/feed/comments/${c.id}/react" method="POST" data-comment-reaction-form="option">
+                                <input type="hidden" name="_token" value="${document.querySelector('meta[name=\\'csrf-token\\']')?.getAttribute('content') || ''}">
+                                <input type="hidden" name="reaction_type" value="like">
+                                <button type="submit" class="connectly-comment-react-emojibtn" data-reaction-key="like" title="Like">👍</button>
+                            </form>
+                            <form action="/feed/comments/${c.id}/react" method="POST" data-comment-reaction-form="option">
+                                <input type="hidden" name="_token" value="${document.querySelector('meta[name=\\'csrf-token\\']')?.getAttribute('content') || ''}">
+                                <input type="hidden" name="reaction_type" value="love">
+                                <button type="submit" class="connectly-comment-react-emojibtn" data-reaction-key="love" title="Love">❤️</button>
+                            </form>
+                            <form action="/feed/comments/${c.id}/react" method="POST" data-comment-reaction-form="option">
+                                <input type="hidden" name="_token" value="${document.querySelector('meta[name=\\'csrf-token\\']')?.getAttribute('content') || ''}">
+                                <input type="hidden" name="reaction_type" value="haha">
+                                <button type="submit" class="connectly-comment-react-emojibtn" data-reaction-key="haha" title="Haha">😆</button>
+                            </form>
+                            <form action="/feed/comments/${c.id}/react" method="POST" data-comment-reaction-form="option">
+                                <input type="hidden" name="_token" value="${document.querySelector('meta[name=\\'csrf-token\\']')?.getAttribute('content') || ''}">
+                                <input type="hidden" name="reaction_type" value="wow">
+                                <button type="submit" class="connectly-comment-react-emojibtn" data-reaction-key="wow" title="Wow">😮</button>
+                            </form>
+                            <form action="/feed/comments/${c.id}/react" method="POST" data-comment-reaction-form="option">
+                                <input type="hidden" name="_token" value="${document.querySelector('meta[name=\\'csrf-token\\']')?.getAttribute('content') || ''}">
+                                <input type="hidden" name="reaction_type" value="sad">
+                                <button type="submit" class="connectly-comment-react-emojibtn" data-reaction-key="sad" title="Sad">😢</button>
+                            </form>
+                        </div>
+                    </div>
+                    <button type="button" class="connectly-comments-reply-btn chatbox-reply-trigger"
+                            data-form-id="commentForm${postId}"
+                            data-parent-id="${c.id}"
+                            data-reply-to-name="${c.user_name}">
+                        <i class="bi bi-reply"></i> Reply
+                    </button>
+                </div>
+                <div class="d-flex flex-wrap gap-2 mt-2 chatbox-comment-reaction-summary">
+                    <span class="badge rounded-pill text-bg-light border connectly-reaction-badge d-none" data-comment-reaction-badge="like"><span class="chatbox-comment-reaction-badge-emoji">👍</span> <span class="chatbox-comment-reaction-badge-count">0</span></span>
+                    <span class="badge rounded-pill text-bg-light border connectly-reaction-badge d-none" data-comment-reaction-badge="love"><span class="chatbox-comment-reaction-badge-emoji">❤️</span> <span class="chatbox-comment-reaction-badge-count">0</span></span>
+                    <span class="badge rounded-pill text-bg-light border connectly-reaction-badge d-none" data-comment-reaction-badge="haha"><span class="chatbox-comment-reaction-badge-emoji">😆</span> <span class="chatbox-comment-reaction-badge-count">0</span></span>
+                    <span class="badge rounded-pill text-bg-light border connectly-reaction-badge d-none" data-comment-reaction-badge="wow"><span class="chatbox-comment-reaction-badge-emoji">😮</span> <span class="chatbox-comment-reaction-badge-count">0</span></span>
+                    <span class="badge rounded-pill text-bg-light border connectly-reaction-badge d-none" data-comment-reaction-badge="sad"><span class="chatbox-comment-reaction-badge-emoji">😢</span> <span class="chatbox-comment-reaction-badge-count">0</span></span>
+                </div>
+            </div>
+        </div>
+    </div>`;
+}
+
 document.addEventListener('DOMContentLoaded', function () {
     const textarea = document.querySelector('.connectly-comments-form-textarea');
     if (textarea) {
@@ -930,6 +1097,142 @@ document.addEventListener('submit', async function (event) {
         }
     } finally {
         buttons.forEach((button) => { button.disabled = false; });
+    }
+});
+
+document.addEventListener('submit', async function (event) {
+    const form = event.target;
+    if (!form.matches('[data-comment-form-id]')) {
+        return;
+    }
+
+    event.preventDefault();
+
+    const postId = form.dataset.commentFormId;
+    if (!postId) return;
+
+    const submitButton = form.querySelector('button[type="submit"]');
+    if (submitButton) submitButton.disabled = true;
+
+    const csrfToken = document.querySelector('meta[name="csrf-token"]')?.getAttribute('content') || '';
+
+    try {
+        const response = await fetch(form.action, {
+            method: 'POST',
+            headers: {
+                'Accept': 'application/json',
+                'X-Requested-With': 'XMLHttpRequest',
+                'X-CSRF-TOKEN': csrfToken,
+            },
+            body: new FormData(form),
+        });
+
+        const data = await response.json();
+        if (!response.ok || !data.success) {
+            const errorText = data?.message || 'Could not add comment.';
+            if (window.chatboxToast) {
+                chatboxToast('error', errorText);
+            }
+            return;
+        }
+
+        const parentId = data.comment.parent_id;
+        const commentList = document.querySelector('.connectly-comments-list');
+        if (!commentList) return;
+
+        if (parentId) {
+            const repliesWrap = commentList.querySelector(`[data-replies-for="${parentId}"]`);
+            if (repliesWrap) {
+                repliesWrap.classList.remove('d-none');
+                const replyHtml = createReplyHtml(data, postId);
+                repliesWrap.insertAdjacentHTML('afterbegin', replyHtml);
+            }
+        } else {
+            const emptyState = commentList.querySelector('.connectly-comments-empty');
+            if (emptyState) emptyState.remove();
+            const commentHtml = createCommentHtml(data, postId);
+            commentList.insertAdjacentHTML('afterbegin', commentHtml);
+        }
+
+        form.reset();
+        form.querySelectorAll('textarea').forEach((ta) => { ta.style.height = 'auto'; });
+
+        const parentInput = form.querySelector('.chatbox-reply-parent-id');
+        const indicator = form.querySelector('.chatbox-reply-indicator');
+        if (parentInput) {
+            parentInput.value = '';
+            delete parentInput.dataset.replyToName;
+        }
+        if (indicator) indicator.classList.add('d-none');
+    } catch (error) {
+        console.error(error);
+        if (window.chatboxToast) {
+            chatboxToast('error', 'Could not add comment. Please try again.');
+        }
+    } finally {
+        if (submitButton) submitButton.disabled = false;
+    }
+});
+
+document.addEventListener('click', function (event) {
+    const replyButton = event.target.closest('.chatbox-reply-trigger');
+    if (replyButton) {
+        const formId = replyButton.dataset.formId;
+        const parentId = replyButton.dataset.parentId || '';
+        const replyToName = replyButton.dataset.replyToName || '';
+        if (!formId) return;
+
+        const form = document.getElementById(formId);
+        if (!form) return;
+
+        const parentInput = form.querySelector('.chatbox-reply-parent-id');
+        const indicator = form.querySelector('.chatbox-reply-indicator');
+        const indicatorText = form.querySelector('.chatbox-reply-indicator-text');
+        const textarea = form.querySelector('textarea[name="comment"]');
+
+        if (parentInput) {
+            parentInput.value = parentId;
+            parentInput.dataset.replyToName = replyToName;
+        }
+        if (indicator) indicator.classList.remove('d-none');
+        if (indicatorText && replyToName) {
+            indicatorText.textContent = 'Replying to ' + replyToName;
+        }
+        if (textarea) {
+            const atMention = '@' + replyToName + ' ';
+            const currentVal = textarea.value;
+            if (!currentVal.startsWith(atMention)) {
+                if (parentInput && parentInput.dataset.replyToName && currentVal.startsWith('@' + parentInput.dataset.replyToName)) {
+                    textarea.value = textarea.value.replace(/^@\S+\s*/, '');
+                }
+                textarea.value = atMention + textarea.value;
+            }
+            textarea.focus();
+        }
+        return;
+    }
+
+    const cancelButton = event.target.closest('.chatbox-reply-cancel');
+    if (cancelButton) {
+        event.preventDefault();
+        const form = cancelButton.closest('form');
+        if (!form) return;
+
+        const parentInput = form.querySelector('.chatbox-reply-parent-id');
+        const indicator = form.querySelector('.chatbox-reply-indicator');
+        const indicatorText = form.querySelector('.chatbox-reply-indicator-text');
+        const textarea = form.querySelector('textarea[name="comment"]');
+
+        if (parentInput) {
+            const name = parentInput.dataset.replyToName || '';
+            if (name && textarea) {
+                textarea.value = textarea.value.replace(new RegExp('^@' + name.replace(/[.*+?^${}()|[\]\\]/g, '\\$&') + '\\s*'), '');
+            }
+            parentInput.value = '';
+            delete parentInput.dataset.replyToName;
+        }
+        if (indicator) indicator.classList.add('d-none');
+        if (indicatorText) indicatorText.textContent = 'Replying to comment';
     }
 });
 </script>
