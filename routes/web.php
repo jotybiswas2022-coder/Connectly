@@ -38,6 +38,7 @@ Route::middleware('auth')->get('/media/{path}', [MessageController::class, 'medi
 Route::middleware('auth')->prefix('/feed')->controller(FeedController::class)->group(function () {
     Route::get('/', 'feed')->name('feed');
     Route::post('/posts', 'storePost')->name('feed.posts.store');
+    Route::get('/posts/{post}/edit', 'editPost')->name('feed.posts.edit');
     Route::put('/posts/{post}', 'updatePost')->name('feed.posts.update');
     Route::delete('/posts/{post}', 'deletePost')->name('feed.posts.delete');
     Route::post('/posts/{post}/react', 'toggleReaction')->name('feed.posts.react');

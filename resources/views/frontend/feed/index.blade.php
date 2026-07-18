@@ -1505,94 +1505,6 @@
     overflow-y: auto;
 }
 
-/* ===== MODAL IMAGE PREVIEW ===== */
-.connectly-edit-preview-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
-    gap: 0.5rem;
-    margin-top: 0.5rem;
-}
-
-.connectly-edit-preview-item {
-    position: relative;
-    border-radius: 8px;
-    overflow: hidden;
-    aspect-ratio: 1;
-    border: 1px solid var(--feed-border);
-    background: var(--feed-input-bg);
-}
-
-.connectly-edit-preview-item img {
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-}
-
-.connectly-edit-preview-item .connectly-edit-remove-btn {
-    position: absolute;
-    top: 4px;
-    right: 4px;
-    width: 24px;
-    height: 24px;
-    border-radius: 50%;
-    background: rgba(239,68,68,0.9);
-    color: #fff;
-    border: none;
-    font-size: 0.65rem;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    cursor: pointer;
-    transition: all 0.2s ease;
-    opacity: 0;
-}
-
-.connectly-edit-preview-item:hover .connectly-edit-remove-btn {
-    opacity: 1;
-}
-
-.connectly-edit-existing-images {
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
-    gap: 0.5rem;
-    margin-bottom: 0.75rem;
-}
-
-.connectly-edit-existing-item {
-    position: relative;
-    border-radius: 8px;
-    overflow: hidden;
-    aspect-ratio: 1;
-    border: 1px solid var(--feed-border);
-    background: var(--feed-input-bg);
-}
-
-.connectly-edit-existing-item img {
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-}
-
-.connectly-edit-existing-item .connectly-edit-remove-check {
-    position: absolute;
-    bottom: 4px;
-    left: 4px;
-    background: rgba(255,255,255,0.9);
-    border-radius: 6px;
-    padding: 2px 6px;
-    font-size: 0.65rem;
-    color: var(--feed-danger);
-    font-weight: 600;
-    cursor: pointer;
-    border: 1px solid rgba(239,68,68,0.3);
-    transition: all 0.2s ease;
-}
-
-.connectly-edit-existing-item .connectly-edit-remove-check:hover {
-    background: rgba(239,68,68,0.9);
-    color: #fff;
-}
-
 /* ===== SWEETALERT OVERRIDES ===== */
 .connectly-toast-popup {
     border-radius: var(--feed-radius-sm) !important;
@@ -2423,8 +2335,6 @@ document.addEventListener('change', function(e) {
     }
 });
 </script>
-
-{{-- Edit modal image preview is delegated globally --}}
 
 @if (session('open_modal'))
 <script>

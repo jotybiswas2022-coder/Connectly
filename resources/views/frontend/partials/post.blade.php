@@ -64,15 +64,13 @@
                                                         <li><hr class="dropdown-divider"></li>
                                                     @endif
                                                     <li>
-                                                        <button
-                                                            type="button"
+                                                        <a
+                                                            href="{{ route('feed.posts.edit', $post->id) }}"
                                                             class="dropdown-item connectly-dropdown-item"
-                                                            data-bs-toggle="modal"
-                                                            data-bs-target="#editPostModal{{ $post->id }}"
                                                         >
                                                             <i class="bi bi-pencil-square me-2"></i>
                                                             Edit
-                                                        </button>
+                                                        </a>
                                                     </li>
                                                     <li>
                                                         <form action="{{ route('feed.posts.delete', $post->id) }}" method="POST" class="d-inline">
@@ -184,93 +182,6 @@
                                 </div>
                             </div>
                         </article>
-
-                        {{-- ===== EDIT POST MODAL (PREMIUM LIGHT) ===== --}}
-                        @if ((int) $post->user_id === (int) auth()->id())
-                            <div class="modal fade" id="editPostModal{{ $post->id }}" tabindex="-1" aria-hidden="true">
-                                <div class="modal-dialog modal-dialog-scrollable">
-                                    <div class="modal-content">
-                                        <div class="modal-header">
-                                            <h5 class="modal-title">
-                                                <i class="bi bi-pencil-square me-1" style="color:var(--feed-primary);"></i>
-                                                Edit Post
-                                            </h5>
-                                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                                        </div>
-                                        <div class="modal-body">
-                                            <form action="{{ route('feed.posts.update', $post->id) }}" method="POST" enctype="multipart/form-data" class="edit-post-form">
-                                                @csrf
-                                                @method('PUT')
-
-                                                <div class="mb-3">
-                                                    <label class="form-label small fw-semibold text-muted">Post Content</label>
-                                                    <textarea
-                                                        name="edit_content"
-                                                        class="form-control @error('edit_content', 'editPost_' . $post->id) is-invalid @enderror"
-                                                        rows="4"
-                                                        placeholder="Update your post..."
-                                                        maxlength="600"
-                                                    >{{ session('open_modal') === 'editPostModal' . $post->id ? old('edit_content', $post->content) : $post->content }}</textarea>
-                                                    @error('edit_content', 'editPost_' . $post->id)
-                                                        <div class="invalid-feedback d-block">{{ $message }}</div>
-                                                    @enderror
-                                                </div>
-
-                                                {{-- Existing Images --}}
-                                                @if ($imageCount > 0)
-                                                    <div class="mb-3">
-                                                        <label class="form-label small fw-semibold text-muted">
-                                                            <i class="bi bi-images me-1"></i>Current Images
-                                                        </label>
-                                                        <div class="connectly-edit-existing-images">
-                                                            @foreach ($postImages as $imgPath)
-                                                                <div class="connectly-edit-existing-item">
-                                                                    <img src="{{ route('media.show', ['path' => $imgPath]) }}" alt="Post image" loading="lazy">
-                                                                    <label class="connectly-edit-remove-check">
-                                                                        <input type="checkbox" name="remove_images[]" value="{{ $imgPath }}" class="me-1" onchange="this.parentElement.style.opacity=this.checked?'0.6':'1'">
-                                                                        Remove
-                                                                    </label>
-                                                                </div>
-                                                            @endforeach
-                                                        </div>
-                                                    </div>
-                                                @endif
-
-                                                {{-- New Images Upload --}}
-                                                <div class="mb-3">
-                                                    <label class="form-label small fw-semibold text-muted">
-                                                        <i class="bi bi-cloud-arrow-up me-1"></i>Add More Images
-                                                    </label>
-                                                    <div class="connectly-file-upload">
-                                                        <input
-                                                            type="file"
-                                                            name="edit_images[]"
-                                                            accept="image/*"
-                                                            multiple
-                                                            class="connectly-file-input connectly-edit-image-input"
-                                                            id="editImageInput{{ $post->id }}"
-                                                            data-preview-container="editPreview{{ $post->id }}"
-                                                        >
-                                                        <label for="editImageInput{{ $post->id }}" class="connectly-file-label">
-                                                            <i class="bi bi-cloud-arrow-up me-2"></i>
-                                                            <span>Click to add more images</span>
-                                                        </label>
-                                                    </div>
-                                                    <div id="editPreview{{ $post->id }}" class="connectly-edit-preview-grid mt-2"></div>
-                                                </div>
-
-                                                <div class="d-flex justify-content-end gap-2 mt-4">
-                                                    <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">Cancel</button>
-                                                    <button type="submit" class="btn btn-primary">
-                                                        <i class="bi bi-check-lg me-1"></i>Save Changes
-                                                    </button>
-                                                </div>
-                                            </form>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        @endif
 
                         {{-- ===== COMMENTS MODAL (PREMIUM LIGHT) ===== --}}
                         <div class="modal fade" id="commentsModal{{ $post->id }}" tabindex="-1" aria-hidden="true">

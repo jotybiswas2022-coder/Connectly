@@ -148,6 +148,17 @@ class FeedController extends Controller
         return back()->with('success', 'Post published successfully.');
     }
 
+    public function editPost(Post $post)
+    {
+        if ((int) $post->user_id !== (int) Auth::id()) {
+            abort(403);
+        }
+
+        $reactionTypes = self::REACTION_TYPES;
+
+        return view('frontend.feed.edit', compact('post', 'reactionTypes'));
+    }
+
     public function updatePost(Request $request, Post $post)
     {
         if ((int) $post->user_id !== (int) Auth::id()) {
@@ -163,10 +174,9 @@ class FeedController extends Controller
         ]);
 
         if ($validator->fails()) {
-            return back()
+            return redirect()->route('feed.posts.edit', $post->id)
                 ->withErrors($validator, 'editPost_' . $post->id)
-                ->withInput()
-                ->with('open_modal', 'editPostModal' . $post->id);
+                ->withInput();
         }
 
         $validated = $validator->validated();
@@ -193,10 +203,9 @@ class FeedController extends Controller
         }
 
         if ($content === '' && empty($currentImages)) {
-            return back()
+            return redirect()->route('feed.posts.edit', $post->id)
                 ->withErrors(['edit_content' => 'Post cannot be empty.'], 'editPost_' . $post->id)
-                ->withInput()
-                ->with('open_modal', 'editPostModal' . $post->id);
+                ->withInput();
         }
 
         $post->update([
@@ -204,7 +213,7 @@ class FeedController extends Controller
             'images' => !empty($currentImages) ? $currentImages : null,
         ]);
 
-        return back()->with('success', 'Post updated successfully.');
+        return redirect()->route('feed')->with('success', 'Post updated successfully.');
     }
 
     public function deletePost(Post $post)

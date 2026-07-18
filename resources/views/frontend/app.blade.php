@@ -41,32 +41,7 @@ function openImageModal(src) {
     }
 }
 
-// Edit modal image preview (delegated, defined globally once)
-document.addEventListener('change', function(e) {
-    if (e.target.matches('.connectly-edit-image-input')) {
-        const containerId = e.target.dataset.previewContainer;
-        const container = document.getElementById(containerId);
-        if (!container) return;
 
-        container.innerHTML = '';
-        const files = Array.from(e.target.files || []);
-        if (files.length === 0) return;
-
-        files.forEach((file, index) => {
-            const reader = new FileReader();
-            const item = document.createElement('div');
-            item.className = 'connectly-edit-preview-item';
-            item.style.animation = 'previewItemIn 0.25s ease backwards';
-            item.style.animationDelay = (index * 0.05) + 's';
-
-            reader.onload = function(ev) {
-                item.innerHTML = `<img src="${ev.target.result}" alt="New image ${index + 1}">`;
-            };
-            reader.readAsDataURL(file);
-            container.appendChild(item);
-        });
-    }
-});
 </script>
 
 </body>
