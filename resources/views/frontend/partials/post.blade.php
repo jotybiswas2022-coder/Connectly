@@ -40,31 +40,51 @@
                                         </div>
 
                                         @if ((int) $post->user_id === (int) auth()->id())
-                                            <div class="d-flex align-items-center gap-1">
-                                                @if(isset($showPinButton) && $showPinButton)
-                                                    <form action="{{ route('profile.posts.pin', ['user_id' => $post->user_id, 'post' => $post->id]) }}" method="POST" class="d-inline">
-                                                        @csrf
-                                                        @method('PUT')
-                                                        <button type="submit" class="btn btn-sm {{ $post->is_pinned ? 'btn-warning' : 'btn-outline-warning' }}">
-                                                            <i class="bi bi-pin-angle-fill me-1"></i>{{ $post->is_pinned ? 'Unpin' : 'Pin' }}
-                                                        </button>
-                                                    </form>
-                                                @endif
+                                            <div class="connectly-post-actions">
                                                 <button
                                                     type="button"
-                                                    class="btn btn-sm btn-outline-secondary"
-                                                    data-bs-toggle="modal"
-                                                    data-bs-target="#editPostModal{{ $post->id }}"
+                                                    class="connectly-post-actions-trigger"
+                                                    data-bs-toggle="dropdown"
+                                                    aria-expanded="false"
                                                 >
-                                                    <i class="bi bi-pencil-square me-1"></i>Edit
+                                                    <i class="bi bi-three-dots-vertical"></i>
                                                 </button>
-                                                <form action="{{ route('feed.posts.delete', $post->id) }}" method="POST" class="d-inline">
-                                                    @csrf
-                                                    @method('DELETE')
-                                                    <button type="submit" class="btn btn-sm btn-outline-danger btn-delete-post" data-delete-post="true">
-                                                        <i class="bi bi-trash me-1"></i>Delete
-                                                    </button>
-                                                </form>
+                                                <ul class="dropdown-menu dropdown-menu-end connectly-post-dropdown">
+                                                    @if(isset($showPinButton) && $showPinButton)
+                                                        <li>
+                                                            <form action="{{ route('profile.posts.pin', ['user_id' => $post->user_id, 'post' => $post->id]) }}" method="POST" class="d-inline">
+                                                                @csrf
+                                                                @method('PUT')
+                                                                <button type="submit" class="dropdown-item connectly-dropdown-item {{ $post->is_pinned ? 'text-warning' : '' }}">
+                                                                    <i class="bi bi-pin-angle-fill me-2"></i>
+                                                                    {{ $post->is_pinned ? 'Unpin' : 'Pin' }}
+                                                                </button>
+                                                            </form>
+                                                        </li>
+                                                        <li><hr class="dropdown-divider"></li>
+                                                    @endif
+                                                    <li>
+                                                        <button
+                                                            type="button"
+                                                            class="dropdown-item connectly-dropdown-item"
+                                                            data-bs-toggle="modal"
+                                                            data-bs-target="#editPostModal{{ $post->id }}"
+                                                        >
+                                                            <i class="bi bi-pencil-square me-2"></i>
+                                                            Edit
+                                                        </button>
+                                                    </li>
+                                                    <li>
+                                                        <form action="{{ route('feed.posts.delete', $post->id) }}" method="POST" class="d-inline">
+                                                            @csrf
+                                                            @method('DELETE')
+                                                            <button type="submit" class="dropdown-item connectly-dropdown-item connectly-dropdown-danger btn-delete-post" data-delete-post="true">
+                                                                <i class="bi bi-trash me-2"></i>
+                                                                Delete
+                                                            </button>
+                                                        </form>
+                                                    </li>
+                                                </ul>
                                             </div>
                                         @endif
                                     </div>

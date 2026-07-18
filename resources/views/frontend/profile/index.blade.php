@@ -1402,6 +1402,92 @@
     .chatbox-toast-popup.swal2-icon-error {
         border-left: 4px solid #ef4444 !important;
     }
+
+    /* ===== POST ACTIONS DROPDOWN ===== */
+    .connectly-post-actions {
+        position: relative;
+    }
+
+    .connectly-post-actions-trigger {
+        width: 32px;
+        height: 32px;
+        border: none;
+        background: transparent;
+        border-radius: 50%;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        color: var(--feed-muted-light, #aeaeb2);
+        cursor: pointer;
+        transition: all 0.25s cubic-bezier(.4,0,.2,1);
+    }
+
+    .connectly-post-actions-trigger:hover {
+        background: var(--feed-input-bg, #f5f5f7);
+        color: var(--feed-text, #1d1d1f);
+    }
+
+    .connectly-post-actions-trigger:active {
+        transform: scale(0.92);
+    }
+
+    .connectly-post-actions-trigger[aria-expanded="true"] {
+        background: var(--feed-input-bg, #f5f5f7);
+        color: var(--feed-primary, #0071e3);
+    }
+
+    .connectly-post-dropdown {
+        border-radius: 14px;
+        border: 1px solid var(--feed-border, #e5e7eb);
+        padding: 0.35rem;
+        box-shadow: 0 8px 24px rgba(0,0,0,0.05);
+        min-width: 150px;
+        animation: connectlyDropdownIn 0.15s ease-out;
+        transform-origin: top right;
+    }
+
+    @keyframes connectlyDropdownIn {
+        from {
+            opacity: 0;
+            transform: scale(0.92) translateY(-4px);
+        }
+        to {
+            opacity: 1;
+            transform: scale(1) translateY(0);
+        }
+    }
+
+    .connectly-dropdown-item {
+        border-radius: 8px;
+        padding: 0.45rem 0.85rem;
+        font-size: 0.85rem;
+        font-weight: 500;
+        color: var(--feed-text, #1d1d1f);
+        transition: all 0.15s ease;
+    }
+
+    .connectly-dropdown-item:hover {
+        background: rgba(0,113,227,0.06);
+        color: var(--feed-primary, #0071e3);
+    }
+
+    .connectly-dropdown-item i {
+        font-size: 0.9rem;
+    }
+
+    .connectly-dropdown-danger {
+        color: #dc2626 !important;
+    }
+
+    .connectly-dropdown-danger:hover {
+        background: rgba(239,68,68,0.08) !important;
+        color: #dc2626 !important;
+    }
+
+    .connectly-post-dropdown .dropdown-divider {
+        margin: 0.25rem 0;
+        border-top-color: var(--feed-border-light, #f0f0f2);
+    }
 </style>
 
 <script>

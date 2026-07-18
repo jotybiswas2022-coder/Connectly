@@ -1080,6 +1080,92 @@
     border: 1px solid rgba(245,158,11,0.2);
 }
 
+/* ===== POST ACTIONS DROPDOWN ===== */
+.connectly-post-actions {
+    position: relative;
+}
+
+.connectly-post-actions-trigger {
+    width: 32px;
+    height: 32px;
+    border: none;
+    background: transparent;
+    border-radius: 50%;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--feed-muted-light);
+    cursor: pointer;
+    transition: all var(--feed-transition);
+}
+
+.connectly-post-actions-trigger:hover {
+    background: var(--feed-input-bg);
+    color: var(--feed-text);
+}
+
+.connectly-post-actions-trigger:active {
+    transform: scale(0.92);
+}
+
+.connectly-post-actions-trigger[aria-expanded="true"] {
+    background: var(--feed-input-bg);
+    color: var(--feed-primary);
+}
+
+.connectly-post-dropdown {
+    border-radius: var(--feed-radius-sm);
+    border: 1px solid var(--feed-border);
+    padding: 0.35rem;
+    box-shadow: var(--feed-shadow-lg);
+    min-width: 150px;
+    animation: connectlyDropdownIn 0.15s ease-out;
+    transform-origin: top right;
+}
+
+@keyframes connectlyDropdownIn {
+    from {
+        opacity: 0;
+        transform: scale(0.92) translateY(-4px);
+    }
+    to {
+        opacity: 1;
+        transform: scale(1) translateY(0);
+    }
+}
+
+.connectly-dropdown-item {
+    border-radius: 8px;
+    padding: 0.45rem 0.85rem;
+    font-size: 0.85rem;
+    font-weight: 500;
+    color: var(--feed-text);
+    transition: all 0.15s ease;
+}
+
+.connectly-dropdown-item:hover {
+    background: var(--feed-primary-subtle);
+    color: var(--feed-primary);
+}
+
+.connectly-dropdown-item i {
+    font-size: 0.9rem;
+}
+
+.connectly-dropdown-danger {
+    color: var(--feed-danger) !important;
+}
+
+.connectly-dropdown-danger:hover {
+    background: rgba(239,68,68,0.08) !important;
+    color: var(--feed-danger) !important;
+}
+
+.connectly-post-dropdown .dropdown-divider {
+    margin: 0.25rem 0;
+    border-top-color: var(--feed-border-light);
+}
+
 /* ===== COMMENT REACTION PICKER ===== */
 .connectly-comment-reaction-picker {
     position: relative;
