@@ -642,7 +642,6 @@
 .connectly-post-card:hover {
     border-color: var(--feed-border-focus);
     box-shadow: var(--feed-shadow-md);
-    transform: translateY(-2px);
 }
 
 @keyframes feedCardSlideUp {

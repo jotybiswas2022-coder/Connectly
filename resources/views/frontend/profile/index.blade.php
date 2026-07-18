@@ -854,7 +854,6 @@
 
     .connectly-profile-posts-container .chatbox-feed-post-card:hover,
     .chatbox-profile-posts-container .chatbox-feed-post-card:hover {
-        transform: translateY(-3px);
         box-shadow: 0 14px 34px rgba(15, 23, 42, 0.08);
         border-color: #c7d9f0;
     }
