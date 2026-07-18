@@ -2188,7 +2188,7 @@
 
 <script>
 document.addEventListener('click', function(e) {
-    const deleteBtn = e.target.closest('[data-delete-post]');
+    const deleteBtn = e.target.closest('.btn-delete-post, [data-delete-post="true"]');
     if (deleteBtn) {
         e.preventDefault();
         const form = deleteBtn.closest('form');

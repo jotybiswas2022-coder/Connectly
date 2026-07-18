@@ -61,7 +61,7 @@
                                                 <form action="{{ route('feed.posts.delete', $post->id) }}" method="POST" class="d-inline">
                                                     @csrf
                                                     @method('DELETE')
-                                                    <button type="submit" class="btn btn-sm btn-outline-danger" data-delete-post>
+                                                    <button type="submit" class="btn btn-sm btn-outline-danger btn-delete-post" data-delete-post="true">
                                                         <i class="bi bi-trash me-1"></i>Delete
                                                     </button>
                                                 </form>
