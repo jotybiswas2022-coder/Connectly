@@ -23,9 +23,9 @@
 
         <div class="row g-4">
             <div class="col-lg-8">
-                <!-- Mobile Search Card (Only visible on mobile) -->
+                <!-- Mobile Search Card (Only visible on mobile, scroll-aware) -->
                 <div class="connectly-mobile-search d-lg-none" id="mobileSearch">
-                    <div class="connectly-mobile-search-inner">
+                    <div class="connectly-mobile-search-inner" id="mobileSearchInner">
                         <form action="{{ route('search') }}" method="GET">
                             <div class="connectly-search-group">
                                 <i class="bi bi-search connectly-search-group-icon"></i>
@@ -41,6 +41,10 @@
                                 </button>
                             </div>
                         </form>
+                        <!-- Scroll hint arrow -->
+                        <div class="connectly-scroll-hint d-none" id="scrollHint">
+                            <i class="bi bi-chevron-down"></i>
+                        </div>
                     </div>
                 </div>
 
@@ -278,10 +282,10 @@
     to { transform: translateY(0); opacity: 1; }
 }
 
-/* ===== MOBILE SEARCH (STICKY) ===== */
+/* ===== MOBILE SEARCH (SCROLL-AWARE) ===== */
 .connectly-mobile-search {
     position: sticky;
-    top: 70px;
+    top: 0;
     z-index: 1020;
     margin-bottom: 1rem;
 }
@@ -292,18 +296,88 @@
     -webkit-backdrop-filter: blur(20px) saturate(180%);
     border-radius: var(--feed-radius);
     border: 1px solid var(--feed-border);
-    padding: 0.8rem 1rem;
+    padding: 0.7rem 0.9rem;
     box-shadow: var(--feed-shadow-md);
     animation: mobileSearchSlideDown 0.4s ease-out;
+    transition: all 0.3s ease;
+    position: relative;
+}
+
+.connectly-mobile-search-inner.is-compact {
+    padding: 0.5rem 0.75rem;
+    border-radius: var(--feed-radius-sm);
+    box-shadow: var(--feed-shadow-lg);
+    border-color: var(--feed-border-focus);
+}
+
+.connectly-scroll-hint {
+    position: absolute;
+    bottom: -6px;
+    left: 50%;
+    transform: translateX(-50%);
+    color: var(--feed-muted-light);
+    font-size: 0.6rem;
+    animation: scrollHintBounce 2s ease-in-out infinite;
+}
+
+@keyframes scrollHintBounce {
+    0%, 100% { transform: translateX(-50%) translateY(0); opacity: 0.4; }
+    50% { transform: translateX(-50%) translateY(4px); opacity: 0.8; }
 }
 
 @keyframes mobileSearchSlideDown {
-    from { transform: translateY(-8px); opacity: 0; }
+    from { transform: translateY(-10px); opacity: 0; }
     to { transform: translateY(0); opacity: 1; }
 }
 
 .connectly-mobile-search-inner .connectly-search-group {
     margin-bottom: 0;
+}
+
+@keyframes skeletonFadeOut {
+    to { opacity: 0; transform: translateY(-10px); }
+}
+
+.connectly-skeleton-fade-out {
+    animation: skeletonFadeOut 0.4s ease forwards;
+}
+
+@media (max-width: 991.98px) {
+    .connectly-composer-card { padding: 1.2rem; }
+    .connectly-post-card { padding: 1.15rem; }
+    .connectly-mobile-search-inner {
+        border-radius: 18px;
+    }
+}
+
+@media (max-width: 767.98px) {
+    .chatbox-layout-feed-profile .chatbox-content-area {
+        height: calc(100vh - var(--chatbox-navbar-height, 68px)) !important;
+        overflow-y: auto !important;
+    }
+    .connectly-feed-page > .container {
+        padding-top: 0 !important;
+    }
+    .connectly-mobile-search {
+        top: 0;
+    }
+    .connectly-mobile-search-inner {
+        padding: 0.65rem 0.85rem;
+    }
+}
+
+@media (max-width: 576px) {
+    .connectly-mobile-search-inner {
+        padding: 0.6rem 0.8rem;
+        border-radius: var(--feed-radius-sm);
+    }
+}
+
+@media (max-width: 480px) {
+    .connectly-mobile-search-inner {
+        padding: 0.5rem 0.7rem;
+        border-radius: 14px;
+    }
 }
 
 /* ===== COMPOSER CARD ===== */
