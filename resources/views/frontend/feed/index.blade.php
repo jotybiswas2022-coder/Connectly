@@ -1769,7 +1769,6 @@ document.addEventListener('DOMContentLoaded', function() {
     // IMAGE PREVIEW — Composer
     // ============================================================
     const composerInput = document.getElementById('composerImageInput');
-    const composerInput = document.getElementById('composerImageInput');
     const previewContainer = document.getElementById('composerPreviewContainer');
     const previewGrid = document.getElementById('composerPreviewGrid');
     const clearBtn = document.getElementById('composerClearPreview');
