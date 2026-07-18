@@ -453,7 +453,7 @@ document.addEventListener('DOMContentLoaded', function () {
 });
 
 document.addEventListener('change', function(e) {
-    if (e.target.matches('.connectly-edit-image-input')) {
+    if (e.target.matches('.connectly-edit-upload-input')) {
         const containerId = e.target.dataset.previewContainer;
         const container = document.getElementById(containerId);
         if (!container) return;
