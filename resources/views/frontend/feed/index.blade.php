@@ -934,35 +934,87 @@
     border: 1px solid var(--feed-border);
 }
 
-/* ===== REACTION PICKER ===== */
-.connectly-reaction-picker {
+/* ===== REACTION BUTTON ===== */
+.connectly-reaction-wrap {
     position: relative;
     display: inline-flex;
     align-items: center;
 }
 
-.connectly-reaction-options {
+.connectly-react-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.35rem;
+    padding: 0.35rem 0.85rem;
+    border-radius: 999px;
+    border: 1.5px solid var(--feed-border);
+    background: var(--feed-surface);
+    color: var(--feed-muted);
+    font-size: 0.8rem;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.2s cubic-bezier(.4,0,.2,1);
+    font-family: inherit;
+}
+
+.connectly-react-btn:hover {
+    border-color: var(--feed-primary);
+    color: var(--feed-primary);
+    background: var(--feed-primary-subtle);
+}
+
+.connectly-react-btn.is-reacted {
+    background: var(--feed-primary);
+    border-color: var(--feed-primary);
+    color: #fff;
+    box-shadow: 0 2px 8px rgba(0,113,227,0.2);
+}
+
+.connectly-react-btn.is-reacted:hover {
+    background: var(--feed-primary-dark);
+    border-color: var(--feed-primary-dark);
+    color: #fff;
+}
+
+.connectly-react-emoji {
+    font-size: 0.95rem;
+    line-height: 1;
+}
+
+.connectly-react-count {
+    font-weight: 600;
+}
+
+.connectly-react-count::before {
+    content: '(';
+}
+
+.connectly-react-count::after {
+    content: ')';
+}
+
+.connectly-react-float {
     position: absolute;
     left: 0;
-    bottom: calc(100% + 4px);
+    bottom: calc(100% + 6px);
     display: flex;
-    gap: 0.35rem;
-    padding: 0.4rem 0.5rem;
+    gap: 0.2rem;
+    padding: 0.35rem 0.45rem;
     background: var(--feed-surface);
     backdrop-filter: blur(16px);
     -webkit-backdrop-filter: blur(16px);
     border: 1px solid var(--feed-border);
     border-radius: 999px;
-    box-shadow: var(--feed-shadow-lg);
+    box-shadow: 0 8px 24px rgba(0,0,0,0.08);
     opacity: 0;
     visibility: hidden;
     pointer-events: none;
-    transform: translateY(8px) scale(0.95);
+    transform: translateY(8px) scale(0.92);
     transition: all 0.2s cubic-bezier(.16,1,.3,1);
     z-index: 25;
 }
 
-.connectly-reaction-options::after {
+.connectly-react-float::after {
     content: '';
     position: absolute;
     left: 0;
@@ -971,84 +1023,76 @@
     height: 12px;
 }
 
-.connectly-reaction-picker:hover .connectly-reaction-options,
-.connectly-reaction-picker:focus-within .connectly-reaction-options,
-.connectly-reaction-options:hover {
+.connectly-reaction-wrap:hover .connectly-react-float,
+.connectly-reaction-wrap:focus-within .connectly-react-float,
+.connectly-react-float:hover {
     opacity: 1;
     visibility: visible;
     pointer-events: auto;
     transform: translateY(0) scale(1);
 }
 
-.connectly-reaction-option {
+.connectly-react-emojibtn {
     border: none;
     background: transparent;
     border-radius: 50%;
-    width: 36px;
-    height: 36px;
-    font-size: 1.1rem;
+    width: 34px;
+    height: 34px;
+    font-size: 1.2rem;
     line-height: 1;
     display: inline-flex;
     align-items: center;
     justify-content: center;
-    transition: transform 0.15s ease, background-color 0.15s ease;
+    transition: transform 0.15s ease, background 0.15s ease;
     cursor: pointer;
 }
 
-.connectly-reaction-option:hover {
-    transform: scale(1.22);
-    background: rgba(37,99,235,0.1);
+.connectly-react-emojibtn:hover {
+    transform: scale(1.3);
+    background: rgba(0,113,227,0.08);
 }
 
-.connectly-reaction-option.active {
-    background: rgba(37,99,235,0.15);
-}
-
-/* ===== MAIN REACTION BUTTON ===== */
-.connectly-main-reaction-btn {
-    border-radius: var(--feed-radius-pill) !important;
-    padding: 0.3rem 0.9rem !important;
-    font-size: 0.8rem !important;
-    font-weight: 500 !important;
-    transition: all 0.2s ease !important;
-    border: 1px solid var(--feed-border) !important;
-    background: var(--feed-surface) !important;
-    color: var(--feed-muted) !important;
-}
-
-.connectly-main-reaction-btn:hover {
-    background: var(--feed-primary-subtle) !important;
-    border-color: var(--feed-primary) !important;
-    color: var(--feed-primary) !important;
-}
-
-.connectly-main-reaction-btn.btn-primary {
-    background: var(--feed-primary) !important;
-    border-color: var(--feed-primary) !important;
-    color: #fff !important;
-}
-
-.connectly-main-reaction-btn.btn-primary:hover {
-    color: #fff !important;
-    background: var(--feed-primary-dark) !important;
+.connectly-react-emojibtn.active {
+    background: rgba(0,113,227,0.12);
+    transform: scale(1.15);
 }
 
 /* ===== COMMENT BUTTON ===== */
-.connectly-comment-btn {
-    border-radius: var(--feed-radius-pill) !important;
-    padding: 0.3rem 0.9rem !important;
-    font-size: 0.8rem !important;
-    font-weight: 500 !important;
-    border: 1px solid var(--feed-border) !important;
-    background: var(--feed-surface) !important;
-    color: var(--feed-muted) !important;
-    transition: all 0.2s ease !important;
+.connectly-comment-link {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.35rem;
+    padding: 0.35rem 0.85rem;
+    border-radius: 999px;
+    border: 1.5px solid var(--feed-border);
+    background: var(--feed-surface);
+    color: var(--feed-muted);
+    font-size: 0.8rem;
+    font-weight: 500;
+    text-decoration: none;
+    transition: all 0.2s cubic-bezier(.4,0,.2,1);
 }
 
-.connectly-comment-btn:hover {
-    background: var(--feed-primary-subtle) !important;
-    border-color: var(--feed-primary) !important;
-    color: var(--feed-primary) !important;
+.connectly-comment-link:hover {
+    border-color: var(--feed-primary);
+    color: var(--feed-primary);
+    background: var(--feed-primary-subtle);
+}
+
+.connectly-comment-link i {
+    font-size: 0.9rem;
+}
+
+.connectly-comment-count {
+    font-weight: 600;
+}
+
+.connectly-comment-count::before {
+    content: '(';
+}
+
+.connectly-comment-count::after {
+    content: ')';
 }
 
 /* ===== REACTION BADGES ===== */
@@ -1635,8 +1679,8 @@
 .connectly-feed-post-btn:active,
 .connectly-search-btn:active,
 .connectly-comment-submit-btn:active,
-.connectly-main-reaction-btn:active,
-.connectly-comment-btn:active,
+.connectly-react-btn:active,
+.connectly-comment-link:active,
 .connectly-reply-trigger:active {
     transform: scale(0.96) !important;
 }
@@ -1716,10 +1760,10 @@
         font-size: 0.88rem;
     }
 
-    .connectly-main-reaction-btn,
-    .connectly-comment-btn {
-        padding: 0.25rem 0.65rem !important;
-        font-size: 0.75rem !important;
+    .connectly-react-btn,
+    .connectly-comment-link {
+        padding: 0.25rem 0.65rem;
+        font-size: 0.75rem;
     }
 
     .connectly-post-image-grid.grid-2,
@@ -2060,12 +2104,12 @@ document.addEventListener('submit', async function (event) {
 
     event.preventDefault();
 
-    const picker = form.closest('.connectly-reaction-picker') || form.closest('.chatbox-reaction-picker');
-    if (!picker) return;
+    const wrap = form.closest('.connectly-reaction-wrap');
+    if (!wrap) return;
 
-    const card = picker.closest('.connectly-post-card') || picker.closest('.chatbox-feed-post-card');
+    const card = wrap.closest('.connectly-post-card');
     const csrfToken = document.querySelector('meta[name="csrf-token"]')?.getAttribute('content') || '';
-    const buttons = picker.querySelectorAll('button');
+    const buttons = wrap.querySelectorAll('button');
     buttons.forEach((button) => { button.disabled = true; });
 
     try {
@@ -2092,16 +2136,15 @@ document.addEventListener('submit', async function (event) {
         };
 
         const currentReaction = data.current_reaction;
-        const mainInput = picker.querySelector('.chatbox-main-reaction-input');
-        const mainButton = picker.querySelector('.chatbox-main-reaction-button');
-        const mainEmoji = picker.querySelector('.chatbox-main-reaction-emoji');
-        const mainLabel = picker.querySelector('.chatbox-main-reaction-label');
-        const mainCount = picker.querySelector('.chatbox-main-reaction-count');
+        const mainInput = wrap.querySelector('.connectly-react-input');
+        const mainButton = wrap.querySelector('.connectly-react-btn');
+        const mainEmoji = wrap.querySelector('.connectly-react-emoji');
+        const mainLabel = wrap.querySelector('.connectly-react-label');
+        const mainCount = wrap.querySelector('.connectly-react-count');
 
         if (mainInput) mainInput.value = currentReaction || 'like';
         if (mainButton) {
-            mainButton.classList.toggle('btn-primary', !!currentReaction);
-            mainButton.classList.toggle('btn-outline-primary', !currentReaction);
+            mainButton.classList.toggle('is-reacted', !!currentReaction);
         }
 
         const meta = reactionMeta[currentReaction] || reactionMeta.like;
@@ -2109,7 +2152,7 @@ document.addEventListener('submit', async function (event) {
         if (mainLabel) mainLabel.textContent = currentReaction ? meta.label : 'Like';
         if (mainCount) mainCount.textContent = String(data.total_reactions ?? 0);
 
-        picker.querySelectorAll('.connectly-reaction-option, .chatbox-reaction-option').forEach((optionButton) => {
+        wrap.querySelectorAll('.connectly-react-emojibtn').forEach((optionButton) => {
             optionButton.classList.toggle('active', optionButton.dataset.reactionKey === currentReaction);
         });
 

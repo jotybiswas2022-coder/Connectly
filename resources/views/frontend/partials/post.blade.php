@@ -110,18 +110,18 @@
                                     @endif
 
                                     <div class="d-flex align-items-center gap-2">
-                                        <div class="chatbox-reaction-picker connectly-reaction-picker" data-post-id="{{ $post->id }}">
-                                            <form action="{{ route('feed.posts.react', $post->id) }}" method="POST" class="d-inline chatbox-main-reaction-form" data-reaction-form="main">
+                                        <div class="connectly-reaction-wrap" data-post-id="{{ $post->id }}">
+                                            <form action="{{ route('feed.posts.react', $post->id) }}" method="POST" data-reaction-form="main">
                                                 @csrf
-                                                <input type="hidden" name="reaction_type" value="{{ $currentReactionType ?? 'like' }}" class="chatbox-main-reaction-input">
-                                                <button type="submit" class="btn btn-sm chatbox-main-reaction-button connectly-main-reaction-btn {{ $currentReactionType ? 'btn-primary' : 'btn-outline-primary' }}">
-                                                    <span class="me-1 chatbox-main-reaction-emoji">{{ $currentReactionEmoji }}</span>
-                                                    <span class="chatbox-main-reaction-label">{{ $currentReactionLabel }}</span>
-                                                    (<span class="chatbox-main-reaction-count">{{ $post->reactions_count }}</span>)
+                                                <input type="hidden" name="reaction_type" value="{{ $currentReactionType ?? 'like' }}" class="connectly-react-input">
+                                                <button type="submit" class="connectly-react-btn {{ $currentReactionType ? 'is-reacted' : '' }}">
+                                                    <span class="connectly-react-emoji">{{ $currentReactionEmoji }}</span>
+                                                    <span class="connectly-react-label">{{ $currentReactionLabel }}</span>
+                                                    <span class="connectly-react-count">{{ $post->reactions_count }}</span>
                                                 </button>
                                             </form>
 
-                                            <div class="chatbox-reaction-options connectly-reaction-options" aria-label="Reaction options">
+                                            <div class="connectly-react-float" aria-label="Reaction options">
                                                 @foreach ($reactionTypes as $reactionKey => $reactionLabel)
                                                     @php
                                                         $reactionEmoji = match ($reactionKey) {
@@ -132,12 +132,12 @@
                                                             default => '👍',
                                                         };
                                                     @endphp
-                                                    <form action="{{ route('feed.posts.react', $post->id) }}" method="POST" class="d-inline" data-reaction-form="option">
+                                                    <form action="{{ route('feed.posts.react', $post->id) }}" method="POST" data-reaction-form="option">
                                                         @csrf
                                                         <input type="hidden" name="reaction_type" value="{{ $reactionKey }}">
                                                         <button
                                                             type="submit"
-                                                            class="chatbox-reaction-option connectly-reaction-option {{ $currentReactionType === $reactionKey ? 'active' : '' }}"
+                                                            class="connectly-react-emojibtn {{ $currentReactionType === $reactionKey ? 'active' : '' }}"
                                                             title="{{ $reactionLabel }}"
                                                             aria-label="{{ $reactionLabel }}"
                                                             data-reaction-key="{{ $reactionKey }}"
@@ -151,10 +151,11 @@
 
                                         <a
                                             href="{{ route('feed.posts.comments', $post->id) }}"
-                                            class="btn btn-sm btn-outline-secondary"
+                                            class="connectly-comment-link"
                                         >
-                                            <i class="bi bi-chat-dots-fill me-1"></i>
-                                            Comments (<span class="chatbox-comments-count">{{ $post->comments_count }}</span>)
+                                            <i class="bi bi-chat-dots-fill"></i>
+                                            <span>Comments</span>
+                                            <span class="connectly-comment-count">{{ $post->comments_count }}</span>
                                         </a>
                                     </div>
 
