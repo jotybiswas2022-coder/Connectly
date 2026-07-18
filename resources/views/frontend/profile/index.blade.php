@@ -2186,4 +2186,34 @@
     });
 </script>
 
+<script>
+document.addEventListener('click', function(e) {
+    const deleteBtn = e.target.closest('[data-delete-post]');
+    if (deleteBtn) {
+        e.preventDefault();
+        const form = deleteBtn.closest('form');
+        if (!form) return;
+
+        if (typeof Swal === 'undefined') {
+            if (confirm('Delete this post?')) form.submit();
+            return;
+        }
+
+        Swal.fire({
+            title: 'Delete post?',
+            text: 'This action cannot be undone.',
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonText: 'Yes, delete it',
+            cancelButtonText: 'Cancel',
+            reverseButtons: true
+        }).then((result) => {
+            if (result.isConfirmed) {
+                form.submit();
+            }
+        });
+    }
+});
+</script>
+
 @endsection
