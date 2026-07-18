@@ -19,7 +19,7 @@
                                          alt="{{ $post->user->name }} avatar"
                                          class="chatbox-feed-avatar chatbox-feed-avatar-image connectly-feed-avatar connectly-feed-avatar-image">
                                 @else
-                                    <div class="chatbox-feed-avatar chatbox-feed-avatar-alt">
+                                    <div class="chatbox-feed-avatar chatbox-feed-avatar-alt connectly-feed-avatar connectly-feed-avatar-alt">
                                         {{ strtoupper(substr($post->user->name, 0, 1)) }}
                                     </div>
                                 @endif

@@ -1205,61 +1205,15 @@
     }
 }
 
-.chatbox-profile-page { min-height: 100%; padding-bottom: 2rem; }
-.chatbox-profile-alert { border-radius: 14px; border: none; font-weight: 500; }
-.chatbox-profile-card { background: var(--profile-surface); border: 1px solid var(--profile-border); border-radius: var(--profile-radius); padding: 1.5rem; box-shadow: var(--profile-shadow); }
-.chatbox-profile-sticky { position: sticky; top: 1rem; }
-.chatbox-profile-avatar-section { text-align: center; padding-bottom: 1rem; }
-.chatbox-profile-avatar { width: 120px; height: 120px; border-radius: 50%; object-fit: cover; border: 3px solid var(--profile-border-light); box-shadow: 0 4px 12px rgba(0,0,0,0.04); }
-.chatbox-profile-avatar-fallback { display: inline-flex; align-items: center; justify-content: center; font-weight: 700; font-size: 2.6rem; color: #fff; background: linear-gradient(135deg, var(--profile-primary) 0%, var(--profile-primary-dark) 100%); }
-.chatbox-profile-name { font-size: 1.2rem; font-weight: 700; color: var(--profile-text); }
-.chatbox-profile-badge { display: inline-flex; align-items: center; gap: 4px; background: var(--profile-primary-subtle); color: var(--profile-primary); font-size: 0.72rem; font-weight: 600; padding: 4px 12px; border-radius: 999px; border: 1px solid rgba(0,113,227,0.12); }
-.chatbox-friend-status-badge { display: inline-flex; align-items: center; justify-content: center; gap: 4px; font-size: 0.8rem; font-weight: 600; padding: 0.5rem 1rem; border-radius: var(--profile-radius-xs); border: 1.5px solid; }
-.chatbox-friend-pending { background: #fffbeb; color: #b45309; border-color: #fde68a; }
-.chatbox-friend-accepted { background: #ecfdf5; color: #047857; border-color: #a7f3d0; }
-.chatbox-friend-rejected { background: #fef2f2; color: #b91c1c; border-color: #fecaca; }
-.chatbox-friend-action-btn { display: inline-flex; align-items: center; justify-content: center; width: 38px; height: 38px; border-radius: var(--profile-radius-xs); border: 1.5px solid var(--profile-border); background: var(--profile-surface); color: var(--profile-muted); cursor: pointer; transition: all 0.2s ease; font-size: 0.85rem; }
-.chatbox-profile-stats-row { display: flex; justify-content: center; gap: 1px; background: var(--profile-surface-hover); border-radius: var(--profile-radius-sm); padding: 0.65rem; border: 1px solid var(--profile-border-light); margin: 0.5rem 0 0.2rem; }
-.chatbox-profile-stat-item { flex: 1; text-align: center; padding: 0.2rem 0.4rem; border-right: 1px solid var(--profile-border-light); }
-.chatbox-profile-stat-item:last-child { border-right: none; }
-.chatbox-profile-stat-value { display: block; font-size: 1.1rem; font-weight: 700; color: var(--profile-text); line-height: 1.3; }
-.chatbox-profile-stat-label { display: block; font-size: 0.68rem; color: var(--profile-muted); font-weight: 500; text-transform: uppercase; letter-spacing: 0.4px; }
-.chatbox-profile-divider { margin: 1rem 0; border-color: var(--profile-border-light); opacity: 1; }
-.chatbox-profile-form { text-align: left; }
-.chatbox-form-label { display: block; font-size: 0.78rem; font-weight: 600; color: var(--profile-text); margin-bottom: 0.4rem; }
-.chatbox-input-group { position: relative; }
-.chatbox-form-control { width: 100%; padding: 0.65rem 2.5rem 0.65rem 0.9rem; font-size: 0.85rem; border: 1.5px solid var(--profile-border); border-radius: var(--profile-radius-xs); background: var(--profile-surface-hover); color: var(--profile-text); transition: all 0.2s; outline: none; }
-.chatbox-form-control:focus { border-color: var(--profile-border-focus); background: var(--profile-surface); box-shadow: 0 0 0 3px rgba(0,113,227,0.1); }
-.chatbox-input-icon { position: absolute; right: 12px; top: 50%; transform: translateY(-50%); color: var(--profile-muted-light); font-size: 0.85rem; pointer-events: none; }
-.chatbox-invalid-feedback { color: #dc2626; font-size: 0.75rem; margin-top: 4px; font-weight: 500; }
-.chatbox-file-input-wrapper { position: relative; }
-.chatbox-file-input { position: absolute; width: 100%; height: 100%; opacity: 0; cursor: pointer; z-index: 2; }
-.chatbox-file-label { display: flex; align-items: center; padding: 0.65rem 0.9rem; border: 1.5px dashed var(--profile-border); border-radius: var(--profile-radius-xs); background: var(--profile-surface-hover); color: var(--profile-muted); font-size: 0.82rem; font-weight: 500; cursor: pointer; transition: all 0.2s; }
-.chatbox-file-label:hover { border-color: var(--profile-primary); background: var(--profile-primary-subtle); color: var(--profile-primary); }
-.chatbox-form-text { font-size: 0.7rem; color: var(--profile-muted-light); margin-top: 4px; }
-.chatbox-checkbox-wrapper { display: flex; align-items: center; gap: 8px; }
-.chatbox-checkbox-input { width: 18px; height: 18px; border-radius: 4px; border: 2px solid var(--profile-border); accent-color: #dc2626; cursor: pointer; }
-.chatbox-checkbox-label { font-size: 0.82rem; color: #dc2626; font-weight: 500; cursor: pointer; user-select: none; }
-.chatbox-btn-primary { display: inline-flex; align-items: center; justify-content: center; gap: 6px; padding: 0.65rem 1.25rem; background: var(--profile-primary); color: #fff; font-size: 0.85rem; font-weight: 600; border: none; border-radius: var(--profile-radius-xs); cursor: pointer; transition: all 0.25s cubic-bezier(.4,0,.2,1); box-shadow: 0 4px 12px rgba(0,113,227,0.2); text-decoration: none; }
-.chatbox-btn-primary:hover { background: var(--profile-primary-dark); transform: translateY(-1px); box-shadow: 0 6px 18px rgba(0,113,227,0.28); color: #fff; }
-.chatbox-btn-full { width: 100%; }
-.chatbox-profile-empty-state { text-align: center; padding: 3rem 1.5rem; background: var(--profile-surface); border: 1px solid var(--profile-border); border-radius: var(--profile-radius); box-shadow: var(--profile-shadow); }
-.chatbox-profile-empty-icon { width: 56px; height: 56px; display: inline-flex; align-items: center; justify-content: center; background: var(--profile-primary-subtle); border-radius: 50%; font-size: 1.4rem; color: var(--profile-primary); margin-bottom: 0.75rem; }
+/* ===== KEPT FALLBACKS (needed by SweetAlert JS or post partial) ===== */
 .chatbox-toast-popup { border-radius: var(--profile-radius-xs) !important; box-shadow: var(--profile-shadow-lg) !important; font-family: inherit !important; }
 .chatbox-toast-popup .swal2-title { font-size: 0.85rem !important; font-weight: 500 !important; color: var(--profile-text) !important; }
 .chatbox-toast-popup .swal2-timer-progress-bar { background: rgba(0,113,227,0.12) !important; height: 3px !important; }
 .chatbox-toast-popup.swal2-icon-success { border-left: 4px solid #10b981 !important; }
 .chatbox-toast-popup.swal2-icon-error { border-left: 4px solid #ef4444 !important; }
+.chatbox-file-input.has-file ~ .chatbox-file-label span { color: var(--profile-primary); }
 .chatbox-reaction-badge-emoji { font-size: 0.75rem; }
 .chatbox-reaction-badge-count { font-size: 0.68rem; font-weight: 600; }
-.chatbox-pinned-badge { display: inline-flex; align-items: center; gap: 3px; background: #fef3c7; color: #b45309; font-size: 0.68rem; font-weight: 600; padding: 2px 10px; border-radius: 999px; border: 1px solid #fde68a; }
-.chatbox-profile-link { font-weight: 600; color: var(--profile-primary-dark); transition: color 0.2s ease; }
-.chatbox-profile-link:hover { color: var(--profile-primary); }
-.chatbox-feed-avatar { width: 42px; height: 42px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: 600; font-size: 1rem; color: #ffffff; flex-shrink: 0; border: 2px solid var(--profile-border-light); background: linear-gradient(135deg, var(--profile-primary) 0%, var(--profile-primary-dark) 100%); }
-.chatbox-feed-avatar-alt { background: linear-gradient(135deg, #6b7280 0%, #374151 100%); }
-.chatbox-feed-avatar-image { object-fit: cover; background: var(--profile-surface); border-color: var(--profile-border-light); }
-.chatbox-feed-post-text { font-size: 0.92rem; line-height: 1.7; color: var(--profile-text-secondary); white-space: pre-line; }
-.chatbox-file-input.has-file ~ .chatbox-file-label span { color: var(--profile-primary); }
 </style>
 
 <script>

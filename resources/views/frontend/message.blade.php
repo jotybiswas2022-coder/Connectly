@@ -871,31 +871,181 @@
     color: var(--clr-text);
 }
 
+/* ===== RESPONSIVE (max-width: 768px - Tablet) ===== */
 @media (max-width: 768px) {
-    .connectly-msg-page { padding: 10px; min-height: calc(100vh - 60px); }
-    .connectly-msg-layout { height: calc(100vh - 80px); min-height: 400px; }
+    .connectly-msg-page {
+        overflow-x: hidden;
+        padding: 10px;
+        min-height: 100dvh;
+    }
+    .connectly-msg-layout {
+        height: calc(100dvh - 20px);
+        max-width: 100%;
+        min-height: 500px;
+    }
     .connectly-msg-header { padding: 12px 16px; }
     .connectly-msg-header-info .connectly-msg-avatar { width: 40px; height: 40px; }
     .connectly-msg-header-name { font-size: 15px; }
+    .connectly-msg-header-actions { gap: 4px; }
+    .connectly-msg-header-btn { width: 38px; height: 38px; font-size: 15px; }
     .connectly-msg-messages { padding: 14px 16px; }
-    .connectly-msg-form { padding: 12px 16px; }
+    .connectly-msg-form { padding: 10px 14px; }
+    .connectly-msg-form-row { padding: 4px; gap: 6px; }
+    .connectly-msg-attach { width: 40px; height: 40px; font-size: 17px; border-radius: 10px; }
+    .connectly-msg-send { width: 40px; height: 40px; font-size: 16px; border-radius: 10px; }
+    .connectly-msg-input { font-size: 16px; padding: 8px 4px; }
     .connectly-lightbox { padding: 12px; }
     .connectly-msg-avatar-wrap { width: 32px; height: 32px; }
     .connectly-msg-bubble-wrap { max-width: 80%; }
+    .connectly-msg-bubble { padding: 10px 14px; border-radius: 16px; }
+    .connectly-msg-bubble-in { border-bottom-left-radius: 4px; }
+    .connectly-msg-bubble-out { border-bottom-right-radius: 4px; }
+    .connectly-msg-text { font-size: 14px; }
+    .connectly-msg-time { font-size: 10px; }
+    .connectly-msg-empty-icon { width: 72px; height: 72px; }
+    .connectly-msg-empty-icon i { font-size: 30px; }
+    .connectly-msg-empty-title { font-size: 17px; }
+    .connectly-msg-empty-sub { font-size: 13px; }
+    .connectly-msg-actions { gap: 6px; }
+    .connectly-msg-action-btn {
+        padding: 8px 12px;
+        font-size: 12px;
+        min-height: 40px;
+        min-width: 40px;
+        justify-content: center;
+        border-radius: 8px;
+    }
+    .connectly-msg-action-btn i { font-size: 14px; }
+    .connectly-msg-edit-input { font-size: 16px; padding: 8px 12px; }
+    .connectly-msg-edit-save, .connectly-msg-edit-cancel { padding: 8px 16px; font-size: 13px; }
+    .connectly-lightbox-close { top: 12px; right: 12px; width: 40px; height: 40px; font-size: 24px; }
+    .connectly-msg-date-sep { margin-bottom: 14px; }
+    .connectly-msg-date-text { font-size: 11px; }
+    .connectly-msg-status-dot { width: 11px; height: 11px; border-width: 2px; }
+
+    /* Reduce orb sizes for tablets */
+    .connectly-msg-orb-1 { width: 200px; height: 200px; top: -60px; right: -50px; }
+    .connectly-msg-orb-2 { width: 180px; height: 180px; bottom: -40px; left: -40px; }
+    .connectly-msg-orb-3 { width: 140px; height: 140px; }
 }
 
-@media (max-width: 480px) {
-    .connectly-msg-page { padding: 6px; }
-    .connectly-msg-layout { height: calc(100vh - 72px); min-height: 350px; }
+/* ===== RESPONSIVE (max-width: 576px - Phones) ===== */
+@media (max-width: 576px) {
+    .connectly-msg-page { padding: 0; }
+    .connectly-msg-layout {
+        height: 100dvh;
+        min-height: 100dvh;
+        border-radius: 0;
+    }
+    .connectly-msg-card { border-radius: 0; border: none; }
     .connectly-msg-header { padding: 10px 12px; }
     .connectly-msg-header-info .connectly-msg-avatar { width: 36px; height: 36px; }
     .connectly-msg-header-name { font-size: 14px; }
+    .connectly-msg-header-btn { width: 36px; height: 36px; font-size: 14px; }
+    .connectly-msg-header-actions { gap: 3px; }
     .connectly-msg-messages { padding: 10px 12px; }
-    .connectly-msg-form { padding: 10px 12px; }
-    .connectly-msg-form-row { padding: 4px; gap: 6px; }
+    .connectly-msg-form { padding: 8px 10px; }
+    .connectly-msg-form-inner { border-radius: 12px; }
+    .connectly-msg-form-row { padding: 3px; gap: 5px; }
+    .connectly-msg-attach { width: 38px; height: 38px; font-size: 16px; border-radius: 9px; }
+    .connectly-msg-send { width: 38px; height: 38px; font-size: 15px; border-radius: 9px; }
+    .connectly-msg-input { font-size: 16px; padding: 6px 4px; }
     .connectly-msg-avatar-wrap { width: 28px; height: 28px; }
     .connectly-msg-bubble-wrap { max-width: 85%; }
-    .connectly-msg-bubble { padding: 10px 14px; }
+    .connectly-msg-bubble { padding: 8px 12px; border-radius: 14px; }
+    .connectly-msg-text { font-size: 14px; }
+    .connectly-msg-empty-icon { width: 60px; height: 60px; }
+    .connectly-msg-empty-icon i { font-size: 26px; }
+    .connectly-msg-empty-title { font-size: 16px; }
+    .connectly-msg-empty-sub { font-size: 12px; padding: 0 10px; }
+    .connectly-msg-action-btn {
+        padding: 6px 10px;
+        font-size: 12px;
+        min-height: 38px;
+        min-width: 38px;
+        border-radius: 8px;
+    }
+    .connectly-msg-action-btn i { font-size: 13px; }
+    .connectly-lightbox-dialog img { border-radius: 8px; }
+    .connectly-lightbox-close { width: 38px; height: 38px; font-size: 22px; }
+    .connectly-msg-edit-input { font-size: 16px; padding: 8px 12px; }
+    .connectly-msg-edit-save { padding: 7px 14px; font-size: 12px; }
+    .connectly-msg-edit-cancel { padding: 7px 14px; font-size: 12px; }
+}
+
+/* ===== RESPONSIVE (max-width: 400px - Small phones) ===== */
+@media (max-width: 400px) {
+    .connectly-msg-header { padding: 8px 10px; }
+    .connectly-msg-header-info { gap: 10px; }
+    .connectly-msg-header-info .connectly-msg-avatar { width: 32px; height: 32px; }
+    .connectly-msg-header-name { font-size: 13px; }
+    .connectly-msg-header-status { font-size: 11px; }
+    .connectly-msg-header-btn { width: 34px; height: 34px; font-size: 13px; }
+    .connectly-msg-header-actions { gap: 2px; }
+    .connectly-msg-messages { padding: 8px 10px; }
+    .connectly-msg-form { padding: 6px 8px; }
+    .connectly-msg-form-row { padding: 3px; gap: 4px; }
+    .connectly-msg-attach { width: 36px; height: 36px; border-radius: 8px; font-size: 15px; }
+    .connectly-msg-send { width: 36px; height: 36px; border-radius: 8px; font-size: 14px; }
+    .connectly-msg-input { font-size: 16px; max-height: 72px; }
+    .connectly-msg-avatar-wrap { width: 24px; height: 24px; }
+    .connectly-msg-bubble-wrap { max-width: 88%; }
+    .connectly-msg-bubble { padding: 7px 10px; border-radius: 12px; }
+    .connectly-msg-text { font-size: 13px; }
+    .connectly-msg-time { font-size: 9px; }
+    .connectly-msg-empty-icon { width: 50px; height: 50px; }
+    .connectly-msg-empty-icon i { font-size: 22px; }
+    .connectly-msg-empty-title { font-size: 14px; }
+    .connectly-msg-empty-sub { font-size: 11px; }
+    .connectly-msg-action-btn {
+        padding: 5px 8px;
+        font-size: 11px;
+        min-height: 36px;
+        min-width: 36px;
+        border-radius: 6px;
+    }
+    .connectly-msg-action-btn i { font-size: 12px; }
+    .connectly-lightbox-close { width: 36px; height: 36px; font-size: 20px; }
+    .connectly-msg-date-sep { margin-bottom: 10px; }
+    .connectly-msg-date-text { font-size: 10px; }
+    .connectly-msg-edit-input { font-size: 16px; padding: 6px 10px; }
+    .connectly-msg-edit-save, .connectly-msg-edit-cancel { padding: 6px 12px; font-size: 11px; }
+
+    /* Reduce orb sizes further for small phones */
+    .connectly-msg-orb-1 { width: 140px; height: 140px; top: -40px; right: -30px; }
+    .connectly-msg-orb-2 { width: 120px; height: 120px; bottom: -30px; left: -30px; }
+    .connectly-msg-orb-3 { width: 100px; height: 100px; }
+}
+
+/* ===== Landscape orientation ===== */
+@media (max-height: 500px) and (orientation: landscape) {
+    .connectly-msg-page { overflow-x: hidden; }
+    .connectly-msg-layout { height: 100dvh; min-height: 100dvh; }
+    .connectly-msg-header { padding: 6px 12px; }
+    .connectly-msg-header-info .connectly-msg-avatar { width: 30px; height: 30px; }
+    .connectly-msg-header-name { font-size: 13px; }
+    .connectly-msg-header-btn { width: 32px; height: 32px; font-size: 13px; }
+    .connectly-msg-messages { padding: 6px 12px; }
+    .connectly-msg-form { padding: 4px 10px; }
+    .connectly-msg-form-row { padding: 3px; gap: 4px; }
+    .connectly-msg-attach { width: 32px; height: 32px; font-size: 14px; }
+    .connectly-msg-send { width: 32px; height: 32px; font-size: 13px; }
+    .connectly-msg-input { max-height: 48px; font-size: 16px; }
+    .connectly-msg-avatar-wrap { width: 24px; height: 24px; }
+    .connectly-msg-bubble { padding: 5px 10px; border-radius: 10px; }
+    .connectly-msg-text { font-size: 13px; }
+    .connectly-msg-empty-icon { width: 44px; height: 44px; }
+    .connectly-msg-empty-icon i { font-size: 20px; }
+    .connectly-msg-empty-title { font-size: 13px; }
+    .connectly-msg-date-sep { margin-bottom: 6px; }
+    .connectly-msg-actions { gap: 4px; }
+    .connectly-msg-action-btn { padding: 4px 8px; min-height: 30px; min-width: 30px; font-size: 10px; }
+}
+
+/* ===== Prevent iOS zoom on input focus ===== */
+@supports (-webkit-touch-callout: none) {
+    .connectly-msg-input { font-size: 16px !important; }
+    .connectly-msg-edit-input { font-size: 16px !important; }
 }
 </style>
 
