@@ -106,17 +106,17 @@
                                      onclick="openImageModal(this.src)">
                             @endif
                             <div class="d-flex align-items-center gap-2 mt-2">
-                                <div class="connectly-comment-reaction-picker" data-comment-id="{{ $comment->id }}">
-                                    <form action="{{ route('feed.comments.react', $comment->id) }}" method="POST" class="d-inline" data-comment-reaction-form="main">
+                                <div class="connectly-comment-react" data-comment-id="{{ $comment->id }}">
+                                    <form action="{{ route('feed.comments.react', $comment->id) }}" method="POST" data-comment-reaction-form="main">
                                         @csrf
-                                        <input type="hidden" name="reaction_type" value="{{ $commentCurrentReactionType ?? 'like' }}" class="chatbox-comment-main-reaction-input">
-                                        <button type="submit" class="connectly-comments-reaction-btn {{ $commentCurrentReactionType ? 'active' : '' }}">
-                                            <span class="me-1 chatbox-comment-main-reaction-emoji">{{ $commentCurrentReactionEmoji }}</span>
-                                            <span class="chatbox-comment-main-reaction-label">{{ $commentCurrentReactionLabel }}</span>
-                                            (<span class="chatbox-comment-main-reaction-count">{{ $comment->reactions_count }}</span>)
+                                        <input type="hidden" name="reaction_type" value="{{ $commentCurrentReactionType ?? 'like' }}" class="connectly-comment-react-input">
+                                        <button type="submit" class="connectly-comment-react-btn {{ $commentCurrentReactionType ? 'is-reacted' : '' }}">
+                                            <span class="connectly-comment-react-emoji">{{ $commentCurrentReactionEmoji }}</span>
+                                            <span class="connectly-comment-react-label">{{ $commentCurrentReactionLabel }}</span>
+                                            <span class="connectly-comment-react-count">{{ $comment->reactions_count }}</span>
                                         </button>
                                     </form>
-                                    <div class="connectly-comment-reaction-options" aria-label="Reaction options">
+                                    <div class="connectly-comment-react-float" aria-label="Reaction options">
                                         @foreach ($reactionTypes as $reactionKey => $reactionLabel)
                                             @php
                                                 $reactionEmoji = match ($reactionKey) {
@@ -124,10 +124,10 @@
                                                     default => '👍',
                                                 };
                                             @endphp
-                                            <form action="{{ route('feed.comments.react', $comment->id) }}" method="POST" class="d-inline" data-comment-reaction-form="option">
+                                            <form action="{{ route('feed.comments.react', $comment->id) }}" method="POST" data-comment-reaction-form="option">
                                                 @csrf
                                                 <input type="hidden" name="reaction_type" value="{{ $reactionKey }}">
-                                                <button type="submit" class="connectly-comments-reaction-option {{ $commentCurrentReactionType === $reactionKey ? 'active' : '' }}" title="{{ $reactionLabel }}">{{ $reactionEmoji }}</button>
+                                                <button type="submit" class="connectly-comment-react-emojibtn {{ $commentCurrentReactionType === $reactionKey ? 'active' : '' }}" data-reaction-key="{{ $reactionKey }}" title="{{ $reactionLabel }}">{{ $reactionEmoji }}</button>
                                             </form>
                                         @endforeach
                                     </div>
@@ -195,17 +195,17 @@
                                                              onclick="openImageModal(this.src)">
                                                     @endif
                                                     <div class="d-flex align-items-center gap-2 mt-2">
-                                                        <div class="connectly-comment-reaction-picker" data-comment-id="{{ $reply->id }}">
-                                                            <form action="{{ route('feed.comments.react', $reply->id) }}" method="POST" class="d-inline" data-comment-reaction-form="main">
+                                                        <div class="connectly-comment-react" data-comment-id="{{ $reply->id }}">
+                                                            <form action="{{ route('feed.comments.react', $reply->id) }}" method="POST" data-comment-reaction-form="main">
                                                                 @csrf
-                                                                <input type="hidden" name="reaction_type" value="{{ $replyCurrentReactionType ?? 'like' }}" class="chatbox-comment-main-reaction-input">
-                                                                <button type="submit" class="connectly-comments-reaction-btn {{ $replyCurrentReactionType ? 'active' : '' }}">
-                                                                    <span class="me-1 chatbox-comment-main-reaction-emoji">{{ $replyCurrentReactionEmoji }}</span>
-                                                                    <span class="chatbox-comment-main-reaction-label">{{ $replyCurrentReactionLabel }}</span>
-                                                                    (<span class="chatbox-comment-main-reaction-count">{{ $reply->reactions_count }}</span>)
+                                                                <input type="hidden" name="reaction_type" value="{{ $replyCurrentReactionType ?? 'like' }}" class="connectly-comment-react-input">
+                                                                <button type="submit" class="connectly-comment-react-btn {{ $replyCurrentReactionType ? 'is-reacted' : '' }}">
+                                                                    <span class="connectly-comment-react-emoji">{{ $replyCurrentReactionEmoji }}</span>
+                                                                    <span class="connectly-comment-react-label">{{ $replyCurrentReactionLabel }}</span>
+                                                                    <span class="connectly-comment-react-count">{{ $reply->reactions_count }}</span>
                                                                 </button>
                                                             </form>
-                                                            <div class="connectly-comment-reaction-options" aria-label="Reaction options">
+                                                            <div class="connectly-comment-react-float" aria-label="Reaction options">
                                                                 @foreach ($reactionTypes as $reactionKey => $reactionLabel)
                                                                     @php
                                                                         $reactionEmoji = match ($reactionKey) {
@@ -213,10 +213,10 @@
                                                                             default => '👍',
                                                                         };
                                                                     @endphp
-                                                                    <form action="{{ route('feed.comments.react', $reply->id) }}" method="POST" class="d-inline" data-comment-reaction-form="option">
+                                                                    <form action="{{ route('feed.comments.react', $reply->id) }}" method="POST" data-comment-reaction-form="option">
                                                                         @csrf
                                                                         <input type="hidden" name="reaction_type" value="{{ $reactionKey }}">
-                                                                        <button type="submit" class="connectly-comments-reaction-option {{ $replyCurrentReactionType === $reactionKey ? 'active' : '' }}" title="{{ $reactionLabel }}">{{ $reactionEmoji }}</button>
+                                                                        <button type="submit" class="connectly-comment-react-emojibtn {{ $replyCurrentReactionType === $reactionKey ? 'active' : '' }}" data-reaction-key="{{ $reactionKey }}" title="{{ $reactionLabel }}">{{ $reactionEmoji }}</button>
                                                                     </form>
                                                                 @endforeach
                                                             </div>
@@ -523,30 +523,125 @@
     border: 1px solid #e5e7eb;
 }
 
-.connectly-comments-reaction-btn {
-    border: 1.5px solid #e5e7eb;
-    background: #ffffff;
-    border-radius: 999px;
-    padding: 0.2rem 0.65rem;
-    font-size: 0.72rem;
-    font-weight: 500;
-    color: #86868b;
-    transition: all 0.2s ease;
-    cursor: pointer;
+.connectly-comment-react {
+    position: relative;
     display: inline-flex;
     align-items: center;
 }
 
-.connectly-comments-reaction-btn:hover {
+.connectly-comment-react-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.25rem;
+    padding: 0.25rem 0.7rem;
+    border-radius: 999px;
+    border: 1.5px solid #e5e7eb;
+    background: #ffffff;
+    color: #86868b;
+    font-size: 0.72rem;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.2s cubic-bezier(.4,0,.2,1);
+    font-family: inherit;
+}
+
+.connectly-comment-react-btn:hover {
     border-color: rgba(0,113,227,0.25);
     color: #0071e3;
     background: rgba(0,113,227,0.04);
 }
 
-.connectly-comments-reaction-btn.active {
+.connectly-comment-react-btn.is-reacted {
     background: #0071e3;
     border-color: #0071e3;
     color: #fff;
+}
+
+.connectly-comment-react-btn.is-reacted:hover {
+    background: #0058b3;
+    border-color: #0058b3;
+    color: #fff;
+}
+
+.connectly-comment-react-emoji {
+    font-size: 0.88rem;
+    line-height: 1;
+}
+
+.connectly-comment-react-count {
+    font-weight: 600;
+}
+
+.connectly-comment-react-count::before {
+    content: '(';
+}
+
+.connectly-comment-react-count::after {
+    content: ')';
+}
+
+.connectly-comment-react-float {
+    position: absolute;
+    left: 0;
+    bottom: calc(100% + 6px);
+    display: flex;
+    gap: 0.2rem;
+    padding: 0.3rem 0.4rem;
+    background: #ffffff;
+    backdrop-filter: blur(16px);
+    -webkit-backdrop-filter: blur(16px);
+    border: 1px solid #e5e7eb;
+    border-radius: 999px;
+    box-shadow: 0 8px 24px rgba(0,0,0,0.08);
+    opacity: 0;
+    visibility: hidden;
+    pointer-events: none;
+    transform: translateY(8px) scale(0.92);
+    transition: all 0.2s cubic-bezier(.16,1,.3,1);
+    z-index: 25;
+}
+
+.connectly-comment-react-float::after {
+    content: '';
+    position: absolute;
+    left: 0;
+    right: 0;
+    bottom: -12px;
+    height: 12px;
+}
+
+.connectly-comment-react:hover .connectly-comment-react-float,
+.connectly-comment-react:focus-within .connectly-comment-react-float,
+.connectly-comment-react-float:hover {
+    opacity: 1;
+    visibility: visible;
+    pointer-events: auto;
+    transform: translateY(0) scale(1);
+}
+
+.connectly-comment-react-emojibtn {
+    border: none;
+    background: transparent;
+    border-radius: 50%;
+    width: 32px;
+    height: 32px;
+    font-size: 1.1rem;
+    line-height: 1;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    transition: transform 0.15s ease, background 0.15s ease;
+    cursor: pointer;
+}
+
+.connectly-comment-react-emojibtn:hover {
+    transform: scale(1.3);
+    background: rgba(0,113,227,0.08);
+}
+
+.connectly-comment-react-emojibtn.active {
+    background: rgba(0,113,227,0.12);
+    transform: scale(1.15);
 }
 
 .connectly-comments-reply-btn {
@@ -757,6 +852,84 @@ document.addEventListener('change', function(e) {
         } else if (label) {
             label.textContent = 'Add image';
         }
+    }
+});
+
+document.addEventListener('submit', async function (event) {
+    const form = event.target;
+    if (!form.matches('[data-comment-reaction-form]')) {
+        return;
+    }
+
+    event.preventDefault();
+
+    const wrap = form.closest('.connectly-comment-react');
+    if (!wrap) return;
+
+    const csrfToken = document.querySelector('meta[name="csrf-token"]')?.getAttribute('content') || '';
+    const buttons = wrap.querySelectorAll('button');
+    buttons.forEach((button) => { button.disabled = true; });
+
+    try {
+        const response = await fetch(form.action, {
+            method: 'POST',
+            headers: {
+                'Accept': 'application/json',
+                'X-Requested-With': 'XMLHttpRequest',
+                'X-CSRF-TOKEN': csrfToken,
+            },
+            body: new FormData(form),
+        });
+
+        if (!response.ok) throw new Error('Failed to submit comment reaction');
+        const data = await response.json();
+
+        const reactionMeta = {
+            like: { label: 'Like', emoji: '👍' },
+            love: { label: 'Love', emoji: '❤️' },
+            haha: { label: 'Haha', emoji: '😆' },
+            wow: { label: 'Wow', emoji: '😮' },
+            sad: { label: 'Sad', emoji: '😢' },
+        };
+
+        const currentReaction = data.current_reaction;
+        const mainInput = wrap.querySelector('.connectly-comment-react-input');
+        const mainButton = wrap.querySelector('.connectly-comment-react-btn');
+        const mainEmoji = wrap.querySelector('.connectly-comment-react-emoji');
+        const mainLabel = wrap.querySelector('.connectly-comment-react-label');
+        const mainCount = wrap.querySelector('.connectly-comment-react-count');
+
+        if (mainInput) mainInput.value = currentReaction || 'like';
+        if (mainButton) {
+            mainButton.classList.toggle('is-reacted', !!currentReaction);
+        }
+
+        const meta = reactionMeta[currentReaction] || reactionMeta.like;
+        if (mainEmoji) mainEmoji.textContent = currentReaction ? meta.emoji : reactionMeta.like.emoji;
+        if (mainLabel) mainLabel.textContent = currentReaction ? meta.label : 'Like';
+        if (mainCount) mainCount.textContent = String(data.total_reactions ?? 0);
+
+        wrap.querySelectorAll('.connectly-comment-react-emojibtn').forEach((optionButton) => {
+            optionButton.classList.toggle('active', optionButton.dataset.reactionKey === currentReaction);
+        });
+
+        if (data.reaction_counts) {
+            Object.keys(reactionMeta).forEach((reactionKey) => {
+                const badge = wrap.closest('[data-comment-id]')?.querySelector(`[data-comment-reaction-badge="${reactionKey}"]`);
+                if (!badge) return;
+                const count = Number(data.reaction_counts[reactionKey] || 0);
+                const countEl = badge.querySelector('.chatbox-comment-reaction-badge-count');
+                if (countEl) countEl.textContent = String(count);
+                badge.classList.toggle('d-none', count <= 0);
+            });
+        }
+    } catch (error) {
+        console.error(error);
+        if (window.chatboxToast) {
+            chatboxToast('error', 'Could not update reaction. Please try again.');
+        }
+    } finally {
+        buttons.forEach((button) => { button.disabled = false; });
     }
 });
 </script>
