@@ -2100,7 +2100,7 @@
                 emptyState.classList.add('d-none');
             }
 
-            const countEl = document.querySelector(`[data-bs-target="#commentsModal${postId}"] .chatbox-comments-count`);
+            const countEl = document.querySelector(`[href$="/feed/posts/${postId}/comments"] .chatbox-comments-count`);
             if (countEl) {
                 const nextCount = Number(countEl.textContent || '0') + 1;
                 countEl.textContent = String(nextCount);

@@ -8,6 +8,7 @@ $isLandingPage = request()->is('/') || request()->is('contact');
 $isProfilePage = request()->routeIs('profile.show');
 $isFeedOrProfile = request()->is('feed') || request()->routeIs('profile.show');
 $isPostEdit = request()->routeIs('feed.posts.edit');
+$isPostComments = request()->routeIs('feed.posts.comments');
 $isFriendsOrSearch = request()->routeIs('friends') || request()->routeIs('search');
 $isLegalPage = in_array(request()->path(), ['privacy', 'terms', 'cookies', 'gdpr']);
 @endphp
@@ -144,8 +145,8 @@ $isLegalPage = in_array(request()->path(), ['privacy', 'terms', 'cookies', 'gdpr
 @endif
 
 <!-- Sidebar + Content -->
-<div class="row m-0 chatbox-main-layout-row {{ $isLandingPage ? 'chatbox-layout-landing' : '' }} {{ $isFeedOrProfile || $isPostEdit ? 'chatbox-layout-feed-profile' : '' }} {{ $isChatPage ? 'chatbox-layout-message' : '' }}">
-    @unless($isLandingPage || $isFeedOrProfile || $isPostEdit || $isFriendsOrSearch || $isLegalPage)
+<div class="row m-0 chatbox-main-layout-row {{ $isLandingPage ? 'chatbox-layout-landing' : '' }} {{ $isFeedOrProfile || $isPostEdit || $isPostComments ? 'chatbox-layout-feed-profile' : '' }} {{ $isChatPage ? 'chatbox-layout-message' : '' }}">
+    @unless($isLandingPage || $isFeedOrProfile || $isPostEdit || $isPostComments || $isFriendsOrSearch || $isLegalPage)
     <div class="col-md-3 p-0">
         <div class="chatbox-sidebar-container">
 
@@ -223,7 +224,7 @@ $isLegalPage = in_array(request()->path(), ['privacy', 'terms', 'cookies', 'gdpr
     @endunless
 
     <!-- Content -->
-    <div class="{{ $isLandingPage || $isFeedOrProfile || $isPostEdit || $isFriendsOrSearch || $isLegalPage ? 'col-12' : 'col-md-9' }} p-0 {{ $isChatPage ? 'chatbox-chat-page-column' : 'chatbox-content-area' }}">
+    <div class="{{ $isLandingPage || $isFeedOrProfile || $isPostEdit || $isPostComments || $isFriendsOrSearch || $isLegalPage ? 'col-12' : 'col-md-9' }} p-0 {{ $isChatPage ? 'chatbox-chat-page-column' : 'chatbox-content-area' }}">
         @yield('content')
     </div>
 </div>

@@ -2183,7 +2183,7 @@ document.addEventListener('submit', async function (event) {
 
         if (emptyState) emptyState.classList.add('d-none');
 
-        const countEl = document.querySelector(`[data-bs-target="#commentsModal${postId}"] .chatbox-comments-count`);
+        const countEl = document.querySelector(`[href$="/feed/posts/${postId}/comments"] .chatbox-comments-count`);
         if (countEl) {
             const nextCount = Number(countEl.textContent || '0') + 1;
             countEl.textContent = String(nextCount);
@@ -2335,21 +2335,5 @@ document.addEventListener('change', function(e) {
     }
 });
 </script>
-
-@if (session('open_modal'))
-<script>
-    document.addEventListener('DOMContentLoaded', function () {
-        const modalId = @json(session('open_modal'));
-        const modalElement = document.getElementById(modalId);
-
-        if (!modalElement || typeof bootstrap === 'undefined') {
-            return;
-        }
-
-        const modal = new bootstrap.Modal(modalElement);
-        modal.show();
-    });
-</script>
-@endif
 
 @endsection

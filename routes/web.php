@@ -39,6 +39,7 @@ Route::middleware('auth')->prefix('/feed')->controller(FeedController::class)->g
     Route::get('/', 'feed')->name('feed');
     Route::post('/posts', 'storePost')->name('feed.posts.store');
     Route::get('/posts/{post}/edit', 'editPost')->name('feed.posts.edit');
+    Route::get('/posts/{post}/comments', 'showComments')->name('feed.posts.comments');
     Route::put('/posts/{post}', 'updatePost')->name('feed.posts.update');
     Route::delete('/posts/{post}', 'deletePost')->name('feed.posts.delete');
     Route::post('/posts/{post}/react', 'toggleReaction')->name('feed.posts.react');

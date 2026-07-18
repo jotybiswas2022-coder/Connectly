@@ -114,6 +114,94 @@ class FeedController extends Controller
         return view('frontend.feed.index', compact('posts', 'reactionTypes'));
     }
 
+    public function showComments(Post $post)
+    {
+        $userId = (int) Auth::id();
+
+        $post->load([
+            'user:id,name,avatar_path',
+            'comments' => function ($query) use ($userId) {
+                $query->whereNull('parent_id')
+                    ->latest()
+                    ->with([
+                        'user:id,name,avatar_path',
+                        'reactions' => function ($reactionQuery) use ($userId) {
+                            $reactionQuery->where('user_id', $userId);
+                        },
+                        'replies' => function ($replyQuery) use ($userId) {
+                            $replyQuery->latest()->with([
+                                'user:id,name,avatar_path',
+                                'reactions' => function ($reactionQuery) use ($userId) {
+                                    $reactionQuery->where('user_id', $userId);
+                                },
+                            ])->withCount([
+                                'reactions',
+                                'reactions as like_count' => function ($countQuery) {
+                                    $countQuery->where('reaction_type', 'like');
+                                },
+                                'reactions as love_count' => function ($countQuery) {
+                                    $countQuery->where('reaction_type', 'love');
+                                },
+                                'reactions as haha_count' => function ($countQuery) {
+                                    $countQuery->where('reaction_type', 'haha');
+                                },
+                                'reactions as wow_count' => function ($countQuery) {
+                                    $countQuery->where('reaction_type', 'wow');
+                                },
+                                'reactions as sad_count' => function ($countQuery) {
+                                    $countQuery->where('reaction_type', 'sad');
+                                },
+                            ]);
+                        },
+                    ])
+                    ->withCount([
+                        'reactions',
+                        'reactions as like_count' => function ($countQuery) {
+                            $countQuery->where('reaction_type', 'like');
+                        },
+                        'reactions as love_count' => function ($countQuery) {
+                            $countQuery->where('reaction_type', 'love');
+                        },
+                        'reactions as haha_count' => function ($countQuery) {
+                            $countQuery->where('reaction_type', 'haha');
+                        },
+                        'reactions as wow_count' => function ($countQuery) {
+                            $countQuery->where('reaction_type', 'wow');
+                        },
+                        'reactions as sad_count' => function ($countQuery) {
+                            $countQuery->where('reaction_type', 'sad');
+                        },
+                    ]);
+            },
+            'reactions' => function ($query) use ($userId) {
+                $query->where('user_id', $userId);
+            },
+        ])
+        ->loadCount([
+            'comments',
+            'reactions',
+            'reactions as like_count' => function ($query) {
+                $query->where('reaction_type', 'like');
+            },
+            'reactions as love_count' => function ($query) {
+                $query->where('reaction_type', 'love');
+            },
+            'reactions as haha_count' => function ($query) {
+                $query->where('reaction_type', 'haha');
+            },
+            'reactions as wow_count' => function ($query) {
+                $query->where('reaction_type', 'wow');
+            },
+            'reactions as sad_count' => function ($query) {
+                $query->where('reaction_type', 'sad');
+            },
+        ]);
+
+        $reactionTypes = self::REACTION_TYPES;
+
+        return view('frontend.feed.comments', compact('post', 'reactionTypes'));
+    }
+
     public function storePost(Request $request)
     {
         $validated = $request->validate([
@@ -312,10 +400,9 @@ class FeedController extends Controller
                 ], 422);
             }
 
-            return back()
+            return redirect()->route('feed.posts.comments', $post->id)
                 ->withErrors($validator, 'commentPost_' . $post->id)
-                ->withInput()
-                ->with('open_modal', 'commentsModal' . $post->id);
+                ->withInput();
         }
 
         $validated = $validator->validated();
@@ -335,10 +422,9 @@ class FeedController extends Controller
                 ], 422);
             }
 
-            return back()
+            return redirect()->route('feed.posts.comments', $post->id)
                 ->withErrors(['comment' => 'Please write a comment or upload an image.'], 'commentPost_' . $post->id)
-                ->withInput()
-                ->with('open_modal', 'commentsModal' . $post->id);
+                ->withInput();
         }
 
         $parentId = isset($validated['parent_id']) ? (int) $validated['parent_id'] : null;
@@ -358,10 +444,9 @@ class FeedController extends Controller
                     ], 422);
                 }
 
-                return back()
-                    ->withErrors(['comment' => 'Invalid reply target.'], 'commentPost_' . $post->id)
-                    ->withInput()
-                    ->with('open_modal', 'commentsModal' . $post->id);
+            return redirect()->route('feed.posts.comments', $post->id)
+                ->withErrors(['comment' => 'Invalid reply target.'], 'commentPost_' . $post->id)
+                ->withInput();
             }
         }
 
@@ -432,7 +517,7 @@ class FeedController extends Controller
             ]);
         }
 
-        return back()->with('success', 'Comment added.');
+        return redirect()->route('feed.posts.comments', $post->id)->with('success', 'Comment added.');
     }
 
     public function toggleCommentReaction(Request $request, PostComment $comment)
@@ -490,7 +575,7 @@ class FeedController extends Controller
             ]);
         }
 
-        return back()->with('open_modal', 'commentsModal' . $comment->post_id);
+        return redirect()->route('feed.posts.comments', $comment->post_id);
     }
 
     private function reactionCountsForPost(int $postId): array
