@@ -1157,30 +1157,9 @@
 .chatbox-toast-popup .swal2-timer-progress-bar { background: rgba(0,113,227,0.12) !important; height: 3px !important; }
 .chatbox-toast-popup.swal2-icon-success { border-left: 4px solid #10b981 !important; }
 .chatbox-toast-popup.swal2-icon-error { border-left: 4px solid #ef4444 !important; }
-.chatbox-pinned-badge { display: inline-flex; align-items: center; gap: 3px; background: #fef3c7; color: #b45309; font-size: 0.68rem; font-weight: 600; padding: 2px 10px; border-radius: 999px; border: 1px solid #fde68a; }
-.chatbox-reaction-picker { position: relative; display: inline-flex; align-items: center; }
-.chatbox-reaction-options { position: absolute; left: 0; bottom: calc(100% + 4px); display: flex; gap: 0.35rem; padding: 0.35rem 0.45rem; background: #ffffff; border: 1px solid #e5e7eb; border-radius: 999px; box-shadow: 0 8px 20px rgba(0,0,0,0.06); opacity: 0; visibility: hidden; pointer-events: none; transform: translateY(8px); transition: all 0.18s ease; z-index: 25; }
-.chatbox-reaction-options::after { content: ''; position: absolute; left: 0; right: 0; bottom: -12px; height: 12px; }
-.chatbox-reaction-picker:hover .chatbox-reaction-options, .chatbox-reaction-picker:focus-within .chatbox-reaction-options, .chatbox-reaction-options:hover { opacity: 1; visibility: visible; pointer-events: auto; transform: translateY(0); }
-.chatbox-reaction-option { border: none; background: transparent; border-radius: 50%; width: 34px; height: 34px; font-size: 1.05rem; line-height: 1; display: inline-flex; align-items: center; justify-content: center; transition: transform 0.15s ease, background-color 0.15s ease; cursor: pointer; }
-.chatbox-reaction-option:hover { transform: scale(1.18); background: rgba(0,113,227,0.06); }
-.chatbox-reaction-option.active { background: rgba(0,113,227,0.1); }
-.chatbox-comment-reaction-picker { position: relative; display: inline-flex; align-items: center; }
-.chatbox-comment-reaction-options { position: absolute; left: 0; bottom: calc(100% + 4px); display: flex; gap: 0.35rem; padding: 0.35rem 0.45rem; background: #ffffff; border: 1px solid #e5e7eb; border-radius: 999px; box-shadow: 0 8px 20px rgba(0,0,0,0.06); opacity: 0; visibility: hidden; pointer-events: none; transform: translateY(8px); transition: all 0.18s ease; z-index: 35; }
-.chatbox-comment-reaction-options::after { content: ''; position: absolute; left: 0; right: 0; bottom: -12px; height: 12px; }
-.chatbox-comment-reaction-picker:hover .chatbox-comment-reaction-options, .chatbox-comment-reaction-picker:focus-within .chatbox-comment-reaction-options, .chatbox-comment-reaction-options:hover { opacity: 1; visibility: visible; pointer-events: auto; transform: translateY(0); }
-.chatbox-comment-reaction-option { border: none; background: transparent; border-radius: 50%; width: 32px; height: 32px; font-size: 1rem; line-height: 1; display: inline-flex; align-items: center; justify-content: center; transition: transform 0.15s ease, background-color 0.15s ease; cursor: pointer; }
-.chatbox-comment-reaction-option:hover { transform: scale(1.18); background: rgba(0,113,227,0.06); }
-.chatbox-comment-reaction-option.active { background: rgba(0,113,227,0.1); }
-.chatbox-comment-item { padding: 0.75rem; border-radius: var(--profile-radius-xs); border: 1px solid var(--profile-border); background: var(--profile-surface-hover); }
-.chatbox-comment-replies { margin-left: 1rem; padding-left: 0.9rem; border-left: 2px solid var(--profile-border); }
-.chatbox-comment-reply-item { padding: 0.65rem; border-radius: var(--profile-radius-xs); border: 1px solid var(--profile-border); background: var(--profile-surface); }
-.chatbox-comment-image { max-width: 320px; max-height: 260px; object-fit: cover; border: 1px solid var(--profile-border); }
-.chatbox-reply-indicator { border-radius: var(--profile-radius-xs); font-size: 0.82rem; background: var(--profile-primary-subtle); border: 1px solid rgba(0,113,227,0.12); color: var(--profile-primary); }
 .chatbox-reaction-badge-emoji { font-size: 0.75rem; }
 .chatbox-reaction-badge-count { font-size: 0.68rem; font-weight: 600; }
-.chatbox-comment-reaction-badge-emoji { font-size: 0.75rem; }
-.chatbox-comment-reaction-badge-count { font-size: 0.68rem; font-weight: 600; }
+.chatbox-pinned-badge { display: inline-flex; align-items: center; gap: 3px; background: #fef3c7; color: #b45309; font-size: 0.68rem; font-weight: 600; padding: 2px 10px; border-radius: 999px; border: 1px solid #fde68a; }
 .chatbox-profile-link { font-weight: 600; color: var(--profile-primary-dark); transition: color 0.2s ease; }
 .chatbox-profile-link:hover { color: var(--profile-primary); }
 .chatbox-feed-avatar { width: 42px; height: 42px; border: 2px solid var(--profile-border-light); background: linear-gradient(135deg, var(--profile-primary) 0%, var(--profile-primary-dark) 100%); }
@@ -1190,19 +1169,6 @@
 .chatbox-feed-post-card:hover { box-shadow: var(--profile-shadow-md); border-color: #d2d2d7; }
 .chatbox-feed-post-text { font-size: 0.95rem; line-height: 1.75; color: var(--profile-text); }
 .chatbox-feed-post-image { border-radius: var(--profile-radius-xs); border: 1px solid var(--profile-border-light); }
-.chatbox-pinned-badge { display: inline-flex; align-items: center; gap: 3px; background: #fef3c7; color: #b45309; font-size: 0.68rem; font-weight: 600; padding: 2px 10px; border-radius: 999px; border: 1px solid #fde68a; }
-.chatbox-main-reaction-input { }
-.chatbox-main-reaction-button { }
-.chatbox-main-reaction-emoji { }
-.chatbox-main-reaction-label { }
-.chatbox-main-reaction-count { }
-.chatbox-comment-main-reaction-input { }
-.chatbox-comment-main-reaction-button { }
-.chatbox-comment-main-reaction-emoji { }
-.chatbox-comment-main-reaction-label { }
-.chatbox-comment-main-reaction-count { }
-.chatbox-reply-trigger { }
-.chatbox-reply-cancel { }
 .chatbox-file-input.has-file ~ .chatbox-file-label span { color: var(--profile-primary); }
 </style>
 
@@ -1558,7 +1524,7 @@
         });
     }
 
-    // ===== LIVE POST REACTIONS =====
+    // ===== LIVE POST REACTIONS (feed-style) =====
     document.addEventListener('submit', async function (event) {
         const form = event.target;
         if (!form.matches('[data-reaction-form]')) {
@@ -1567,18 +1533,13 @@
 
         event.preventDefault();
 
-        const picker = form.closest('.chatbox-reaction-picker');
-        if (!picker) {
-            return;
-        }
+        const wrap = form.closest('.connectly-reaction-wrap');
+        if (!wrap) return;
 
-        const card = picker.closest('.chatbox-feed-post-card');
+        const card = wrap.closest('.connectly-post-card');
         const csrfToken = document.querySelector('meta[name="csrf-token"]')?.getAttribute('content') || '';
-        const buttons = picker.querySelectorAll('button');
-
-        buttons.forEach((button) => {
-            button.disabled = true;
-        });
+        const buttons = wrap.querySelectorAll('button');
+        buttons.forEach((button) => { button.disabled = true; });
 
         try {
             const response = await fetch(form.action, {
@@ -1591,15 +1552,9 @@
                 body: new FormData(form),
             });
 
-            if (!response.ok) {
-                throw new Error('Failed to submit reaction');
-            }
-
+            if (!response.ok) throw new Error('Failed to submit reaction');
             const data = await response.json();
-
-            if (!data.success) {
-                throw new Error('Invalid reaction response');
-            }
+            if (!data.success) throw new Error('Invalid reaction response');
 
             const reactionMeta = {
                 like: { label: 'Like', emoji: '👍' },
@@ -1610,49 +1565,33 @@
             };
 
             const currentReaction = data.current_reaction;
-            const mainInput = picker.querySelector('.chatbox-main-reaction-input');
-            const mainButton = picker.querySelector('.chatbox-main-reaction-button');
-            const mainEmoji = picker.querySelector('.chatbox-main-reaction-emoji');
-            const mainLabel = picker.querySelector('.chatbox-main-reaction-label');
-            const mainCount = picker.querySelector('.chatbox-main-reaction-count');
+            const mainInput = wrap.querySelector('.connectly-react-input');
+            const mainButton = wrap.querySelector('.connectly-react-btn');
+            const mainEmoji = wrap.querySelector('.connectly-react-emoji');
+            const mainLabel = wrap.querySelector('.connectly-react-label');
+            const mainCount = wrap.querySelector('.connectly-react-count');
 
-            if (mainInput) {
-                mainInput.value = currentReaction || 'like';
-            }
-
+            if (mainInput) mainInput.value = currentReaction || 'like';
             if (mainButton) {
-                mainButton.classList.toggle('btn-primary', !!currentReaction);
-                mainButton.classList.toggle('btn-outline-primary', !currentReaction);
+                mainButton.classList.toggle('is-reacted', !!currentReaction);
             }
 
             const meta = reactionMeta[currentReaction] || reactionMeta.like;
-            if (mainEmoji) {
-                mainEmoji.textContent = currentReaction ? meta.emoji : reactionMeta.like.emoji;
-            }
-            if (mainLabel) {
-                mainLabel.textContent = currentReaction ? meta.label : 'Like';
-            }
-            if (mainCount) {
-                mainCount.textContent = String(data.total_reactions ?? 0);
-            }
+            if (mainEmoji) mainEmoji.textContent = currentReaction ? meta.emoji : reactionMeta.like.emoji;
+            if (mainLabel) mainLabel.textContent = currentReaction ? meta.label : 'Like';
+            if (mainCount) mainCount.textContent = String(data.total_reactions ?? 0);
 
-            picker.querySelectorAll('.chatbox-reaction-option').forEach((optionButton) => {
+            wrap.querySelectorAll('.connectly-react-emojibtn').forEach((optionButton) => {
                 optionButton.classList.toggle('active', optionButton.dataset.reactionKey === currentReaction);
             });
 
             if (card && data.reaction_counts) {
                 Object.keys(reactionMeta).forEach((reactionKey) => {
                     const badge = card.querySelector(`[data-reaction-badge="${reactionKey}"]`);
-                    if (!badge) {
-                        return;
-                    }
-
+                    if (!badge) return;
                     const count = Number(data.reaction_counts[reactionKey] || 0);
                     const countEl = badge.querySelector('.chatbox-reaction-badge-count');
-                    if (countEl) {
-                        countEl.textContent = String(count);
-                    }
-
+                    if (countEl) countEl.textContent = String(count);
                     badge.classList.toggle('d-none', count <= 0);
                 });
             }
@@ -1660,331 +1599,10 @@
             console.error(error);
             chatboxToast('error', 'Could not update reaction. Please try again.');
         } finally {
-            buttons.forEach((button) => {
-                button.disabled = false;
-            });
+            buttons.forEach((button) => { button.disabled = false; });
         }
     });
 
-    // ===== COMMENT REACTION META =====
-    const chatboxCommentReactionMeta = {
-        like: { label: 'Like', emoji: '👍' },
-        love: { label: 'Love', emoji: '❤️' },
-        haha: { label: 'Haha', emoji: '😆' },
-        wow: { label: 'Wow', emoji: '😮' },
-        sad: { label: 'Sad', emoji: '😢' },
-    };
-
-    function chatboxEscapeHtml(text) {
-        return String(text || '')
-            .replace(/&/g, '&amp;')
-            .replace(/</g, '&lt;')
-            .replace(/>/g, '&gt;')
-            .replace(/\"/g, '&quot;')
-            .replace(/'/g, '&#039;');
-    }
-
-    function chatboxNl2br(text) {
-        return chatboxEscapeHtml(text).replace(/\n/g, '<br>');
-    }
-
-    function chatboxCommentCardHtml(comment, postId, parentForReply) {
-        const safeName = chatboxEscapeHtml(comment.user_name || 'User');
-        const safeTime = chatboxEscapeHtml(comment.created_at_human || 'Just now');
-        const safeText = chatboxNl2br(comment.comment || '');
-        const imageHtml = comment.image_url
-            ? `<div class="mt-2"><img src="${chatboxEscapeHtml(comment.image_url)}" alt="Comment image" class="img-fluid rounded chatbox-comment-image"></div>`
-            : '';
-
-        const reactionOptions = Object.entries(chatboxCommentReactionMeta).map(([key, meta]) => `
-            <form action="/feed/comments/${comment.id}/react" method="POST" class="d-inline" data-comment-reaction-form="option">
-                <input type="hidden" name="_token" value="${window.chatboxCsrfToken || ''}">
-                <input type="hidden" name="reaction_type" value="${key}">
-                <button type="submit" class="chatbox-comment-reaction-option" title="${meta.label}" aria-label="${meta.label}" data-reaction-key="${key}">
-                    ${meta.emoji}
-                </button>
-            </form>
-        `).join('');
-
-        const reactionBadges = Object.entries(chatboxCommentReactionMeta).map(([key, meta]) => `
-            <span class="badge rounded-pill text-bg-light border d-none" data-comment-reaction-badge="${key}">
-                <span class="chatbox-comment-reaction-badge-emoji">${meta.emoji}</span>
-                <span class="chatbox-comment-reaction-badge-count">0</span>
-            </span>
-        `).join('');
-
-        return `
-            <div class="${comment.parent_id ? 'chatbox-comment-reply-item mt-2' : 'chatbox-comment-item'}" data-comment-card="${comment.id}">
-                <div class="d-flex align-items-center gap-2 mb-1">
-                    <strong>${safeName}</strong>
-                    <span class="text-muted small">#${comment.user_id}</span>
-                    <span class="text-muted small">${safeTime}</span>
-                </div>
-                ${safeText ? `<p class="mb-0 text-dark">${safeText}</p>` : ''}
-                ${imageHtml}
-
-                <div class="d-flex align-items-center gap-2 mt-2">
-                    <div class="chatbox-comment-reaction-picker" data-comment-id="${comment.id}">
-                        <form action="/feed/comments/${comment.id}/react" method="POST" class="d-inline" data-comment-reaction-form="main">
-                            <input type="hidden" name="_token" value="${window.chatboxCsrfToken || ''}">
-                            <input type="hidden" name="reaction_type" value="like" class="chatbox-comment-main-reaction-input">
-                            <button type="submit" class="btn btn-sm chatbox-comment-main-reaction-button btn-outline-primary">
-                                <span class="me-1 chatbox-comment-main-reaction-emoji">👍</span>
-                                <span class="chatbox-comment-main-reaction-label">Like</span>
-                                (<span class="chatbox-comment-main-reaction-count">0</span>)
-                            </button>
-                        </form>
-                        <div class="chatbox-comment-reaction-options" aria-label="Comment reaction options">
-                            ${reactionOptions}
-                        </div>
-                    </div>
-
-                    <button
-                        type="button"
-                        class="btn btn-sm btn-outline-secondary chatbox-reply-trigger"
-                        data-form-id="commentForm${postId}"
-                        data-parent-id="${parentForReply}"
-                    >
-                        Reply
-                    </button>
-                </div>
-
-                <div class="d-flex flex-wrap gap-2 mt-2 chatbox-comment-reaction-summary">
-                    ${reactionBadges}
-                </div>
-
-                ${comment.parent_id ? '' : `<div class="chatbox-comment-replies mt-3 d-none" data-replies-for="${comment.id}"></div>`}
-            </div>
-        `;
-    }
-
-    // ===== LIVE COMMENT SUBMISSION =====
-    document.addEventListener('submit', async function (event) {
-        const form = event.target;
-        if (!form.matches('[data-comment-form-id]')) {
-            return;
-        }
-
-        event.preventDefault();
-
-        const postId = form.dataset.commentFormId;
-        const modalBody = form.closest('.modal-body');
-        if (!postId || !modalBody) {
-            return;
-        }
-
-        const csrfToken = document.querySelector('meta[name="csrf-token"]')?.getAttribute('content') || '';
-        window.chatboxCsrfToken = csrfToken;
-
-        const submitButton = form.querySelector('button[type="submit"]');
-        if (submitButton) submitButton.disabled = true;
-
-        try {
-            const response = await fetch(form.action, {
-                method: 'POST',
-                headers: {
-                    'Accept': 'application/json',
-                    'X-Requested-With': 'XMLHttpRequest',
-                    'X-CSRF-TOKEN': csrfToken,
-                },
-                body: new FormData(form),
-            });
-
-            const data = await response.json();
-            if (!response.ok || !data.success) {
-                const errorText = data?.message || 'Could not add comment.';
-                chatboxToast('error', errorText);
-                return;
-            }
-
-            const comment = data.comment;
-            const commentList = modalBody.querySelector(`#commentsList${postId}`);
-            const emptyState = modalBody.querySelector(`#commentsEmpty${postId}`);
-
-            if (comment.parent_id) {
-                const repliesWrap = modalBody.querySelector(`[data-replies-for="${comment.root_parent_id}"]`);
-                if (repliesWrap) {
-                    repliesWrap.classList.remove('d-none');
-                    repliesWrap.insertAdjacentHTML('afterbegin', chatboxCommentCardHtml(comment, postId, comment.root_parent_id));
-                }
-            } else if (commentList) {
-                commentList.classList.remove('d-none');
-                commentList.insertAdjacentHTML('afterbegin', chatboxCommentCardHtml(comment, postId, comment.id));
-            }
-
-            if (emptyState) {
-                emptyState.classList.add('d-none');
-            }
-
-            const countEl = document.querySelector(`[href$="/feed/posts/${postId}/comments"] .chatbox-comments-count`);
-            if (countEl) {
-                const nextCount = Number(countEl.textContent || '0') + 1;
-                countEl.textContent = String(nextCount);
-            }
-
-            form.reset();
-            const parentInput = form.querySelector('.chatbox-reply-parent-id');
-            const indicator = form.querySelector('.chatbox-reply-indicator');
-            if (parentInput) parentInput.value = '';
-            if (indicator) indicator.classList.add('d-none');
-        } catch (error) {
-            console.error(error);
-            chatboxToast('error', 'Could not add comment. Please try again.');
-        } finally {
-            if (submitButton) submitButton.disabled = false;
-        }
-    });
-
-    // ===== LIVE COMMENT REACTIONS =====
-    document.addEventListener('submit', async function (event) {
-        const form = event.target;
-        if (!form.matches('[data-comment-reaction-form]')) {
-            return;
-        }
-
-        event.preventDefault();
-
-        const picker = form.closest('.chatbox-comment-reaction-picker');
-        if (!picker) {
-            return;
-        }
-
-        const card = picker.closest('[data-comment-card]');
-        const csrfToken = document.querySelector('meta[name="csrf-token"]')?.getAttribute('content') || '';
-        const buttons = picker.querySelectorAll('button');
-
-        buttons.forEach((button) => {
-            button.disabled = true;
-        });
-
-        try {
-            const response = await fetch(form.action, {
-                method: 'POST',
-                headers: {
-                    'Accept': 'application/json',
-                    'X-Requested-With': 'XMLHttpRequest',
-                    'X-CSRF-TOKEN': csrfToken,
-                },
-                body: new FormData(form),
-            });
-
-            if (!response.ok) {
-                throw new Error('Failed to submit comment reaction');
-            }
-
-            const data = await response.json();
-            const currentReaction = data.current_reaction;
-
-            const mainInput = picker.querySelector('.chatbox-comment-main-reaction-input');
-            const mainButton = picker.querySelector('.chatbox-comment-main-reaction-button');
-            const mainEmoji = picker.querySelector('.chatbox-comment-main-reaction-emoji');
-            const mainLabel = picker.querySelector('.chatbox-comment-main-reaction-label');
-            const mainCount = picker.querySelector('.chatbox-comment-main-reaction-count');
-
-            if (mainInput) {
-                mainInput.value = currentReaction || 'like';
-            }
-
-            if (mainButton) {
-                mainButton.classList.toggle('btn-primary', !!currentReaction);
-                mainButton.classList.toggle('btn-outline-primary', !currentReaction);
-            }
-
-            const meta = chatboxCommentReactionMeta[currentReaction] || chatboxCommentReactionMeta.like;
-            if (mainEmoji) {
-                mainEmoji.textContent = currentReaction ? meta.emoji : chatboxCommentReactionMeta.like.emoji;
-            }
-            if (mainLabel) {
-                mainLabel.textContent = currentReaction ? meta.label : 'Like';
-            }
-            if (mainCount) {
-                mainCount.textContent = String(data.total_reactions ?? 0);
-            }
-
-            picker.querySelectorAll('.chatbox-comment-reaction-option').forEach((optionButton) => {
-                optionButton.classList.toggle('active', optionButton.dataset.reactionKey === currentReaction);
-            });
-
-            if (card && data.reaction_counts) {
-                Object.keys(chatboxCommentReactionMeta).forEach((reactionKey) => {
-                    const badge = card.querySelector(`[data-comment-reaction-badge="${reactionKey}"]`);
-                    if (!badge) {
-                        return;
-                    }
-
-                    const count = Number(data.reaction_counts[reactionKey] || 0);
-                    const countEl = badge.querySelector('.chatbox-comment-reaction-badge-count');
-                    if (countEl) {
-                        countEl.textContent = String(count);
-                    }
-
-                    badge.classList.toggle('d-none', count <= 0);
-                });
-            }
-        } catch (error) {
-            console.error(error);
-            chatboxToast('error', 'Could not update comment reaction. Please try again.');
-        } finally {
-            buttons.forEach((button) => {
-                button.disabled = false;
-            });
-        }
-    });
-
-    // ===== REPLY TRIGGER / CANCEL =====
-    document.addEventListener('click', function (event) {
-        const replyButton = event.target.closest('.chatbox-reply-trigger');
-        if (replyButton) {
-            const formId = replyButton.dataset.formId;
-            const parentId = replyButton.dataset.parentId || '';
-
-            if (!formId) {
-                return;
-            }
-
-            const form = document.getElementById(formId);
-            if (!form) {
-                return;
-            }
-
-            const parentInput = form.querySelector('.chatbox-reply-parent-id');
-            const indicator = form.querySelector('.chatbox-reply-indicator');
-            const textarea = form.querySelector('textarea[name="comment"]');
-
-            if (parentInput) {
-                parentInput.value = parentId;
-            }
-
-            if (indicator) {
-                indicator.classList.remove('d-none');
-            }
-
-            if (textarea) {
-                textarea.focus();
-            }
-            return;
-        }
-
-        const cancelButton = event.target.closest('.chatbox-reply-cancel');
-        if (cancelButton) {
-            event.preventDefault();
-            const form = cancelButton.closest('form');
-            if (!form) {
-                return;
-            }
-
-            const parentInput = form.querySelector('.chatbox-reply-parent-id');
-            const indicator = form.querySelector('.chatbox-reply-indicator');
-
-            if (parentInput) {
-                parentInput.value = '';
-            }
-
-            if (indicator) {
-                indicator.classList.add('d-none');
-            }
-        }
-    });
 </script>
 
 <script>
