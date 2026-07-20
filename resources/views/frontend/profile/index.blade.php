@@ -2,609 +2,708 @@
 
 @section('content')
 
-<div class="chatbox-profile-page connectly-profile-page">
-    <div class="container py-4">
+<div class="cl-profile">
+
+    {{-- ===== HERO BANNER ===== --}}
+    <div class="cl-profile-hero">
+        <div class="cl-profile-hero-bg">
+            <div class="cl-profile-hero-orb cl-profile-hero-orb-1"></div>
+            <div class="cl-profile-hero-orb cl-profile-hero-orb-2"></div>
+            <div class="cl-profile-hero-orb cl-profile-hero-orb-3"></div>
+        </div>
+        <div class="cl-profile-hero-particles" id="heroParticles"></div>
+        <div class="cl-profile-hero-wave">
+            <svg viewBox="0 0 1440 120" preserveAspectRatio="none"><path d="M0,60 C360,120 720,0 1440,60 L1440,120 L0,120 Z" fill="var(--cl-profile-bg)"/></svg>
+        </div>
+    </div>
+
+    <div class="cl-profile-container">
+
         @if (session('success'))
-            <div class="alert alert-success alert-dismissible fade show chatbox-profile-alert connectly-profile-alert" role="alert">
-                <i class="bi bi-check-circle-fill me-1"></i>
-                {{ session('success') }}
-                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+            <div class="cl-profile-toast" id="successToast">
+                <i class="bi bi-check-circle-fill"></i>
+                <span>{{ session('success') }}</span>
+                <button type="button" onclick="this.parentElement.remove()">&times;</button>
             </div>
         @endif
 
-        <div class="row g-4">
-            <!-- Left Column: Profile Card -->
-            <div class="col-xl-4">
-                <div class="chatbox-profile-card chatbox-profile-sticky connectly-profile-card connectly-profile-card-sticky">
-                    <!-- Avatar Section -->
-                    <div class="chatbox-profile-avatar-section connectly-profile-avatar-section">
-                        @if ($user->avatar_path)
-                            <img
-                                src="{{ route('media.show', ['path' => $user->avatar_path]) }}"
-                                alt="Profile picture"
-                                class="chatbox-profile-avatar mb-3 connectly-profile-avatar" loading="lazy"
-                            >
-                        @else
-                            <div class="chatbox-profile-avatar chatbox-profile-avatar-fallback mb-3 connectly-profile-avatar connectly-profile-avatar-fallback">
-                                {{ strtoupper(substr($user->name, 0, 1)) }}
-                            </div>
-                        @endif
-
-                        <h4 class="mb-1 fw-bold chatbox-profile-name connectly-profile-name">{{ $user->name }}</h4>
-                        <p class="text-muted small mb-2 connectly-profile-email">{{ $user->email }}</p>
-
-                        <span class="chatbox-profile-badge connectly-profile-badge">
-                            <i class="bi bi-calendar3 me-1"></i>
-                            Joined {{ $user->created_at->format('M Y') }}
-                        </span>
-
-                        @unless($isOwner)
-                            {{-- Friend Request Button --}}
-                            @php
-                                $frSentByMe = $friendRequest && (int) $friendRequest->sender_id === (int) auth()->id();
-                                $frSentByThem = $friendRequest && (int) $friendRequest->sender_id === (int) $user->id;
-                            @endphp
-
-                            @if (!$friendRequest)
-                                {{-- No request yet --}}
-                                <form action="{{ route('friend-request.send', $user->id) }}" method="POST" class="w-100">
-                                    @csrf
-                                    <button type="submit" class="chatbox-btn-primary chatbox-btn-full chatbox-profile-message-btn connectly-btn-primary">
-                                        <i class="bi bi-person-plus-fill me-2"></i>
-                                        Add Friend
-                                    </button>
-                                </form>
-                            @elseif ($friendStatus === 'pending' && $frSentByMe)
-                                {{-- Request sent by current user --}}
-                                <div class="d-flex gap-2 w-100 mt-3">
-                                    <span class="chatbox-friend-status-badge chatbox-friend-pending flex-grow-1 connectly-friend-status-badge">
-                                        <i class="bi bi-hourglass-split me-1"></i> Friend Request Sent
-                                    </span>
-                                    <form action="{{ route('friend-request.cancel', $friendRequest->id) }}" method="POST" class="chatbox-cancel-form" data-user-name="{{ $user->name }}" data-user-id="{{ $user->id }}">
-                                        @csrf
-                                        @method('DELETE')
-                                        <button type="submit" class="chatbox-friend-action-btn chatbox-friend-cancel-btn" title="Cancel Request">
-                                            <i class="bi bi-x-lg"></i>
-                                        </button>
-                                    </form>
-                                </div>
-                            @elseif ($friendStatus === 'pending' && $frSentByThem)
-                                {{-- Request received from this user --}}
-                                <div class="d-flex gap-2 w-100 mt-3">
-                                    <form action="{{ route('friend-request.accept', $friendRequest->id) }}" method="POST" class="flex-grow-1 chatbox-profile-accept-form" data-user-name="{{ $user->name }}" data-user-id="{{ $user->id }}">
-                                        @csrf
-                                        @method('PUT')
-                                        <button type="submit" class="chatbox-btn-primary chatbox-btn-full connectly-btn-primary" style="padding: 0.5rem 1rem; font-size: 0.82rem;">
-                                            <i class="bi bi-check-lg me-1"></i> Accept Request
-                                        </button>
-                                    </form>
-                                    <form action="{{ route('friend-request.reject', $friendRequest->id) }}" method="POST" class="chatbox-reject-form" data-user-name="{{ $user->name }}" data-user-id="{{ $user->id }}">
-                                        @csrf
-                                        @method('PUT')
-                                        <button type="submit" class="chatbox-friend-action-btn chatbox-friend-reject-btn" title="Reject">
-                                            <i class="bi bi-x-lg"></i>
-                                        </button>
-                                    </form>
-                                </div>
-                            @elseif ($friendStatus === 'accepted')
-                                {{-- Already friends --}}
-                                <div class="d-flex gap-2 w-100 mt-2">
-                                    <span class="chatbox-friend-status-badge chatbox-friend-accepted flex-grow-1">
-                                        <i class="bi bi-people-fill me-1"></i> Friends
-                                    </span>
-                                    <form action="{{ route('friend-request.unfriend', $user->id) }}" method="POST" class="chatbox-unfriend-form" data-user-name="{{ $user->name }}" data-user-id="{{ $user->id }}">
-                                        @csrf
-                                        @method('DELETE')
-                                        <button type="submit" class="chatbox-friend-action-btn chatbox-friend-unfriend-btn" title="Unfriend">
-                                            <i class="bi bi-person-dash-fill"></i>
-                                        </button>
-                                    </form>
-                                </div>
-                            @elseif ($friendStatus === 'rejected' && $frSentByMe)
-                                {{-- Was rejected --}}
-                                <form action="{{ route('friend-request.send', $user->id) }}" method="POST" class="w-100 mt-3">
-                                    @csrf
-                                    <button type="submit" class="chatbox-btn-primary chatbox-btn-full chatbox-profile-message-btn connectly-btn-primary">
-                                        <i class="bi bi-person-plus-fill me-2"></i>
-                                        Add Friend
-                                    </button>
-                                </form>
-                            @elseif ($friendStatus === 'rejected' && $frSentByThem)
-                                {{-- I rejected their request --}}
-                                <div class="d-flex gap-2 w-100 mt-3">
-                                    <span class="chatbox-friend-status-badge chatbox-friend-rejected flex-grow-1">
-                                        <i class="bi bi-x-circle me-1"></i> Request Rejected
-                                    </span>
-                                    <form action="{{ route('friend-request.send', $user->id) }}" method="POST">
-                                        @csrf
-                                        <button type="submit" class="chatbox-friend-action-btn chatbox-friend-send-again-btn" title="Send Request Again">
-                                            <i class="bi bi-arrow-clockwise"></i>
-                                        </button>
-                                    </form>
-                                </div>
-                            @endif
-
-                            {{-- Send Message button --}}
-                            <a href="{{ route('message', $user->id) }}" class="chatbox-btn-primary chatbox-btn-full mt-2 connectly-btn-primary">
-                                <i class="bi bi-chat-dots-fill me-2"></i>
-                                Send Message
-                            </a>
-                        @endunless
-                    </div>
-
-                    <!-- Stats Row -->
-                    <div class="chatbox-profile-stats-row connectly-profile-stats-row">
-                        <div class="chatbox-profile-stat-item connectly-profile-stat-item">
-                            <span class="chatbox-profile-stat-value connectly-profile-stat-value">{{ $posts->count() }}</span>
-                            <span class="chatbox-profile-stat-label connectly-profile-stat-label">Posts</span>
-                        </div>
-                        <div class="chatbox-profile-stat-item connectly-profile-stat-item">
-                            <span class="chatbox-profile-stat-value connectly-profile-stat-value">{{ $posts->where('is_pinned', true)->count() }}</span>
-                            <span class="chatbox-profile-stat-label connectly-profile-stat-label">Pinned</span>
-                        </div>
-                        <div class="chatbox-profile-stat-item connectly-profile-stat-item">
-                            <span class="chatbox-profile-stat-value chatbox-friend-count-stat">{{ $friendsCount }}</span>
-                            <span class="chatbox-profile-stat-label connectly-profile-stat-label">Friends</span>
-                        </div>
-                        <div class="chatbox-profile-stat-item connectly-profile-stat-item">
-                            <span class="chatbox-profile-stat-value connectly-profile-stat-value">{{ $posts->sum('reactions_count') }}</span>
-                            <span class="chatbox-profile-stat-label connectly-profile-stat-label">Reactions</span>
-                        </div>
-                    </div>
-
-                    <!-- Edit Form (only for profile owner) -->
-                    @if($isOwner)
-                    <hr class="chatbox-profile-divider connectly-profile-divider">
-
-                    <form action="{{ route('profile.update', $user->id) }}" method="POST" enctype="multipart/form-data" class="chatbox-profile-form connectly-profile-form">
-                        @csrf
-                        @method('PUT')
-
-                        <div class="mb-3">
-                            <label class="chatbox-form-label connectly-form-label">
-                                <i class="bi bi-person me-1"></i> Your Name
-                            </label>
-                            <div class="chatbox-input-group">
-                                <input
-                                    type="text"
-                                    name="name"
-                                    value="{{ old('name', $user->name) }}"
-                                    class="chatbox-form-control connectly-form-control @error('name') is-invalid @enderror"
-                                    maxlength="255"
-                                    required
-                                    placeholder="Enter your name"
-                                >
-                                <i class="bi bi-pencil chatbox-input-icon"></i>
-                            </div>
-                            @error('name')
-                                <div class="chatbox-invalid-feedback">{{ $message }}</div>
-                            @enderror
-                        </div>
-
-                        <div class="mb-3">
-                            <label class="chatbox-form-label connectly-form-label">
-                                <i class="bi bi-image me-1"></i> Profile Picture
-                            </label>
-                            <div class="chatbox-file-input-wrapper connectly-file-input-wrapper">
-                                <input
-                                    type="file"
-                                    name="avatar"
-                                    accept="image/*"
-                                    class="chatbox-file-input @error('avatar') is-invalid @enderror"
-                                    id="avatarInput"
-                                >
-                                <label for="avatarInput" class="chatbox-file-label connectly-file-label">
-                                    <i class="bi bi-cloud-arrow-up me-2"></i>
-                                    <span>Choose an image</span>
-                                </label>
-                            </div>
-                            @error('avatar')
-                                <div class="chatbox-invalid-feedback">{{ $message }}</div>
-                            @enderror
-                            <div class="chatbox-form-text">Max 5MB. JPEG, PNG, GIF, or WebP.</div>
-                        </div>
-
-                        @if ($user->avatar_path)
-                            <div class="mb-3">
-                                <div class="chatbox-checkbox-wrapper">
-                                    <input class="chatbox-checkbox-input" type="checkbox" value="1" name="remove_avatar" id="removeAvatar">
-                                    <label class="chatbox-checkbox-label" for="removeAvatar">
-                                        <i class="bi bi-trash me-1"></i> Remove current picture
-                                    </label>
-                                </div>
-                            </div>
-                        @endif
-
-                        <button type="submit" class="chatbox-btn-primary chatbox-btn-full connectly-btn-primary">
-                            <i class="bi bi-check2 me-1"></i> Update Profile
-                        </button>
-                    </form>
-                    @endif
-                </div>
+        {{-- ===== PROFILE HEADER ===== --}}
+        <div class="cl-profile-header">
+            <div class="cl-profile-avatar-wrap">
+                @if ($user->avatar_path)
+                    <img src="{{ route('media.show', ['path' => $user->avatar_path]) }}" alt="{{ $user->name }}" class="cl-profile-avatar">
+                @else
+                    <div class="cl-profile-avatar cl-profile-avatar-fallback">{{ strtoupper(substr($user->name, 0, 1)) }}</div>
+                @endif
+                <div class="cl-profile-avatar-ring"></div>
+                <div class="cl-profile-avatar-ring-2"></div>
             </div>
 
-            <!-- Right Column: Posts -->
-            <div class="col-xl-8">
-                <div class="mt-4 d-flex flex-column gap-3">
-                    @forelse ($posts as $post)
-                        @include('frontend.partials.post', ['post' => $post, 'showPinButton' => $isOwner])
-                    @empty
-                        <div class="connectly-empty-state text-center py-5">
-                            <div class="connectly-empty-icon">
-                                <i class="bi bi-journal-text"></i>
-                            </div>
-                            <h5 class="fw-bold mt-3">No posts yet</h5>
-                            <p class="text-muted mb-0">
-                                @if($isOwner)
-                                    Share your first post with the community!
-                                @else
-                                    {{ $user->name }} hasn't posted anything yet.
-                                @endif
-                            </p>
-                        </div>
-                    @endforelse
-                </div>
+            <h1 class="cl-profile-name">{{ $user->name }}</h1>
+            <p class="cl-profile-email">{{ $user->email }}</p>
+
+            <div class="cl-profile-meta">
+                <span class="cl-profile-meta-item">
+                    <i class="bi bi-calendar3"></i>
+                    Joined {{ $user->created_at->format('M Y') }}
+                </span>
+                <span class="cl-profile-meta-divider"></span>
+                <span class="cl-profile-meta-item">
+                    <i class="bi bi-geo-alt"></i>
+                    Connectly
+                </span>
             </div>
         </div>
+
+        {{-- ===== STATS ROW ===== --}}
+        <div class="cl-profile-stats">
+            <div class="cl-profile-stat">
+                <span class="cl-profile-stat-value">{{ $posts->count() }}</span>
+                <span class="cl-profile-stat-label">Posts</span>
+            </div>
+            <div class="cl-profile-stat">
+                <span class="cl-profile-stat-value">{{ $posts->where('is_pinned', true)->count() }}</span>
+                <span class="cl-profile-stat-label">Pinned</span>
+            </div>
+            <div class="cl-profile-stat">
+                <span class="cl-profile-stat-value cl-profile-friend-count">{{ $friendsCount }}</span>
+                <span class="cl-profile-stat-label">Friends</span>
+            </div>
+            <div class="cl-profile-stat">
+                <span class="cl-profile-stat-value">{{ $posts->sum('reactions_count') }}</span>
+                <span class="cl-profile-stat-label">Reactions</span>
+            </div>
+        </div>
+
+        {{-- ===== FRIEND ACTIONS ===== --}}
+        @unless($isOwner)
+        <div class="cl-profile-actions">
+            @php
+                $frSentByMe = $friendRequest && (int) $friendRequest->sender_id === (int) auth()->id();
+                $frSentByThem = $friendRequest && (int) $friendRequest->sender_id === (int) $user->id;
+            @endphp
+
+            @if (!$friendRequest)
+                <form action="{{ route('friend-request.send', $user->id) }}" method="POST">
+                    @csrf
+                    <button type="submit" class="cl-profile-btn cl-profile-btn-primary">
+                        <i class="bi bi-person-plus-fill"></i>
+                        Add Friend
+                    </button>
+                </form>
+            @elseif ($friendStatus === 'pending' && $frSentByMe)
+                <div class="cl-profile-btn-group">
+                    <span class="cl-profile-status-badge cl-profile-status-pending">
+                        <i class="bi bi-hourglass-split"></i> Request Sent
+                    </span>
+                    <form action="{{ route('friend-request.cancel', $friendRequest->id) }}" method="POST" class="cl-profile-cancel-form" data-user-name="{{ $user->name }}" data-user-id="{{ $user->id }}">
+                        @csrf @method('DELETE')
+                        <button type="submit" class="cl-profile-icon-btn cl-profile-icon-btn-danger" title="Cancel Request"><i class="bi bi-x-lg"></i></button>
+                    </form>
+                </div>
+            @elseif ($friendStatus === 'pending' && $frSentByThem)
+                <div class="cl-profile-btn-group">
+                    <form action="{{ route('friend-request.accept', $friendRequest->id) }}" method="POST" class="flex-grow-1 cl-profile-accept-form" data-user-name="{{ $user->name }}" data-user-id="{{ $user->id }}">
+                        @csrf @method('PUT')
+                        <button type="submit" class="cl-profile-btn cl-profile-btn-primary"><i class="bi bi-check-lg"></i> Accept Request</button>
+                    </form>
+                    <form action="{{ route('friend-request.reject', $friendRequest->id) }}" method="POST" class="cl-profile-reject-form" data-user-name="{{ $user->name }}" data-user-id="{{ $user->id }}">
+                        @csrf @method('PUT')
+                        <button type="submit" class="cl-profile-icon-btn cl-profile-icon-btn-danger" title="Reject"><i class="bi bi-x-lg"></i></button>
+                    </form>
+                </div>
+            @elseif ($friendStatus === 'accepted')
+                <div class="cl-profile-btn-group">
+                    <span class="cl-profile-status-badge cl-profile-status-friends">
+                        <i class="bi bi-people-fill"></i> Friends
+                    </span>
+                    <form action="{{ route('friend-request.unfriend', $user->id) }}" method="POST" class="cl-profile-unfriend-form" data-user-name="{{ $user->name }}" data-user-id="{{ $user->id }}">
+                        @csrf @method('DELETE')
+                        <button type="submit" class="cl-profile-icon-btn cl-profile-icon-btn-danger" title="Unfriend"><i class="bi bi-person-dash-fill"></i></button>
+                    </form>
+                </div>
+            @elseif ($friendStatus === 'rejected' && $frSentByMe)
+                <form action="{{ route('friend-request.send', $user->id) }}" method="POST">
+                    @csrf
+                    <button type="submit" class="cl-profile-btn cl-profile-btn-primary"><i class="bi bi-person-plus-fill"></i> Add Friend</button>
+                </form>
+            @elseif ($friendStatus === 'rejected' && $frSentByThem)
+                <div class="cl-profile-btn-group">
+                    <span class="cl-profile-status-badge cl-profile-status-rejected"><i class="bi bi-x-circle"></i> Request Rejected</span>
+                    <form action="{{ route('friend-request.send', $user->id) }}" method="POST">
+                        @csrf
+                        <button type="submit" class="cl-profile-icon-btn cl-profile-icon-btn-primary" title="Send Again"><i class="bi bi-arrow-clockwise"></i></button>
+                    </form>
+                </div>
+            @endif
+
+            <a href="{{ route('message', $user->id) }}" class="cl-profile-btn cl-profile-btn-secondary">
+                <i class="bi bi-chat-dots-fill"></i>
+                Send Message
+            </a>
+        </div>
+        @endunless
+
+        {{-- ===== EDIT FORM (OWNER ONLY) ===== --}}
+        @if($isOwner)
+        <div class="cl-profile-edit-section">
+            <div class="cl-profile-edit-header">
+                <i class="bi bi-gear-fill"></i>
+                <span>Profile Settings</span>
+            </div>
+            <form action="{{ route('profile.update', $user->id) }}" method="POST" enctype="multipart/form-data">
+                @csrf @method('PUT')
+
+                <div class="cl-profile-edit-grid">
+                    <div class="cl-profile-edit-field">
+                        <label><i class="bi bi-person"></i> Your Name</label>
+                        <div class="cl-profile-input-wrap">
+                            <input type="text" name="name" value="{{ old('name', $user->name) }}" maxlength="255" required placeholder="Enter your name" class="@error('name') is-invalid @enderror">
+                            @error('name') <span class="cl-profile-field-error">{{ $message }}</span> @enderror
+                        </div>
+                    </div>
+
+                    <div class="cl-profile-edit-field">
+                        <label><i class="bi bi-image"></i> Profile Picture</label>
+                        <div class="cl-profile-upload-wrap">
+                            <input type="file" name="avatar" accept="image/*" id="avatarInput" class="cl-profile-upload-input">
+                            <label for="avatarInput" class="cl-profile-upload-label">
+                                <i class="bi bi-cloud-arrow-up"></i>
+                                <span>Choose an image</span>
+                            </label>
+                        </div>
+                        <span class="cl-profile-field-hint">Max 5MB. JPEG, PNG, GIF, WebP.</span>
+                        @error('avatar') <span class="cl-profile-field-error">{{ $message }}</span> @enderror
+                    </div>
+                </div>
+
+                @if ($user->avatar_path)
+                <label class="cl-profile-checkbox">
+                    <input type="checkbox" name="remove_avatar" value="1">
+                    <i class="bi bi-trash"></i> Remove current picture
+                </label>
+                @endif
+
+                <button type="submit" class="cl-profile-btn cl-profile-btn-primary cl-profile-btn-save">
+                    <i class="bi bi-check2"></i> Update Profile
+                </button>
+            </form>
+        </div>
+        @endif
+
+        {{-- ===== POSTS SECTION ===== --}}
+        <div class="cl-profile-posts">
+            <div class="cl-profile-posts-header">
+                <i class="bi bi-journal-text"></i>
+                <span>Posts</span>
+                <span class="cl-profile-posts-count">{{ $posts->count() }}</span>
+            </div>
+
+            <div class="cl-profile-posts-list">
+                @forelse ($posts as $post)
+                    @include('frontend.partials.post', ['post' => $post, 'showPinButton' => $isOwner])
+                @empty
+                    <div class="cl-profile-empty">
+                        <div class="cl-profile-empty-icon"><i class="bi bi-journal-text"></i></div>
+                        <h5>No posts yet</h5>
+                        <p>
+                            @if($isOwner)
+                                Share your first post with the community!
+                            @else
+                                {{ $user->name }} hasn't posted anything yet.
+                            @endif
+                        </p>
+                    </div>
+                @endforelse
+            </div>
+        </div>
+
     </div>
 </div>
 
 <style>
 :root {
-    --profile-bg: #f5f5f7;
-    --profile-surface: #ffffff;
-    --profile-surface-hover: #fafbfc;
-    --profile-border: #e5e7eb;
-    --profile-border-light: #f0f0f2;
-    --profile-border-focus: #0071e3;
-    --profile-text: #1d1d1f;
-    --profile-text-secondary: #424245;
-    --profile-muted: #86868b;
-    --profile-muted-light: #aeaeb2;
-    --profile-primary: #0071e3;
-    --profile-primary-light: #40a9ff;
-    --profile-primary-dark: #0058b3;
-    --profile-primary-subtle: rgba(0,113,227,0.06);
-    --profile-primary-glow: rgba(0,113,227,0.15);
-    --profile-radius: 24px;
-    --profile-radius-sm: 16px;
-    --profile-radius-xs: 12px;
-    --profile-shadow-sm: 0 1px 3px rgba(0,0,0,0.03);
-    --profile-shadow: 0 2px 8px rgba(0,0,0,0.04);
-    --profile-shadow-md: 0 4px 16px rgba(0,0,0,0.05);
-    --profile-shadow-lg: 0 8px 30px rgba(0,0,0,0.06);
-    --profile-shadow-xl: 0 16px 48px rgba(0,0,0,0.08);
-    --profile-transition: 0.35s cubic-bezier(.4,0,.2,1);
+    --cl-profile-bg: #f0f2f5;
+    --cl-profile-surface: #ffffff;
+    --cl-profile-border: #e4e6eb;
+    --cl-profile-text: #050505;
+    --cl-profile-text-secondary: #65676b;
+    --cl-profile-text-muted: #8a8d91;
+    --cl-profile-primary: #2563eb;
+    --cl-profile-primary-dark: #1d4ed8;
+    --cl-profile-primary-light: #60a5fa;
+    --cl-profile-primary-subtle: rgba(37,99,235,0.08);
+    --cl-profile-success: #10b981;
+    --cl-profile-danger: #ef4444;
+    --cl-profile-radius: 20px;
+    --cl-profile-radius-sm: 14px;
+    --cl-profile-radius-xs: 10px;
+    --cl-profile-shadow: 0 2px 8px rgba(0,0,0,0.04);
+    --cl-profile-shadow-md: 0 8px 24px rgba(0,0,0,0.06);
+    --cl-profile-shadow-lg: 0 16px 48px rgba(0,0,0,0.08);
+    --cl-profile-transition: 0.3s cubic-bezier(.4,0,.2,1);
 }
 
-.connectly-profile-page {
+.cl-profile {
     min-height: 100dvh;
-    background: var(--profile-bg);
-    padding-bottom: 2rem;
+    background: var(--cl-profile-bg);
     position: relative;
 }
 
-.connectly-profile-page::before {
-    content: '';
-    position: fixed;
-    top: 0;
+/* ===== HERO BANNER ===== */
+.cl-profile-hero {
+    position: relative;
+    height: 280px;
+    overflow: hidden;
+    background: linear-gradient(135deg, #0f172a 0%, #1e3a5f 40%, #1e40af 70%, #0f172a 100%);
+}
+
+.cl-profile-hero-bg {
+    position: absolute;
+    inset: 0;
+    overflow: hidden;
+}
+
+.cl-profile-hero-orb {
+    position: absolute;
+    border-radius: 50%;
+    filter: blur(80px);
+    opacity: 0.4;
+}
+
+.cl-profile-hero-orb-1 {
+    width: 500px; height: 500px;
+    background: radial-gradient(circle, rgba(37,99,235,0.3), transparent);
+    top: -150px; right: -100px;
+    animation: heroOrbFloat1 14s ease-in-out infinite;
+}
+
+.cl-profile-hero-orb-2 {
+    width: 400px; height: 400px;
+    background: radial-gradient(circle, rgba(96,165,250,0.2), transparent);
+    bottom: -120px; left: -80px;
+    animation: heroOrbFloat2 12s ease-in-out infinite reverse;
+}
+
+.cl-profile-hero-orb-3 {
+    width: 300px; height: 300px;
+    background: radial-gradient(circle, rgba(124,58,237,0.15), transparent);
+    top: 50%; left: 60%;
+    animation: heroOrbFloat3 16s ease-in-out infinite;
+}
+
+@keyframes heroOrbFloat1 {
+    0%,100%{ transform: translate(0,0) scale(1); }
+    50%{ transform: translate(40px,-40px) scale(1.1); }
+}
+@keyframes heroOrbFloat2 {
+    0%,100%{ transform: translate(0,0) scale(1); }
+    50%{ transform: translate(-30px,30px) scale(1.15); }
+}
+@keyframes heroOrbFloat3 {
+    0%,100%{ transform: translate(0,0) scale(1); opacity: 0.3; }
+    50%{ transform: translate(20px,-20px) scale(1.2); opacity: 0.5; }
+}
+
+.cl-profile-hero-particles {
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    overflow: hidden;
+}
+
+.cl-profile-hero-wave {
+    position: absolute;
+    bottom: -2px;
     left: 0;
     width: 100%;
-    height: 280px;
-    background: linear-gradient(180deg, rgba(0,113,227,0.04) 0%, transparent 100%);
-    pointer-events: none;
-    z-index: 0;
+    height: 80px;
+    z-index: 2;
 }
 
-.connectly-profile-page > .container {
+.cl-profile-hero-wave svg {
+    display: block;
+    width: 100%;
+    height: 100%;
+}
+
+/* ===== CONTAINER ===== */
+.cl-profile-container {
+    max-width: 820px;
+    margin: -80px auto 2rem;
+    padding: 0 1rem;
     position: relative;
+    z-index: 3;
+}
+
+/* ===== TOAST ===== */
+.cl-profile-toast {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 14px 20px;
+    background: #fff;
+    border-radius: var(--cl-profile-radius-sm);
+    box-shadow: var(--cl-profile-shadow-lg);
+    border-left: 4px solid var(--cl-profile-success);
+    margin-bottom: 1.25rem;
+    font-size: 0.88rem;
+    font-weight: 500;
+    color: var(--cl-profile-text);
+    animation: toastSlideIn 0.4s cubic-bezier(.16,1,.3,1) backwards;
+}
+
+.cl-profile-toast i { color: var(--cl-profile-success); font-size: 1.2rem; }
+.cl-profile-toast button {
+    margin-left: auto;
+    background: none;
+    border: none;
+    font-size: 1.3rem;
+    color: var(--cl-profile-text-muted);
+    cursor: pointer;
+    padding: 0 4px;
+}
+
+@keyframes toastSlideIn {
+    from { opacity: 0; transform: translateY(-20px) scale(0.95); }
+    to { opacity: 1; transform: translateY(0) scale(1); }
+}
+
+/* ===== PROFILE HEADER ===== */
+.cl-profile-header {
+    text-align: center;
+    padding: 1rem 1.5rem 0;
+}
+
+.cl-profile-avatar-wrap {
+    position: relative;
+    width: 140px;
+    height: 140px;
+    margin: 0 auto 1rem;
+}
+
+.cl-profile-avatar {
+    width: 140px;
+    height: 140px;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 4px solid #fff;
+    box-shadow: 0 8px 32px rgba(0,0,0,0.12);
+    position: relative;
+    z-index: 2;
+}
+
+.cl-profile-avatar-fallback {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 3.2rem;
+    font-weight: 700;
+    color: #fff;
+    background: linear-gradient(135deg, var(--cl-profile-primary), var(--cl-profile-primary-dark));
+}
+
+.cl-profile-avatar-ring {
+    position: absolute;
+    inset: -6px;
+    border-radius: 50%;
+    border: 2px solid rgba(37,99,235,0.15);
+    animation: avatarRingPulse 3s ease-in-out infinite;
     z-index: 1;
 }
 
-.connectly-profile-alert {
-    border-radius: var(--profile-radius-xs);
-    border: none;
-    background: linear-gradient(135deg, #d1fae5, #a7f3d0);
-    color: #065f46;
-    font-weight: 500;
-    box-shadow: 0 4px 16px rgba(16,185,129,0.15);
-    backdrop-filter: blur(8px);
+.cl-profile-avatar-ring-2 {
+    inset: -12px;
+    border-width: 1.5px;
+    border-color: rgba(37,99,235,0.08);
+    animation-delay: 1.5s;
 }
 
-.connectly-profile-card {
-    background: var(--profile-surface);
-    border: 1px solid var(--profile-border);
-    border-radius: var(--profile-radius);
-    padding: 1.75rem;
-    box-shadow: var(--profile-shadow-sm);
-    transition: box-shadow var(--profile-transition), transform var(--profile-transition);
+@keyframes avatarRingPulse {
+    0%,100%{ transform: scale(1); opacity: 0.6; }
+    50%{ transform: scale(1.05); opacity: 0.2; }
+}
+
+.cl-profile-name {
+    font-size: 1.65rem;
+    font-weight: 800;
+    color: var(--cl-profile-text);
+    letter-spacing: -0.02em;
+    margin: 0 0 4px;
+}
+
+.cl-profile-email {
+    font-size: 0.92rem;
+    color: var(--cl-profile-text-secondary);
+    margin: 0 0 0.75rem;
+}
+
+.cl-profile-meta {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 12px;
+    flex-wrap: wrap;
+}
+
+.cl-profile-meta-item {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 0.82rem;
+    color: var(--cl-profile-text-muted);
+}
+
+.cl-profile-meta-item i { font-size: 0.85rem; }
+.cl-profile-meta-divider { width: 4px; height: 4px; border-radius: 50%; background: var(--cl-profile-border); }
+
+/* ===== STATS ===== */
+.cl-profile-stats {
+    display: flex;
+    justify-content: center;
+    gap: 0;
+    background: var(--cl-profile-surface);
+    border: 1px solid var(--cl-profile-border);
+    border-radius: var(--cl-profile-radius);
+    padding: 0.75rem;
+    margin: 1.25rem auto;
+    max-width: 480px;
+    box-shadow: var(--cl-profile-shadow);
+}
+
+.cl-profile-stat {
+    flex: 1;
+    text-align: center;
+    padding: 0.35rem 0.5rem;
+    border-right: 1px solid var(--cl-profile-border);
+    transition: transform var(--cl-profile-transition);
+}
+
+.cl-profile-stat:last-child { border-right: none; }
+.cl-profile-stat:hover { transform: translateY(-2px); }
+.cl-profile-stat:hover .cl-profile-stat-value { color: var(--cl-profile-primary); }
+
+.cl-profile-stat-value {
+    display: block;
+    font-size: 1.2rem;
+    font-weight: 800;
+    color: var(--cl-profile-text);
+    line-height: 1.3;
+    transition: color var(--cl-profile-transition);
+    font-variant-numeric: tabular-nums;
+}
+
+.cl-profile-stat-label {
+    display: block;
+    font-size: 0.65rem;
+    color: var(--cl-profile-text-muted);
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+/* ===== ACTIONS ===== */
+.cl-profile-actions {
+    display: flex;
+    flex-direction: column;
+    gap: 0.6rem;
+    max-width: 400px;
+    margin: 0 auto 1.5rem;
+}
+
+.cl-profile-btn-group {
+    display: flex;
+    gap: 0.5rem;
+    align-items: center;
+}
+
+.cl-profile-btn-group .flex-grow-1 { flex: 1; }
+.cl-profile-btn-group .flex-grow-1 button { width: 100%; }
+
+.cl-profile-btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    width: 100%;
+    padding: 0.7rem 1.25rem;
+    border: none;
+    border-radius: var(--cl-profile-radius-xs);
+    font-size: 0.88rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all var(--cl-profile-transition);
+    text-decoration: none;
+    font-family: inherit;
     position: relative;
     overflow: hidden;
 }
 
-.connectly-profile-card::before {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: 0;
-    right: 0;
-    height: 3px;
-    background: linear-gradient(90deg, var(--profile-primary), var(--profile-primary-light), var(--profile-primary));
-    opacity: 0.6;
+.cl-profile-btn-primary {
+    background: var(--cl-profile-primary);
+    color: #fff;
+    box-shadow: 0 4px 16px rgba(37,99,235,0.25);
 }
 
-.connectly-profile-card:hover {
-    box-shadow: var(--profile-shadow-md);
+.cl-profile-btn-primary:hover {
+    background: var(--cl-profile-primary-dark);
+    transform: translateY(-2px);
+    box-shadow: 0 8px 24px rgba(37,99,235,0.35);
+    color: #fff;
+}
+
+.cl-profile-btn-primary:active { transform: translateY(0); }
+
+.cl-profile-btn-secondary {
+    background: var(--cl-profile-surface);
+    color: var(--cl-profile-primary);
+    border: 1.5px solid var(--cl-profile-primary);
+}
+
+.cl-profile-btn-secondary:hover {
+    background: var(--cl-profile-primary-subtle);
     transform: translateY(-2px);
 }
 
-@media (min-width: 1200px) {
-    .connectly-profile-card-sticky {
-        position: sticky;
-        top: 1.5rem;
-    }
-}
-
-.connectly-profile-avatar-section {
-    text-align: center;
-    padding-bottom: 1.25rem;
-}
-
-.connectly-profile-avatar {
-    width: 130px;
-    height: 130px;
-    border-radius: 50%;
-    object-fit: cover;
-    border: 3px solid var(--profile-surface);
-    box-shadow: 0 0 0 2px var(--profile-border), 0 8px 24px rgba(0,0,0,0.06);
-    transition: transform var(--profile-transition), box-shadow var(--profile-transition);
-}
-
-.connectly-profile-avatar:hover {
-    transform: scale(1.05);
-    box-shadow: 0 0 0 2px var(--profile-primary-subtle), 0 12px 32px rgba(0,0,0,0.08);
-}
-
-.connectly-profile-avatar-fallback {
-    display: inline-flex;
+.cl-profile-status-badge {
+    display: flex;
     align-items: center;
     justify-content: center;
-    font-weight: 700;
-    font-size: 2.8rem;
-    color: #fff;
-    background: linear-gradient(135deg, #0071e3 0%, #0058b3 100%);
-    letter-spacing: -0.02em;
-}
-
-.connectly-profile-name {
-    color: var(--profile-text);
-    font-size: 1.3rem;
-    font-weight: 700;
-    letter-spacing: -0.01em;
-}
-
-.connectly-profile-email {
-    font-size: 0.8rem;
-    color: var(--profile-muted);
-}
-
-.connectly-profile-badge {
-    display: inline-flex;
-    align-items: center;
-    gap: 5px;
-    background: linear-gradient(135deg, var(--profile-primary-subtle), rgba(0,113,227,0.03));
-    color: var(--profile-primary);
-    font-size: 0.7rem;
+    gap: 6px;
+    padding: 0.6rem 1rem;
+    border-radius: var(--cl-profile-radius-xs);
+    font-size: 0.82rem;
     font-weight: 600;
-    padding: 5px 14px;
-    border-radius: 999px;
-    border: 1px solid rgba(0,113,227,0.1);
-}
-
-.connectly-friend-status-badge {
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    gap: 5px;
-    font-size: 0.78rem;
-    font-weight: 600;
-    padding: 0.5rem 1rem;
-    border-radius: var(--profile-radius-xs);
     border: 1.5px solid;
-    transition: all 0.25s ease;
+    flex: 1;
 }
 
-.connectly-friend-pending {
+.cl-profile-status-pending {
     background: linear-gradient(135deg, #fffbeb, #fef3c7);
     color: #b45309;
     border-color: #fde68a;
 }
 
-.connectly-friend-accepted {
+.cl-profile-status-friends {
     background: linear-gradient(135deg, #ecfdf5, #d1fae5);
     color: #047857;
     border-color: #a7f3d0;
 }
 
-.connectly-friend-rejected {
+.cl-profile-status-rejected {
     background: linear-gradient(135deg, #fef2f2, #fee2e2);
     color: #b91c1c;
     border-color: #fecaca;
 }
 
-.connectly-friend-action-btn {
+.cl-profile-icon-btn {
     display: inline-flex;
     align-items: center;
     justify-content: center;
-    width: 40px;
-    height: 40px;
-    border-radius: var(--profile-radius-xs);
-    border: 1.5px solid var(--profile-border);
-    background: var(--profile-surface);
-    color: var(--profile-muted);
+    width: 42px;
+    height: 42px;
+    border-radius: var(--cl-profile-radius-xs);
+    border: 1.5px solid var(--cl-profile-border);
+    background: var(--cl-profile-surface);
+    color: var(--cl-profile-text-muted);
     cursor: pointer;
     transition: all 0.25s ease;
-    font-size: 0.85rem;
-    text-decoration: none;
+    font-size: 0.9rem;
+    flex-shrink: 0;
 }
 
-.connectly-friend-action-btn:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 6px 16px rgba(0,0,0,0.06);
+.cl-profile-icon-btn:hover { transform: translateY(-2px); box-shadow: 0 4px 12px rgba(0,0,0,0.06); }
+.cl-profile-icon-btn-danger:hover { background: #fef2f2; border-color: #fecaca; color: var(--cl-profile-danger); }
+.cl-profile-icon-btn-primary:hover { background: var(--cl-profile-primary-subtle); border-color: rgba(37,99,235,0.2); color: var(--cl-profile-primary); }
+
+/* ===== EDIT SECTION ===== */
+.cl-profile-edit-section {
+    background: var(--cl-profile-surface);
+    border: 1px solid var(--cl-profile-border);
+    border-radius: var(--cl-profile-radius);
+    padding: 1.5rem;
+    margin-bottom: 1.5rem;
+    box-shadow: var(--cl-profile-shadow);
 }
 
-.connectly-friend-cancel-btn:hover,
-.connectly-friend-reject-btn:hover,
-.connectly-friend-unfriend-btn:hover {
-    background: #fef2f2;
-    border-color: #fecaca;
-    color: #dc2626;
-}
-
-.connectly-friend-send-again-btn:hover {
-    background: var(--profile-primary-subtle);
-    border-color: rgba(0,113,227,0.15);
-    color: var(--profile-primary);
-}
-
-.connectly-profile-stats-row {
+.cl-profile-edit-header {
     display: flex;
-    justify-content: center;
-    gap: 0;
-    background: var(--profile-surface-hover);
-    border-radius: var(--profile-radius-sm);
-    padding: 0.75rem;
-    border: 1px solid var(--profile-border-light);
-    margin: 0.75rem 0 0.25rem;
-    position: relative;
-    overflow: hidden;
-}
-
-.connectly-profile-stats-row::before {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: 0;
-    right: 0;
-    height: 1px;
-    background: linear-gradient(90deg, transparent, rgba(0,113,227,0.08), transparent);
-}
-
-.connectly-profile-stat-item {
-    flex: 1;
-    text-align: center;
-    padding: 0.25rem 0.4rem;
-    border-right: 1px solid var(--profile-border-light);
-    position: relative;
-}
-
-.connectly-profile-stat-item:last-child {
-    border-right: none;
-}
-
-.connectly-profile-stat-item:hover .connectly-profile-stat-value {
-    color: var(--profile-primary);
-}
-
-.connectly-profile-stat-value {
-    display: block;
-    font-size: 1.15rem;
+    align-items: center;
+    gap: 8px;
+    font-size: 0.95rem;
     font-weight: 700;
-    color: var(--profile-text);
-    line-height: 1.3;
-    transition: color 0.25s ease;
-    font-variant-numeric: tabular-nums;
+    color: var(--cl-profile-text);
+    margin-bottom: 1.25rem;
+    padding-bottom: 0.75rem;
+    border-bottom: 1px solid var(--cl-profile-border);
 }
 
-.connectly-profile-stat-label {
-    display: block;
-    font-size: 0.65rem;
-    color: var(--profile-muted);
-    font-weight: 500;
-    text-transform: uppercase;
-    letter-spacing: 0.5px;
+.cl-profile-edit-header i { color: var(--cl-profile-primary); }
+
+.cl-profile-edit-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1rem;
+    margin-bottom: 1rem;
 }
 
-.connectly-profile-divider {
-    margin: 1.25rem 0;
-    border-color: var(--profile-border-light);
-    opacity: 1;
-    position: relative;
-}
-
-.connectly-profile-form {
-    text-align: left;
-}
-
-.connectly-form-label {
-    display: block;
-    font-size: 0.75rem;
+.cl-profile-edit-field label {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 0.78rem;
     font-weight: 600;
-    color: var(--profile-text);
-    margin-bottom: 0.4rem;
-    letter-spacing: 0.01em;
+    color: var(--cl-profile-text-secondary);
+    margin-bottom: 6px;
 }
 
-.connectly-input-group {
-    position: relative;
-}
+.cl-profile-edit-field label i { color: var(--cl-profile-primary); font-size: 0.8rem; }
 
-.connectly-form-control {
+.cl-profile-input-wrap input {
     width: 100%;
-    padding: 0.7rem 2.5rem 0.7rem 0.9rem;
-    font-size: 0.85rem;
-    border: 1.5px solid var(--profile-border);
-    border-radius: var(--profile-radius-xs);
-    background: var(--profile-surface-hover);
-    color: var(--profile-text);
+    padding: 0.65rem 0.85rem;
+    border: 1.5px solid var(--cl-profile-border);
+    border-radius: var(--cl-profile-radius-xs);
+    background: var(--cl-profile-bg);
+    color: var(--cl-profile-text);
+    font-size: 0.88rem;
     transition: all 0.25s ease;
     outline: none;
     font-family: inherit;
-    line-height: 1.5;
+    box-sizing: border-box;
 }
 
-.connectly-form-control:focus {
-    border-color: var(--profile-border-focus);
-    background: var(--profile-surface);
-    box-shadow: 0 0 0 4px rgba(0,113,227,0.08);
+.cl-profile-input-wrap input:focus {
+    border-color: var(--cl-profile-primary);
+    background: var(--cl-profile-surface);
+    box-shadow: 0 0 0 4px rgba(37,99,235,0.08);
 }
 
-.connectly-form-control::placeholder {
-    color: var(--profile-muted-light);
-}
-
-.connectly-input-icon {
-    position: absolute;
-    right: 14px;
-    top: 50%;
-    transform: translateY(-50%);
-    color: var(--profile-muted-light);
-    font-size: 0.85rem;
-    pointer-events: none;
-    transition: color 0.25s ease;
-}
-
-.connectly-form-control:focus ~ .connectly-input-icon {
-    color: var(--profile-primary);
-}
-
-.connectly-invalid-feedback {
-    color: #dc2626;
-    font-size: 0.72rem;
-    margin-top: 5px;
-    font-weight: 500;
-}
-
-.connectly-form-control.is-invalid {
-    border-color: #dc2626;
+.cl-profile-input-wrap input.is-invalid {
+    border-color: var(--cl-profile-danger);
     background: #fef2f2;
 }
 
-.connectly-file-input-wrapper {
+.cl-profile-field-error {
+    display: block;
+    color: var(--cl-profile-danger);
+    font-size: 0.72rem;
+    font-weight: 500;
+    margin-top: 4px;
+}
+
+.cl-profile-field-hint {
+    display: block;
+    font-size: 0.68rem;
+    color: var(--cl-profile-text-muted);
+    margin-top: 4px;
+}
+
+.cl-profile-upload-wrap {
     position: relative;
 }
 
-.connectly-file-input {
+.cl-profile-upload-input {
     position: absolute;
     width: 100%;
     height: 100%;
@@ -613,1070 +712,364 @@
     z-index: 2;
 }
 
-.connectly-file-label {
+.cl-profile-upload-label {
     display: flex;
     align-items: center;
-    padding: 0.7rem 0.9rem;
-    border: 1.5px dashed var(--profile-border);
-    border-radius: var(--profile-radius-xs);
-    background: var(--profile-surface-hover);
-    color: var(--profile-muted);
+    gap: 8px;
+    padding: 0.65rem 0.85rem;
+    border: 1.5px dashed var(--cl-profile-border);
+    border-radius: var(--cl-profile-radius-xs);
+    background: var(--cl-profile-bg);
+    color: var(--cl-profile-text-muted);
     font-size: 0.82rem;
     font-weight: 500;
     transition: all 0.25s ease;
     cursor: pointer;
+}
+
+.cl-profile-upload-label:hover {
+    border-color: var(--cl-profile-primary);
+    background: var(--cl-profile-primary-subtle);
+    color: var(--cl-profile-primary);
+}
+
+.cl-profile-checkbox {
+    display: inline-flex;
+    align-items: center;
     gap: 8px;
-}
-
-.connectly-file-label:hover {
-    border-color: var(--profile-primary);
-    background: var(--profile-primary-subtle);
-    color: var(--profile-primary);
-}
-
-.connectly-file-input.has-file ~ .connectly-file-label span {
-    color: var(--profile-primary);
-}
-
-.connectly-form-text {
-    font-size: 0.68rem;
-    color: var(--profile-muted-light);
-    margin-top: 5px;
-}
-
-.connectly-checkbox-wrapper {
-    display: flex;
-    align-items: center;
-    gap: 10px;
-}
-
-.connectly-checkbox-input {
-    width: 18px;
-    height: 18px;
-    border-radius: 5px;
-    border: 2px solid var(--profile-border);
-    accent-color: #dc2626;
-    cursor: pointer;
-    transition: border-color 0.2s ease;
-}
-
-.connectly-checkbox-input:hover {
-    border-color: #dc2626;
-}
-
-.connectly-checkbox-label {
     font-size: 0.82rem;
-    color: #dc2626;
+    color: var(--cl-profile-danger);
     font-weight: 500;
     cursor: pointer;
-    user-select: none;
-}
-
-.connectly-btn-primary {
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    gap: 7px;
-    padding: 0.7rem 1.35rem;
-    background: var(--profile-primary);
-    color: #fff;
-    font-size: 0.85rem;
-    font-weight: 600;
-    border: none;
-    border-radius: var(--profile-radius-xs);
-    cursor: pointer;
-    transition: all var(--profile-transition);
-    box-shadow: 0 4px 14px rgba(0,113,227,0.2);
-    text-decoration: none;
-    font-family: inherit;
-    position: relative;
-    overflow: hidden;
-}
-
-.connectly-btn-primary::after {
-    content: '';
-    position: absolute;
-    inset: 0;
-    background: linear-gradient(135deg, rgba(255,255,255,0.1), transparent);
-    pointer-events: none;
-}
-
-.connectly-btn-primary:hover {
-    background: var(--profile-primary-dark);
-    transform: translateY(-2px);
-    box-shadow: 0 8px 22px rgba(0,113,227,0.28);
-    color: #fff;
-}
-
-.connectly-btn-primary:active {
-    transform: translateY(0);
-    box-shadow: 0 2px 8px rgba(0,113,227,0.2);
-}
-
-.connectly-btn-full {
-    width: 100%;
-}
-
-.connectly-post-card {
-    background: var(--profile-surface);
-    border-radius: var(--profile-radius);
-    border: 1px solid var(--profile-border);
-    padding: 1.25rem 1.35rem;
-    position: relative;
-    transition: all var(--profile-transition);
-    animation: profileCardSlideUp 0.5s ease-out backwards;
-    box-shadow: var(--profile-shadow-sm);
-}
-
-.connectly-post-card:hover {
-    border-color: var(--profile-border-focus);
-    box-shadow: var(--profile-shadow-md);
-}
-
-@keyframes profileCardSlideUp {
-    from { opacity: 0; transform: translateY(24px); }
-    to { opacity: 1; transform: translateY(0); }
-}
-
-/* ===== POST CARD ANIMATION DELAYS ===== */
-.connectly-post-card:nth-child(1) { animation-delay: 0.08s; }
-.connectly-post-card:nth-child(2) { animation-delay: 0.16s; }
-.connectly-post-card:nth-child(3) { animation-delay: 0.24s; }
-.connectly-post-card:nth-child(4) { animation-delay: 0.32s; }
-.connectly-post-card:nth-child(5) { animation-delay: 0.40s; }
-
-/* ===== POST TEXT ===== */
-.connectly-post-text {
-    color: var(--profile-text-secondary);
-    line-height: 1.7;
-    white-space: pre-line;
-    font-size: 0.92rem;
-}
-
-/* ===== POST IMAGE GRID ===== */
-.connectly-post-image-grid {
-    display: grid;
-    gap: 0.4rem;
-    border-radius: var(--profile-radius-sm);
-    overflow: hidden;
-}
-
-.connectly-post-image-grid:not(.d-none) {
-    margin-bottom: 0.75rem;
-}
-
-.connectly-post-image-grid.grid-1 {
-    grid-template-columns: 1fr;
-    max-height: 400px;
-}
-
-.connectly-post-image-grid.grid-2 {
-    grid-template-columns: 1fr 1fr;
-    max-height: 280px;
-}
-
-.connectly-post-image-grid.grid-3 {
-    grid-template-columns: 1fr 1fr;
-    grid-template-rows: 1fr 1fr;
-    max-height: 320px;
-}
-.connectly-post-image-grid.grid-3 .connectly-post-image-item:nth-child(1) {
-    grid-row: span 2;
-}
-
-.connectly-post-image-grid.grid-4,
-.connectly-post-image-grid.grid-many {
-    grid-template-columns: 1fr 1fr;
-    grid-template-rows: 1fr 1fr;
-    max-height: 320px;
-}
-
-.connectly-post-image-item {
-    position: relative;
-    overflow: hidden;
-    border-radius: 6px;
-    background: var(--profile-surface-hover);
-    cursor: pointer;
-}
-
-.connectly-post-image-item img {
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-    transition: transform 0.4s ease;
-}
-
-.connectly-post-image-item:hover img {
-    transform: scale(1.03);
-}
-
-.connectly-post-image-overlay {
-    position: absolute;
-    inset: 0;
-    background: rgba(0,0,0,0.5);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    color: #fff;
-    font-size: 1.2rem;
-    font-weight: 700;
-    cursor: pointer;
-}
-
-/* ===== PROFILE LINK ===== */
-.connectly-profile-link {
-    color: var(--profile-text);
-    font-weight: 600;
-    transition: color 0.2s ease;
-}
-
-.connectly-profile-link:hover {
-    color: var(--profile-primary);
-}
-
-/* ===== REACTION BUTTON ===== */
-.connectly-reaction-wrap {
-    position: relative;
-    display: inline-flex;
-    align-items: center;
-}
-
-.connectly-react-btn {
-    display: inline-flex;
-    align-items: center;
-    gap: 0.35rem;
-    padding: 0.35rem 0.85rem;
-    border-radius: 999px;
-    border: 1.5px solid var(--profile-border);
-    background: var(--profile-surface);
-    color: var(--profile-muted);
-    font-size: 0.8rem;
-    font-weight: 500;
-    cursor: pointer;
-    transition: all 0.2s cubic-bezier(.4,0,.2,1);
-    font-family: inherit;
-}
-
-.connectly-react-btn:hover {
-    border-color: var(--profile-primary);
-    color: var(--profile-primary);
-    background: var(--profile-primary-subtle);
-}
-
-.connectly-react-btn.is-reacted {
-    background: var(--profile-primary);
-    border-color: var(--profile-primary);
-    color: #fff;
-    box-shadow: 0 2px 8px rgba(0,113,227,0.2);
-}
-
-.connectly-react-btn.is-reacted:hover {
-    background: var(--profile-primary-dark);
-    border-color: var(--profile-primary-dark);
-    color: #fff;
-}
-
-.connectly-react-emoji {
-    font-size: 0.95rem;
-    line-height: 1;
-}
-
-.connectly-react-count {
-    font-weight: 600;
-}
-
-.connectly-react-count::before {
-    content: '(';
-}
-
-.connectly-react-count::after {
-    content: ')';
-}
-
-.connectly-react-float {
-    position: absolute;
-    left: 0;
-    bottom: calc(100% + 6px);
-    display: flex;
-    gap: 0.2rem;
-    padding: 0.35rem 0.45rem;
-    background: var(--profile-surface);
-    backdrop-filter: blur(16px);
-    -webkit-backdrop-filter: blur(16px);
-    border: 1px solid var(--profile-border);
-    border-radius: 999px;
-    box-shadow: 0 8px 24px rgba(0,0,0,0.08);
-    opacity: 0;
-    visibility: hidden;
-    pointer-events: none;
-    transform: translateY(8px) scale(0.92);
-    transition: all 0.2s cubic-bezier(.16,1,.3,1);
-    z-index: 25;
-}
-
-.connectly-react-float::after {
-    content: '';
-    position: absolute;
-    left: 0;
-    right: 0;
-    bottom: -12px;
-    height: 12px;
-}
-
-.connectly-reaction-wrap:hover .connectly-react-float,
-.connectly-reaction-wrap:focus-within .connectly-react-float,
-.connectly-react-float:hover {
-    opacity: 1;
-    visibility: visible;
-    pointer-events: auto;
-    transform: translateY(0) scale(1);
-}
-
-.connectly-react-emojibtn {
-    border: none;
-    background: transparent;
-    border-radius: 50%;
-    width: 34px;
-    height: 34px;
-    font-size: 1.2rem;
-    line-height: 1;
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    transition: transform 0.15s ease, background 0.15s ease;
-    cursor: pointer;
-}
-
-.connectly-react-emojibtn:hover {
-    transform: scale(1.3);
-    background: rgba(0,113,227,0.08);
-}
-
-.connectly-react-emojibtn.active {
-    background: rgba(0,113,227,0.12);
-    transform: scale(1.15);
-}
-
-/* ===== COMMENT BUTTON ===== */
-.connectly-comment-link {
-    display: inline-flex;
-    align-items: center;
-    gap: 0.35rem;
-    padding: 0.35rem 0.85rem;
-    border-radius: 999px;
-    border: 1.5px solid var(--profile-border);
-    background: var(--profile-surface);
-    color: var(--profile-muted);
-    font-size: 0.8rem;
-    font-weight: 500;
-    text-decoration: none;
-    transition: all 0.2s cubic-bezier(.4,0,.2,1);
-}
-
-.connectly-comment-link:hover {
-    border-color: var(--profile-primary);
-    color: var(--profile-primary);
-    background: var(--profile-primary-subtle);
-}
-
-.connectly-comment-link i {
-    font-size: 0.9rem;
-}
-
-.connectly-comment-count {
-    font-weight: 600;
-}
-
-.connectly-comment-count::before {
-    content: '(';
-}
-
-.connectly-comment-count::after {
-    content: ')';
-}
-
-/* ===== REACTION BADGES ===== */
-.connectly-reaction-badge {
-    background: var(--profile-surface-hover) !important;
-    border: 1px solid var(--profile-border) !important;
-    color: var(--profile-muted) !important;
-    font-weight: 500 !important;
-    font-size: 0.75rem !important;
-    padding: 0.2rem 0.65rem !important;
-    border-radius: 999px !important;
-}
-
-/* ===== PINNED BADGE ===== */
-.connectly-pinned-badge {
-    display: inline-flex;
-    align-items: center;
-    gap: 3px;
-    background: rgba(245,158,11,0.1);
-    color: #d97706;
-    font-size: 0.7rem;
-    font-weight: 600;
-    padding: 2px 10px;
-    border-radius: 12px;
-    border: 1px solid rgba(245,158,11,0.2);
-}
-
-/* ===== POST ACTIONS DROPDOWN ===== */
-.connectly-post-actions {
-    position: relative;
-}
-
-.connectly-post-actions-trigger {
-    width: 32px;
-    height: 32px;
-    border: none;
-    background: transparent;
-    border-radius: 50%;
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    color: var(--profile-muted-light);
-    cursor: pointer;
-    transition: all var(--profile-transition);
-}
-
-.connectly-post-actions-trigger:hover {
-    background: var(--profile-surface-hover);
-    color: var(--profile-text);
-}
-
-.connectly-post-actions-trigger:active {
-    transform: scale(0.92);
-}
-
-.connectly-post-actions-trigger[aria-expanded="true"] {
-    background: var(--profile-surface-hover);
-    color: var(--profile-primary);
-}
-
-.connectly-post-dropdown {
-    border-radius: var(--profile-radius-sm);
-    border: 1px solid var(--profile-border);
-    padding: 0.35rem;
-    box-shadow: var(--profile-shadow-lg);
-    min-width: 150px;
-    animation: connectlyDropdownIn 0.15s ease-out;
-    transform-origin: top right;
-}
-
-@keyframes connectlyDropdownIn {
-    from {
-        opacity: 0;
-        transform: scale(0.92) translateY(-4px);
-    }
-    to {
-        opacity: 1;
-        transform: scale(1) translateY(0);
-    }
-}
-
-.connectly-dropdown-item {
+    margin-bottom: 1rem;
+    padding: 6px 12px;
     border-radius: 8px;
-    padding: 0.45rem 0.85rem;
-    font-size: 0.85rem;
-    font-weight: 500;
-    color: var(--profile-text);
-    transition: all 0.15s ease;
+    transition: background 0.2s ease;
 }
 
-.connectly-dropdown-item:hover {
-    background: var(--profile-primary-subtle);
-    color: var(--profile-primary);
+.cl-profile-checkbox:hover { background: rgba(239,68,68,0.06); }
+.cl-profile-checkbox input { accent-color: var(--cl-profile-danger); width: 16px; height: 16px; }
+
+.cl-profile-btn-save {
+    max-width: 220px;
 }
 
-.connectly-dropdown-item i {
-    font-size: 0.9rem;
+/* ===== POSTS SECTION ===== */
+.cl-profile-posts {
+    margin-top: 0.5rem;
 }
 
-.connectly-dropdown-danger {
-    color: #dc2626 !important;
+.cl-profile-posts-header {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 1rem;
+    font-weight: 700;
+    color: var(--cl-profile-text);
+    margin-bottom: 1rem;
+    padding: 0 0.25rem;
 }
 
-.connectly-dropdown-danger:hover {
-    background: rgba(239,68,68,0.08) !important;
-    color: #dc2626 !important;
+.cl-profile-posts-header i { color: var(--cl-profile-primary); }
+
+.cl-profile-posts-count {
+    margin-left: auto;
+    font-size: 0.75rem;
+    font-weight: 600;
+    color: var(--cl-profile-text-muted);
+    background: var(--cl-profile-border);
+    padding: 2px 10px;
+    border-radius: 999px;
 }
 
-.connectly-post-dropdown .dropdown-divider {
-    margin: 0.25rem 0;
-    border-top-color: var(--profile-border-light);
+.cl-profile-posts-list {
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+}
+
+.cl-profile-posts-list > .connectly-post-card {
+    background: var(--cl-profile-surface);
+    border: 1px solid var(--cl-profile-border);
+    border-radius: var(--cl-profile-radius);
+    padding: 1.25rem;
+    box-shadow: var(--cl-profile-shadow);
+    transition: all var(--cl-profile-transition);
+}
+
+.cl-profile-posts-list > .connectly-post-card:hover {
+    box-shadow: var(--cl-profile-shadow-md);
+    border-color: var(--cl-profile-primary);
 }
 
 /* ===== EMPTY STATE ===== */
-.connectly-empty-state {
+.cl-profile-empty {
     text-align: center;
     padding: 3.5rem 1.5rem;
-    background: var(--profile-surface);
-    border: 2px dashed var(--profile-border);
-    border-radius: var(--profile-radius);
-    box-shadow: var(--profile-shadow-sm);
+    background: var(--cl-profile-surface);
+    border: 2px dashed var(--cl-profile-border);
+    border-radius: var(--cl-profile-radius);
 }
 
-.connectly-empty-icon {
+.cl-profile-empty-icon {
     width: 64px;
     height: 64px;
-    margin: 0 auto;
-    display: inline-flex;
+    margin: 0 auto 1rem;
+    display: flex;
     align-items: center;
     justify-content: center;
-    background: linear-gradient(135deg, var(--profile-primary-subtle), rgba(0,113,227,0.02));
+    background: var(--cl-profile-primary-subtle);
     border-radius: 50%;
     font-size: 1.5rem;
-    color: var(--profile-primary);
+    color: var(--cl-profile-primary);
 }
 
-.connectly-empty-state h5 {
-    color: var(--profile-text);
+.cl-profile-empty h5 {
+    font-size: 1.05rem;
+    font-weight: 700;
+    color: var(--cl-profile-text);
+    margin: 0 0 6px;
 }
 
-.connectly-toast-popup {
-    border-radius: var(--profile-radius-xs) !important;
-    box-shadow: var(--profile-shadow-lg) !important;
-    font-family: inherit !important;
+.cl-profile-empty p {
+    font-size: 0.88rem;
+    color: var(--cl-profile-text-muted);
+    margin: 0;
 }
 
-.connectly-toast-popup .swal2-title {
-    font-size: 0.85rem !important;
-    font-weight: 500 !important;
-    color: var(--profile-text) !important;
+/* ===== RESPONSIVE ===== */
+@media (max-width: 768px) {
+    .cl-profile-hero { height: 200px; }
+    .cl-profile-container { margin-top: -60px; }
+    .cl-profile-avatar-wrap { width: 110px; height: 110px; }
+    .cl-profile-avatar { width: 110px; height: 110px; }
+    .cl-profile-avatar-fallback { font-size: 2.6rem; }
+    .cl-profile-name { font-size: 1.35rem; }
+    .cl-profile-stats { max-width: 100%; }
+    .cl-profile-edit-grid { grid-template-columns: 1fr; }
+    .cl-profile-actions { max-width: 100%; }
 }
 
-.connectly-toast-popup .swal2-timer-progress-bar {
-    background: rgba(0,113,227,0.12) !important;
-    height: 3px !important;
+@media (max-width: 480px) {
+    .cl-profile-hero { height: 160px; }
+    .cl-profile-container { margin-top: -50px; padding: 0 0.75rem; }
+    .cl-profile-avatar-wrap { width: 90px; height: 90px; }
+    .cl-profile-avatar { width: 90px; height: 90px; }
+    .cl-profile-avatar-fallback { font-size: 2rem; }
+    .cl-profile-name { font-size: 1.15rem; }
+    .cl-profile-email { font-size: 0.82rem; }
+    .cl-profile-stat-value { font-size: 1rem; }
+    .cl-profile-posts-list > .connectly-post-card { padding: 1rem; border-radius: var(--cl-profile-radius-sm); }
+    .cl-profile-edit-section { padding: 1.15rem; border-radius: var(--cl-profile-radius-sm); }
 }
-
-.connectly-toast-popup.swal2-icon-success {
-    border-left: 4px solid #10b981 !important;
-}
-
-.connectly-toast-popup.swal2-icon-error {
-    border-left: 4px solid #ef4444 !important;
-}
-
-@media (max-width: 991.98px) {
-    .connectly-profile-card {
-        margin-bottom: 1rem;
-    }
-}
-
-@media (max-width: 767.98px) {
-    .connectly-profile-avatar {
-        width: 100px;
-        height: 100px;
-    }
-
-    .connectly-profile-avatar-fallback {
-        font-size: 2.2rem;
-    }
-
-    .connectly-profile-card {
-        padding: 1.25rem;
-        border-radius: 20px;
-    }
-
-    .connectly-profile-stats-row {
-        padding: 0.5rem;
-        border-radius: var(--profile-radius-xs);
-    }
-
-    .connectly-profile-stat-value {
-        font-size: 1rem;
-    }
-
-}
-
-@media (max-width: 575.98px) {
-    .connectly-profile-page {
-        padding-bottom: 1rem;
-    }
-
-    .connectly-empty-state {
-        padding: 2.5rem 1rem;
-        border-radius: 20px;
-    }
-
-    .connectly-profile-card {
-        border-radius: 16px;
-    }
-}
-
-/* ===== KEPT FALLBACKS (needed by SweetAlert JS or post partial) ===== */
-.chatbox-toast-popup { border-radius: var(--profile-radius-xs) !important; box-shadow: var(--profile-shadow-lg) !important; font-family: inherit !important; }
-.chatbox-toast-popup .swal2-title { font-size: 0.85rem !important; font-weight: 500 !important; color: var(--profile-text) !important; }
-.chatbox-toast-popup .swal2-timer-progress-bar { background: rgba(0,113,227,0.12) !important; height: 3px !important; }
-.chatbox-toast-popup.swal2-icon-success { border-left: 4px solid #10b981 !important; }
-.chatbox-toast-popup.swal2-icon-error { border-left: 4px solid #ef4444 !important; }
-.chatbox-file-input.has-file ~ .chatbox-file-label span { color: var(--profile-primary); }
-.chatbox-reaction-badge-emoji { font-size: 0.75rem; }
-.chatbox-reaction-badge-count { font-size: 0.68rem; font-weight: 600; }
 </style>
 
 <script>
-    // Update file input label when a file is selected
-    document.addEventListener('change', function(e) {
-        if (e.target.matches('.chatbox-file-input')) {
-            const label = e.target.closest('.chatbox-file-input-wrapper')?.querySelector('.chatbox-file-label span');
-            if (label && e.target.files.length > 0) {
-                label.textContent = e.target.files[0].name;
-                e.target.classList.add('has-file');
-            } else if (label) {
-                label.textContent = 'Choose an image';
-                e.target.classList.remove('has-file');
-            }
+document.addEventListener('DOMContentLoaded', function () {
+    // Particle generation for hero
+    const container = document.getElementById('heroParticles');
+    if (container) {
+        for (let i = 0; i < 30; i++) {
+            const dot = document.createElement('div');
+            const size = 2 + Math.random() * 4;
+            dot.style.cssText = `
+                position:absolute;
+                width:${size}px;height:${size}px;
+                background:rgba(255,255,255,${0.1 + Math.random() * 0.3});
+                border-radius:50%;
+                left:${Math.random() * 100}%;
+                top:${Math.random() * 100}%;
+                animation:heroParticleFloat ${8 + Math.random() * 12}s linear infinite;
+                animation-delay:${Math.random() * 5}s;
+                pointer-events:none;
+            `;
+            container.appendChild(dot);
+        }
+    }
+
+    // File input label update
+    document.addEventListener('change', function (e) {
+        const input = e.target.closest('.cl-profile-upload-input');
+        if (!input) return;
+        const label = input.parentElement.querySelector('.cl-profile-upload-label span');
+        if (label && input.files.length > 0) {
+            label.textContent = input.files[0].name;
+        } else if (label) {
+            label.textContent = 'Choose an image';
         }
     });
 
-    // ===== SWEET ALERT BEFORE UNFRIEND =====
-    document.addEventListener('submit', function(e) {
-        const unfriendForm = e.target.closest('.chatbox-unfriend-form');
-        if (!unfriendForm) return;
+    // ===== SWEET ALERT CONFIRMATIONS =====
+    function handleSweetAlert(form, config) {
+        form.addEventListener('submit', function (e) {
+            e.preventDefault();
+            const userName = form.dataset.userName || 'this user';
 
-        e.preventDefault();
-
-        const userName = unfriendForm.dataset.userName || 'this user';
-
-        Swal.fire({
-            title: 'Are you sure?',
-            text: `You will no longer be friends with ${userName}. This action cannot be undone.`,
-            icon: 'warning',
-            showCancelButton: true,
-            confirmButtonColor: '#dc2626',
-            cancelButtonColor: '#64748b',
-            confirmButtonText: '<i class="bi bi-person-dash-fill me-1"></i> Yes, Unfriend',
-            cancelButtonText: 'Cancel',
-            reverseButtons: true,
-            focusCancel: true,
-            customClass: {
-                popup: 'chatbox-toast-popup',
-                confirmButton: 'btn btn-danger px-4 py-2 rounded-3 fw-semibold d-inline-flex align-items-center gap-1',
-                cancelButton: 'btn btn-light px-4 py-2 rounded-3 fw-semibold border'
-            },
-            buttonsStyling: false,
-            showLoaderOnConfirm: true,
-            preConfirm: async () => {
-                try {
-                    const response = await fetch(unfriendForm.action, {
-                        method: 'POST',
-                        headers: {
-                            'X-Requested-With': 'XMLHttpRequest',
-                            'Accept': 'application/json',
-                        },
-                        body: new FormData(unfriendForm),
-                    });
-
-                    const data = await response.json();
-
-                    if (!response.ok || !data.success) {
-                        throw new Error(data.message || 'Failed to unfriend.');
+            Swal.fire({
+                ...config,
+                preConfirm: async () => {
+                    try {
+                        const response = await fetch(form.action, {
+                            method: 'POST',
+                            headers: { 'X-Requested-With': 'XMLHttpRequest', 'Accept': 'application/json' },
+                            body: new FormData(form),
+                        });
+                        const data = await response.json();
+                        if (!response.ok || !data.success) throw new Error(data.message || 'Action failed.');
+                        return data;
+                    } catch (error) {
+                        Swal.showValidationMessage(error.message);
+                        throw error;
                     }
-
-                    return data;
-                } catch (error) {
-                    Swal.showValidationMessage(error.message);
-                    throw error;
                 }
-            }
-        }).then((result) => {
-            if (result.isConfirmed) {
-                // Replace the friend status area with "Add Friend" button
-                const container = unfriendForm.closest('.d-flex');
-                if (container) {
-                    const userId = unfriendForm.dataset.userId;
-                    const addFriendUrl = `{{ url('/friend-request') }}/${userId}/send`;
-                    const csrfToken = document.querySelector('meta[name="csrf-token"]')?.getAttribute('content') || '';
+            }).then((result) => {
+                if (!result.isConfirmed) return;
+                const container = form.closest('.cl-profile-btn-group') || form.closest('.cl-profile-actions');
+                const userId = form.dataset.userId;
+                const csrf = document.querySelector('meta[name="csrf-token"]')?.getAttribute('content') || '';
+                const action = config._action || '';
 
-                    container.outerHTML = `
-                        <form action="${addFriendUrl}" method="POST" class="w-100">
-                            <input type="hidden" name="_token" value="${csrfToken}">
-                            <button type="submit" class="chatbox-btn-primary chatbox-btn-full chatbox-profile-message-btn">
-                                <i class="bi bi-person-plus-fill me-2"></i>
-                                Add Friend
-                            </button>
-                        </form>
-                    `;
-                }
-
-                // Update friend count in sidebar stat
-                const friendCountEl = document.querySelector('.chatbox-friend-count-stat');
-                if (friendCountEl) {
-                    const currentCount = parseInt(friendCountEl.textContent, 10) || 0;
-                    friendCountEl.textContent = Math.max(0, currentCount - 1);
-                }
-
-                chatboxToast('success', `Unfriended ${userName}`);
-            }
-        });
-    });
-
-    // ===== SWEET ALERT BEFORE CANCEL REQUEST =====
-    document.addEventListener('submit', function(e) {
-        const cancelForm = e.target.closest('.chatbox-cancel-form');
-        if (!cancelForm) return;
-
-        e.preventDefault();
-
-        const userName = cancelForm.dataset.userName || 'this user';
-
-        Swal.fire({
-            title: 'Cancel Request?',
-            text: `Cancel your friend request to ${userName}?`,
-            icon: 'question',
-            showCancelButton: true,
-            confirmButtonColor: '#dc2626',
-            cancelButtonColor: '#64748b',
-            confirmButtonText: '<i class="bi bi-x-lg me-1"></i> Yes, Cancel',
-            cancelButtonText: 'Keep Request',
-            reverseButtons: true,
-            focusCancel: true,
-            customClass: {
-                popup: 'chatbox-toast-popup',
-                confirmButton: 'btn btn-danger px-4 py-2 rounded-3 fw-semibold d-inline-flex align-items-center gap-1',
-                cancelButton: 'btn btn-light px-4 py-2 rounded-3 fw-semibold border'
-            },
-            buttonsStyling: false,
-            showLoaderOnConfirm: true,
-            preConfirm: async () => {
-                try {
-                    const response = await fetch(cancelForm.action, {
-                        method: 'POST',
-                        headers: {
-                            'X-Requested-With': 'XMLHttpRequest',
-                            'Accept': 'application/json',
-                        },
-                        body: new FormData(cancelForm),
-                    });
-
-                    const data = await response.json();
-
-                    if (!response.ok || !data.success) {
-                        throw new Error(data.message || 'Failed to cancel request.');
-                    }
-
-                    return data;
-                } catch (error) {
-                    Swal.showValidationMessage(error.message);
-                    throw error;
-                }
-            }
-        }).then((result) => {
-            if (result.isConfirmed) {
-                const container = cancelForm.closest('.d-flex');
-                if (container) {
-                    const userId = cancelForm.dataset.userId;
-                    const addFriendUrl = '{{ url("/friend-request") }}';
-                    const csrfToken = document.querySelector('meta[name="csrf-token"]')?.getAttribute('content') || '';
-
-                    container.outerHTML = `
-                        <form action="${addFriendUrl}/${userId}/send" method="POST" class="w-100">
-                            <input type="hidden" name="_token" value="${csrfToken}">
-                            <button type="submit" class="chatbox-btn-primary chatbox-btn-full chatbox-profile-message-btn">
-                                <i class="bi bi-person-plus-fill me-2"></i>
-                                Add Friend
-                            </button>
-                        </form>
-                    `;
-                }
-
-                chatboxToast('success', `Request to ${userName} cancelled`);
-            }
-        });
-    });
-
-    // ===== SWEET ALERT BEFORE ACCEPT REQUEST =====
-    document.addEventListener('submit', function(e) {
-        const acceptForm = e.target.closest('.chatbox-profile-accept-form');
-        if (!acceptForm) return;
-
-        e.preventDefault();
-
-        const userName = acceptForm.dataset.userName || 'this user';
-
-        Swal.fire({
-            title: 'Accept Request?',
-            text: `You will become friends with ${userName}.`,
-            icon: 'question',
-            showCancelButton: true,
-            confirmButtonColor: '#059669',
-            cancelButtonColor: '#64748b',
-            confirmButtonText: '<i class="bi bi-check-lg me-1"></i> Yes, Accept',
-            cancelButtonText: 'Not Now',
-            reverseButtons: true,
-            focusCancel: true,
-            customClass: {
-                popup: 'chatbox-toast-popup',
-                confirmButton: 'btn btn-success px-4 py-2 rounded-3 fw-semibold d-inline-flex align-items-center gap-1',
-                cancelButton: 'btn btn-light px-4 py-2 rounded-3 fw-semibold border'
-            },
-            buttonsStyling: false,
-            showLoaderOnConfirm: true,
-            preConfirm: async () => {
-                try {
-                    const response = await fetch(acceptForm.action, {
-                        method: 'POST',
-                        headers: {
-                            'X-Requested-With': 'XMLHttpRequest',
-                            'Accept': 'application/json',
-                        },
-                        body: new FormData(acceptForm),
-                    });
-
-                    const data = await response.json();
-
-                    if (!response.ok || !data.success) {
-                        throw new Error(data.message || 'Failed to accept request.');
-                    }
-
-                    return data;
-                } catch (error) {
-                    Swal.showValidationMessage(error.message);
-                    throw error;
-                }
-            }
-        }).then((result) => {
-            if (result.isConfirmed) {
-                // Replace the accept/reject area with "Friends" status + unfriend button
-                const container = acceptForm.closest('.d-flex');
-                if (container) {
-                    const userId = acceptForm.dataset.userId;
-                    const unfriendUrl = `{{ url('/friend-request') }}/${userId}/unfriend`;
-                    const csrfToken = document.querySelector('meta[name="csrf-token"]')?.getAttribute('content') || '';
-
-                    container.outerHTML = `
-                        <div class="d-flex gap-2 w-100 mt-2">
-                            <span class="chatbox-friend-status-badge chatbox-friend-accepted flex-grow-1">
-                                <i class="bi bi-people-fill me-1"></i> Friends
-                            </span>
-                            <form action="${unfriendUrl}" method="POST" class="chatbox-unfriend-form" data-user-name="${acceptForm.dataset.userName}" data-user-id="${userId}">
-                                <input type="hidden" name="_token" value="${csrfToken}">
+                if (action === 'unfriend') {
+                    container.innerHTML = `
+                        <form action="${window.location.origin}/friend-request/${userId}/send" method="POST" style="width:100%">
+                            <input type="hidden" name="_token" value="${csrf}">
+                            <button type="submit" class="cl-profile-btn cl-profile-btn-primary"><i class="bi bi-person-plus-fill"></i> Add Friend</button>
+                        </form>`;
+                    const countEl = document.querySelector('.cl-profile-friend-count');
+                    if (countEl) countEl.textContent = Math.max(0, (parseInt(countEl.textContent, 10) || 0) - 1);
+                    chatboxToast('success', `Unfriended ${userName}`);
+                } else if (action === 'cancel') {
+                    container.innerHTML = `
+                        <form action="${window.location.origin}/friend-request/${userId}/send" method="POST" style="width:100%">
+                            <input type="hidden" name="_token" value="${csrf}">
+                            <button type="submit" class="cl-profile-btn cl-profile-btn-primary"><i class="bi bi-person-plus-fill"></i> Add Friend</button>
+                        </form>`;
+                    chatboxToast('success', `Request to ${userName} cancelled`);
+                } else if (action === 'accept') {
+                    container.innerHTML = `
+                        <div class="cl-profile-btn-group">
+                            <span class="cl-profile-status-badge cl-profile-status-friends"><i class="bi bi-people-fill"></i> Friends</span>
+                            <form action="${window.location.origin}/friend-request/${userId}/unfriend" method="POST" class="cl-profile-unfriend-form" data-user-name="${userName}" data-user-id="${userId}">
+                                <input type="hidden" name="_token" value="${csrf}">
                                 <input type="hidden" name="_method" value="DELETE">
-                                <button type="submit" class="chatbox-friend-action-btn chatbox-friend-unfriend-btn" title="Unfriend">
-                                    <i class="bi bi-person-dash-fill"></i>
-                                </button>
+                                <button type="submit" class="cl-profile-icon-btn cl-profile-icon-btn-danger" title="Unfriend"><i class="bi bi-person-dash-fill"></i></button>
                             </form>
-                        </div>
-                    `;
+                        </div>`;
+                    const countEl = document.querySelector('.cl-profile-friend-count');
+                    if (countEl) countEl.textContent = (parseInt(countEl.textContent, 10) || 0) + 1;
+                    chatboxToast('success', `Accepted ${userName}'s request`);
+                } else if (action === 'reject') {
+                    container.innerHTML = `
+                        <div class="cl-profile-btn-group">
+                            <span class="cl-profile-status-badge cl-profile-status-rejected"><i class="bi bi-x-circle"></i> Request Rejected</span>
+                            <form action="${window.location.origin}/friend-request/send" method="POST" style="display:inline">
+                                <input type="hidden" name="_method" value="POST">
+                                <button type="submit" class="cl-profile-icon-btn cl-profile-icon-btn-primary" title="Send Again"><i class="bi bi-arrow-clockwise"></i></button>
+                            </form>
+                        </div>`;
+                    chatboxToast('success', `Rejected ${userName}'s request`);
                 }
-
-                // Update friend count in sidebar stat
-                const friendCountEl = document.querySelector('.chatbox-friend-count-stat');
-                if (friendCountEl) {
-                    const currentCount = parseInt(friendCountEl.textContent, 10) || 0;
-                    friendCountEl.textContent = currentCount + 1;
-                }
-
-                chatboxToast('success', `Accepted ${userName}'s request`);
-            }
-        });
-    });
-
-    // ===== SWEET ALERT BEFORE REJECT REQUEST =====
-    document.addEventListener('submit', function(e) {
-        const rejectForm = e.target.closest('.chatbox-reject-form');
-        if (!rejectForm) return;
-
-        e.preventDefault();
-
-        const userName = rejectForm.dataset.userName || 'this user';
-
-        Swal.fire({
-            title: 'Reject Request?',
-            text: `Reject the friend request from ${userName}?`,
-            icon: 'warning',
-            showCancelButton: true,
-            confirmButtonColor: '#dc2626',
-            cancelButtonColor: '#64748b',
-            confirmButtonText: '<i class="bi bi-x-lg me-1"></i> Yes, Reject',
-            cancelButtonText: 'Keep Request',
-            reverseButtons: true,
-            focusCancel: true,
-            customClass: {
-                popup: 'chatbox-toast-popup',
-                confirmButton: 'btn btn-danger px-4 py-2 rounded-3 fw-semibold d-inline-flex align-items-center gap-1',
-                cancelButton: 'btn btn-light px-4 py-2 rounded-3 fw-semibold border'
-            },
-            buttonsStyling: false,
-            showLoaderOnConfirm: true,
-            preConfirm: async () => {
-                try {
-                    const response = await fetch(rejectForm.action, {
-                        method: 'POST',
-                        headers: {
-                            'X-Requested-With': 'XMLHttpRequest',
-                            'Accept': 'application/json',
-                        },
-                        body: new FormData(rejectForm),
-                    });
-
-                    const data = await response.json();
-
-                    if (!response.ok || !data.success) {
-                        throw new Error(data.message || 'Failed to reject request.');
-                    }
-
-                    return data;
-                } catch (error) {
-                    Swal.showValidationMessage(error.message);
-                    throw error;
-                }
-            }
-        }).then((result) => {
-            if (result.isConfirmed) {
-                const container = rejectForm.closest('.d-flex');
-                if (container) {
-                    const userId = rejectForm.dataset.userId;
-                    const addFriendUrl = '{{ url("/friend-request") }}';
-                    const csrfToken = document.querySelector('meta[name="csrf-token"]')?.getAttribute('content') || '';
-
-                    container.outerHTML = `
-                        <form action="${addFriendUrl}/${userId}/send" method="POST" class="w-100">
-                            <input type="hidden" name="_token" value="${csrfToken}">
-                            <button type="submit" class="chatbox-btn-primary chatbox-btn-full chatbox-profile-message-btn">
-                                <i class="bi bi-person-plus-fill me-2"></i>
-                                Add Friend
-                            </button>
-                        </form>
-                    `;
-                }
-
-                chatboxToast('success', `Request from ${userName} rejected`);
-            }
-        });
-    });
-
-    function chatboxToast(icon, title) {
-        if (typeof Swal === 'undefined') {
-            console.warn('SweetAlert2 not loaded, falling back to alert');
-            alert(title);
-            return;
-        }
-        Swal.fire({
-            toast: true,
-            position: 'top-end',
-            icon: icon,
-            title: title,
-            showConfirmButton: false,
-            timer: 3000,
-            timerProgressBar: true,
-            customClass: {
-                popup: 'chatbox-toast-popup'
-            }
+            });
         });
     }
 
-    // ===== LIVE POST REACTIONS (feed-style) =====
-    document.addEventListener('submit', async function (event) {
-        const form = event.target;
-        if (!form.matches('[data-reaction-form]')) {
-            return;
-        }
+    // Attach handlers
+    document.querySelectorAll('.cl-profile-unfriend-form').forEach(f => handleSweetAlert(f, {
+        title: 'Are you sure?',
+        text: `You will no longer be friends with ${f.dataset.userName}.`,
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonColor: '#ef4444',
+        cancelButtonColor: '#64748b',
+        confirmButtonText: '<i class="bi bi-person-dash-fill me-1"></i> Yes, Unfriend',
+        cancelButtonText: 'Cancel',
+        reverseButtons: true,
+        focusCancel: true,
+        customClass: { popup: 'connectly-toast-popup', confirmButton: 'btn btn-danger px-4 py-2 rounded-3 fw-semibold d-inline-flex align-items-center gap-1', cancelButton: 'btn btn-light px-4 py-2 rounded-3 fw-semibold border' },
+        buttonsStyling: false,
+        showLoaderOnConfirm: true,
+        _action: 'unfriend',
+    }));
 
-        event.preventDefault();
+    document.querySelectorAll('.cl-profile-cancel-form').forEach(f => handleSweetAlert(f, {
+        title: 'Cancel Request?',
+        text: `Cancel your friend request to ${f.dataset.userName}?`,
+        icon: 'question',
+        showCancelButton: true,
+        confirmButtonColor: '#ef4444',
+        cancelButtonColor: '#64748b',
+        confirmButtonText: '<i class="bi bi-x-lg me-1"></i> Yes, Cancel',
+        cancelButtonText: 'Keep Request',
+        reverseButtons: true,
+        focusCancel: true,
+        customClass: { popup: 'connectly-toast-popup', confirmButton: 'btn btn-danger px-4 py-2 rounded-3 fw-semibold d-inline-flex align-items-center gap-1', cancelButton: 'btn btn-light px-4 py-2 rounded-3 fw-semibold border' },
+        buttonsStyling: false,
+        showLoaderOnConfirm: true,
+        _action: 'cancel',
+    }));
 
-        const wrap = form.closest('.connectly-reaction-wrap');
-        if (!wrap) return;
+    document.querySelectorAll('.cl-profile-accept-form').forEach(f => handleSweetAlert(f, {
+        title: 'Accept Request?',
+        text: `You will become friends with ${f.dataset.userName}.`,
+        icon: 'question',
+        showCancelButton: true,
+        confirmButtonColor: '#10b981',
+        cancelButtonColor: '#64748b',
+        confirmButtonText: '<i class="bi bi-check-lg me-1"></i> Yes, Accept',
+        cancelButtonText: 'Not Now',
+        reverseButtons: true,
+        focusCancel: true,
+        customClass: { popup: 'connectly-toast-popup', confirmButton: 'btn btn-success px-4 py-2 rounded-3 fw-semibold d-inline-flex align-items-center gap-1', cancelButton: 'btn btn-light px-4 py-2 rounded-3 fw-semibold border' },
+        buttonsStyling: false,
+        showLoaderOnConfirm: true,
+        _action: 'accept',
+    }));
 
-        const card = wrap.closest('.connectly-post-card');
-        const csrfToken = document.querySelector('meta[name="csrf-token"]')?.getAttribute('content') || '';
-        const buttons = wrap.querySelectorAll('button');
-        buttons.forEach((button) => { button.disabled = true; });
+    document.querySelectorAll('.cl-profile-reject-form').forEach(f => handleSweetAlert(f, {
+        title: 'Reject Request?',
+        text: `Reject the friend request from ${f.dataset.userName}?`,
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonColor: '#ef4444',
+        cancelButtonColor: '#64748b',
+        confirmButtonText: '<i class="bi bi-x-lg me-1"></i> Yes, Reject',
+        cancelButtonText: 'Keep Request',
+        reverseButtons: true,
+        focusCancel: true,
+        customClass: { popup: 'connectly-toast-popup', confirmButton: 'btn btn-danger px-4 py-2 rounded-3 fw-semibold d-inline-flex align-items-center gap-1', cancelButton: 'btn btn-light px-4 py-2 rounded-3 fw-semibold border' },
+        buttonsStyling: false,
+        showLoaderOnConfirm: true,
+        _action: 'reject',
+    }));
 
-        try {
-            const response = await fetch(form.action, {
-                method: 'POST',
-                headers: {
-                    'Accept': 'application/json',
-                    'X-Requested-With': 'XMLHttpRequest',
-                    'X-CSRF-TOKEN': csrfToken,
-                },
-                body: new FormData(form),
-            });
-
-            if (!response.ok) throw new Error('Failed to submit reaction');
-            const data = await response.json();
-            if (!data.success) throw new Error('Invalid reaction response');
-
-            const reactionMeta = {
-                like: { label: 'Like', emoji: '👍' },
-                love: { label: 'Love', emoji: '❤️' },
-                haha: { label: 'Haha', emoji: '😆' },
-                wow: { label: 'Wow', emoji: '😮' },
-                sad: { label: 'Sad', emoji: '😢' },
-            };
-
-            const currentReaction = data.current_reaction;
-            const mainInput = wrap.querySelector('.connectly-react-input');
-            const mainButton = wrap.querySelector('.connectly-react-btn');
-            const mainEmoji = wrap.querySelector('.connectly-react-emoji');
-            const mainLabel = wrap.querySelector('.connectly-react-label');
-            const mainCount = wrap.querySelector('.connectly-react-count');
-
-            if (mainInput) mainInput.value = currentReaction || 'like';
-            if (mainButton) {
-                mainButton.classList.toggle('is-reacted', !!currentReaction);
+    // ===== KEYFRAME for particles =====
+    if (!document.getElementById('clProfileKeyframes')) {
+        const s = document.createElement('style');
+        s.id = 'clProfileKeyframes';
+        s.textContent = `
+            @keyframes heroParticleFloat {
+                0% { transform: translateY(0) scale(0); opacity: 0; }
+                10% { opacity: 1; }
+                90% { opacity: 1; }
+                100% { transform: translateY(-100vh) scale(1); opacity: 0; }
             }
-
-            const meta = reactionMeta[currentReaction] || reactionMeta.like;
-            if (mainEmoji) mainEmoji.textContent = currentReaction ? meta.emoji : reactionMeta.like.emoji;
-            if (mainLabel) mainLabel.textContent = currentReaction ? meta.label : 'Like';
-            if (mainCount) mainCount.textContent = String(data.total_reactions ?? 0);
-
-            wrap.querySelectorAll('.connectly-react-emojibtn').forEach((optionButton) => {
-                optionButton.classList.toggle('active', optionButton.dataset.reactionKey === currentReaction);
-            });
-
-            if (card && data.reaction_counts) {
-                Object.keys(reactionMeta).forEach((reactionKey) => {
-                    const badge = card.querySelector(`[data-reaction-badge="${reactionKey}"]`);
-                    if (!badge) return;
-                    const count = Number(data.reaction_counts[reactionKey] || 0);
-                    const countEl = badge.querySelector('.chatbox-reaction-badge-count');
-                    if (countEl) countEl.textContent = String(count);
-                    badge.classList.toggle('d-none', count <= 0);
-                });
-            }
-        } catch (error) {
-            console.error(error);
-            chatboxToast('error', 'Could not update reaction. Please try again.');
-        } finally {
-            buttons.forEach((button) => { button.disabled = false; });
-        }
-    });
-
-</script>
-
-<script>
-document.addEventListener('click', function(e) {
-    const deleteBtn = e.target.closest('.btn-delete-post, [data-delete-post="true"]');
-    if (deleteBtn) {
-        e.preventDefault();
-        const form = deleteBtn.closest('form');
-        if (!form) return;
-
-        if (typeof Swal === 'undefined') {
-            if (confirm('Delete this post?')) form.submit();
-            return;
-        }
-
-        Swal.fire({
-            title: 'Delete post?',
-            text: 'This action cannot be undone.',
-            icon: 'warning',
-            showCancelButton: true,
-            confirmButtonText: 'Yes, delete it',
-            cancelButtonText: 'Cancel',
-            reverseButtons: true
-        }).then((result) => {
-            if (result.isConfirmed) {
-                form.submit();
-            }
-        });
+        `;
+        document.head.appendChild(s);
     }
 });
 </script>
+
+<style>
+.connectly-toast-popup {
+    border-radius: var(--cl-profile-radius-sm) !important;
+    box-shadow: var(--cl-profile-shadow-lg) !important;
+    font-family: inherit !important;
+}
+.connectly-toast-popup .swal2-title {
+    font-size: 0.88rem !important;
+    font-weight: 600 !important;
+    color: var(--cl-profile-text) !important;
+}
+</style>
 
 @endsection
