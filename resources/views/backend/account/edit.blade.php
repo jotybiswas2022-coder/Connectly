@@ -39,7 +39,7 @@
                     <label class="ae-label">Name</label>
                     <div class="ae-input-wrap">
                         <svg class="ae-input-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
-                        <input type="text" name="name" value="{{ $account->name ?? '' }}" placeholder="Enter name" required class="ae-input @error('name') ae-input-error @enderror">
+                        <input type="text" name="name" value="{{ $account->name ?? '' }}" placeholder="Enter name" required class="ae-input @error('name') ae-input-error @enderror" aria-label="Account name">
                     </div>
                     @error('name') <span class="ae-field-error">{{ $message }}</span> @enderror
                 </div>
