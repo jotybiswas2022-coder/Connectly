@@ -68,7 +68,7 @@ $isLegalPage = in_array(request()->path(), ['privacy', 'terms', 'cookies', 'gdpr
                 </li>
                 <!-- Notification Bell -->
                 <li class="nav-item dropdown" id="chatboxNotificationDropdown">
-                    <a class="nav-link chatbox-navlink-top chatbox-notif-bell" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false" id="notifDropdownToggle">
+                    <a class="nav-link chatbox-navlink-top chatbox-notif-bell" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false" id="notifDropdownToggle" title="Notifications">
                         <i class="bi bi-bell-fill"></i>
                         <span class="d-none d-lg-inline">Notifications</span>
                         <span class="chatbox-notif-badge d-none" id="notifBadge">0</span>
