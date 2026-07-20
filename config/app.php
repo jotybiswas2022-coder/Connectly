@@ -53,7 +53,7 @@ return [
     */
 
     'url' => env('APP_URL', 'http://localhost'),
-    'storage_url' => 'http://localhost/core/storage/app/public/',
+    'storage_url' => env('STORAGE_URL', 'http://localhost/core/storage/app/public/'),
 
     /*
     |--------------------------------------------------------------------------
