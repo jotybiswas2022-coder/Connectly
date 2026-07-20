@@ -10,7 +10,7 @@ use App\Models\User;
 
 class UserController extends Controller
 {
-     public function contact(Request $request)
+     public function contact(Request $request): \Illuminate\Http\RedirectResponse
     {
         $request->validate([
             'name' => 'required|string|max:255',
