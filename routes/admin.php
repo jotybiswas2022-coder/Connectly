@@ -50,4 +50,7 @@ Route::prefix('admin')->middleware('admin')->group(function () {
         Route::delete('/{post}', 'destroy')->name('posts.destroy');
     });
 
+    // ===============================
+    // End of admin routes
+    // ===============================
 });
