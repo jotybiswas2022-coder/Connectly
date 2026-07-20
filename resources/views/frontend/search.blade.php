@@ -55,7 +55,7 @@
                             </a>
                         @endif
 
-                        <button type="submit" class="connectly-search-submit" id="searchSubmitBtn">
+                        <button type="submit" class="connectly-search-submit" id="searchSubmitBtn" aria-label="Search">
                             <i class="bi bi-arrow-right"></i>
                         </button>
                     </div>
