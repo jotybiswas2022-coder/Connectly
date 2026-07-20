@@ -75,6 +75,81 @@
             </p>
         </div>
 
+        {{-- ===== EDIT PROFILE BUTTON (OWNER ONLY) ===== --}}
+        @if($isOwner)
+        <div class="cl-profile-edit-section">
+            {{-- Toggle Button --}}
+            <button type="button" class="cl-profile-edit-toggle" id="editToggleBtn" aria-expanded="false">
+                <div class="cl-profile-edit-toggle-icon">
+                    <i class="bi bi-sliders2"></i>
+                </div>
+                <div class="cl-profile-edit-toggle-text">
+                    <span class="cl-profile-edit-toggle-title">Profile Settings</span>
+                    <span class="cl-profile-edit-toggle-sub">Manage your profile information</span>
+                </div>
+                <div class="cl-profile-edit-toggle-arrow">
+                    <i class="bi bi-chevron-down"></i>
+                </div>
+            </button>
+
+            {{-- Collapsible Form --}}
+            <div class="cl-profile-edit-collapse" id="editCollapse">
+                <div class="cl-profile-edit-collapse-inner">
+                    <div class="cl-profile-edit-divider"></div>
+
+                    <form action="{{ route('profile.update', $user->id) }}" method="POST" enctype="multipart/form-data">
+                        @csrf @method('PUT')
+
+                        <div class="cl-profile-edit-grid">
+                            <div class="cl-profile-edit-field">
+                                <label><i class="bi bi-person"></i> Display Name</label>
+                                <div class="cl-profile-input-wrap">
+                                    <input type="text" name="name" value="{{ old('name', $user->name) }}" maxlength="255" required placeholder="Enter your full name" class="@error('name') is-invalid @enderror">
+                                    <div class="cl-profile-input-focus-ring"></div>
+                                    @error('name') <span class="cl-profile-field-error"><i class="bi bi-exclamation-circle"></i> {{ $message }}</span> @enderror
+                                </div>
+                            </div>
+
+                            <div class="cl-profile-edit-field">
+                                <label><i class="bi bi-image"></i> Profile Picture</label>
+                                <div class="cl-profile-upload-wrap">
+                                    <input type="file" name="avatar" accept="image/*" id="avatarInput" class="cl-profile-upload-input">
+                                    <label for="avatarInput" class="cl-profile-upload-label">
+                                        <div class="cl-profile-upload-icon">
+                                            <i class="bi bi-cloud-arrow-up"></i>
+                                        </div>
+                                        <div class="cl-profile-upload-text">
+                                            <span class="cl-profile-upload-title">Choose an image</span>
+                                            <span class="cl-profile-upload-hint">JPEG, PNG, GIF, WebP (max 5MB)</span>
+                                        </div>
+                                    </label>
+                                </div>
+                                @error('avatar') <span class="cl-profile-field-error"><i class="bi bi-exclamation-circle"></i> {{ $message }}</span> @enderror
+                            </div>
+                        </div>
+
+                        @if ($user->avatar_path)
+                        <label class="cl-profile-checkbox">
+                            <input type="checkbox" name="remove_avatar" value="1">
+                            <span class="cl-profile-checkbox-mark">
+                                <i class="bi bi-trash3"></i>
+                            </span>
+                            <span>Remove current picture</span>
+                        </label>
+                        @endif
+
+                        <div class="cl-profile-edit-footer">
+                            <button type="submit" class="cl-profile-btn cl-profile-btn-primary">
+                                <i class="bi bi-check2"></i>
+                                <span>Update Profile</span>
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+        @endif
+
         {{-- ===== STATS ROW ===== --}}
         <div class="cl-profile-stats">
             <div class="cl-profile-stat" data-count="{{ $posts->count() }}">
@@ -171,81 +246,6 @@
             </a>
         </div>
         @endunless
-
-        {{-- ===== EDIT PROFILE BUTTON (OWNER ONLY) ===== --}}
-        @if($isOwner)
-        <div class="cl-profile-edit-section">
-            {{-- Toggle Button --}}
-            <button type="button" class="cl-profile-edit-toggle" id="editToggleBtn" aria-expanded="false">
-                <div class="cl-profile-edit-toggle-icon">
-                    <i class="bi bi-sliders2"></i>
-                </div>
-                <div class="cl-profile-edit-toggle-text">
-                    <span class="cl-profile-edit-toggle-title">Profile Settings</span>
-                    <span class="cl-profile-edit-toggle-sub">Manage your profile information</span>
-                </div>
-                <div class="cl-profile-edit-toggle-arrow">
-                    <i class="bi bi-chevron-down"></i>
-                </div>
-            </button>
-
-            {{-- Collapsible Form --}}
-            <div class="cl-profile-edit-collapse" id="editCollapse">
-                <div class="cl-profile-edit-collapse-inner">
-                    <div class="cl-profile-edit-divider"></div>
-
-                    <form action="{{ route('profile.update', $user->id) }}" method="POST" enctype="multipart/form-data">
-                        @csrf @method('PUT')
-
-                        <div class="cl-profile-edit-grid">
-                            <div class="cl-profile-edit-field">
-                                <label><i class="bi bi-person"></i> Display Name</label>
-                                <div class="cl-profile-input-wrap">
-                                    <input type="text" name="name" value="{{ old('name', $user->name) }}" maxlength="255" required placeholder="Enter your full name" class="@error('name') is-invalid @enderror">
-                                    <div class="cl-profile-input-focus-ring"></div>
-                                    @error('name') <span class="cl-profile-field-error"><i class="bi bi-exclamation-circle"></i> {{ $message }}</span> @enderror
-                                </div>
-                            </div>
-
-                            <div class="cl-profile-edit-field">
-                                <label><i class="bi bi-image"></i> Profile Picture</label>
-                                <div class="cl-profile-upload-wrap">
-                                    <input type="file" name="avatar" accept="image/*" id="avatarInput" class="cl-profile-upload-input">
-                                    <label for="avatarInput" class="cl-profile-upload-label">
-                                        <div class="cl-profile-upload-icon">
-                                            <i class="bi bi-cloud-arrow-up"></i>
-                                        </div>
-                                        <div class="cl-profile-upload-text">
-                                            <span class="cl-profile-upload-title">Choose an image</span>
-                                            <span class="cl-profile-upload-hint">JPEG, PNG, GIF, WebP (max 5MB)</span>
-                                        </div>
-                                    </label>
-                                </div>
-                                @error('avatar') <span class="cl-profile-field-error"><i class="bi bi-exclamation-circle"></i> {{ $message }}</span> @enderror
-                            </div>
-                        </div>
-
-                        @if ($user->avatar_path)
-                        <label class="cl-profile-checkbox">
-                            <input type="checkbox" name="remove_avatar" value="1">
-                            <span class="cl-profile-checkbox-mark">
-                                <i class="bi bi-trash3"></i>
-                            </span>
-                            <span>Remove current picture</span>
-                        </label>
-                        @endif
-
-                        <div class="cl-profile-edit-footer">
-                            <button type="submit" class="cl-profile-btn cl-profile-btn-primary">
-                                <i class="bi bi-check2"></i>
-                                <span>Update Profile</span>
-                            </button>
-                        </div>
-                    </form>
-                </div>
-            </div>
-        </div>
-        @endif
 
         {{-- ===== POSTS SECTION ===== --}}
         <div class="cl-profile-posts">
