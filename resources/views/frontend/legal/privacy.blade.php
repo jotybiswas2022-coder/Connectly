@@ -1,6 +1,7 @@
 @extends('frontend.app')
 
 @section('title', 'Privacy Policy — Connectly')
+@section('meta_description', 'Read Connectly\'s Privacy Policy to understand how we collect, use, and protect your personal data.')
 
 @section('content')
 <div class="cl-legal-page">

@@ -1,6 +1,7 @@
 @extends('frontend.app')
 
 @section('title', 'GDPR Compliance — Connectly')
+@section('meta_description', 'Understand your rights under GDPR and how Connectly ensures data protection compliance.')
 
 @section('content')
 <div class="cl-legal-page">

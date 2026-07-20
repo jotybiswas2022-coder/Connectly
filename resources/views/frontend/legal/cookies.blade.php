@@ -1,6 +1,7 @@
 @extends('frontend.app')
 
 @section('title', 'Cookie Policy — Connectly')
+@section('meta_description', 'Learn how Connectly uses cookies and similar tracking technologies on our platform.')
 
 @section('content')
 <div class="cl-legal-page">

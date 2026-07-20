@@ -1,6 +1,7 @@
 @extends('frontend.app')
 
 @section('title', 'Terms of Service — Connectly')
+@section('meta_description', 'Review the Terms of Service governing your use of Connectly platform and services.')
 
 @section('content')
 <div class="cl-legal-page">
