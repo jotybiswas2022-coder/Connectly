@@ -1217,7 +1217,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
     scrollDown();
     resize();
-    setInterval(poll, 3000);
+    setInterval(poll, 2500);
     document.addEventListener('visibilitychange', function() { if (!document.hidden) poll(); });
 });
 </script>
