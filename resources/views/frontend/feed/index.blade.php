@@ -1773,6 +1773,190 @@
         max-height: 160px;
     }
 }
+
+/* ============================================================
+   POST PARTIAL — SHARED COMPONENT STYLES
+   ============================================================ */
+
+/* Post Avatar */
+.connectly-post-avatar {
+    width: 44px;
+    height: 44px;
+    border-radius: 50%;
+    object-fit: cover;
+    flex-shrink: 0;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+    background: var(--feed-surface);
+}
+
+.connectly-post-avatar-fallback {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 600;
+    font-size: 1rem;
+    color: #ffffff;
+    background: linear-gradient(135deg, var(--feed-primary), var(--feed-purple));
+    box-shadow: 0 2px 8px rgba(37,99,235,0.12);
+}
+
+/* Post User Name */
+.connectly-post-user-name {
+    font-size: 0.9rem;
+}
+
+.connectly-post-user-name a {
+    color: var(--feed-text);
+    font-weight: 700;
+    transition: color 0.2s ease;
+}
+
+.connectly-post-user-name a:hover {
+    color: var(--feed-primary);
+}
+
+/* Post Time */
+.connectly-post-time {
+    font-size: 0.75rem;
+    color: var(--feed-muted);
+    font-weight: 400;
+}
+
+.connectly-post-time-dot {
+    color: var(--feed-muted-light);
+    font-size: 0.6rem;
+}
+
+/* Pin Badge */
+.connectly-post-pin-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 3px;
+    background: rgba(245,158,11,0.08);
+    color: #d97706;
+    font-size: 0.68rem;
+    font-weight: 600;
+    padding: 2px 10px;
+    border-radius: 20px;
+    border: 1px solid rgba(245,158,11,0.15);
+}
+
+.connectly-post-pin-badge i {
+    font-size: 0.65rem;
+}
+
+/* Actions Dropdown Wrapper */
+.connectly-post-actions-dropdown {
+    position: relative;
+    flex-shrink: 0;
+}
+
+/* Post Images Grid (updated class names) */
+.connectly-post-images {
+    display: grid;
+    gap: 0.35rem;
+    border-radius: 14px;
+    overflow: hidden;
+    margin-bottom: 0.85rem;
+}
+
+.connectly-post-images.img-1 {
+    grid-template-columns: 1fr;
+    max-height: 400px;
+}
+
+.connectly-post-images.img-2 {
+    grid-template-columns: 1fr 1fr;
+    max-height: 260px;
+}
+
+.connectly-post-images.img-3 {
+    grid-template-columns: 1fr 1fr;
+    grid-template-rows: 1fr 1fr;
+    max-height: 300px;
+}
+
+.connectly-post-images.img-3 .connectly-post-image-wrap:nth-child(1) {
+    grid-row: span 2;
+}
+
+.connectly-post-images.img-4,
+.connectly-post-images.img-many {
+    grid-template-columns: 1fr 1fr;
+    grid-template-rows: 1fr 1fr;
+    max-height: 300px;
+}
+
+.connectly-post-image-wrap {
+    position: relative;
+    overflow: hidden;
+    border-radius: 8px;
+    background: var(--feed-input-bg);
+    cursor: pointer;
+}
+
+.connectly-post-image-wrap img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform 0.5s cubic-bezier(.4,0,.2,1);
+    display: block;
+}
+
+.connectly-post-image-wrap:hover img {
+    transform: scale(1.05);
+}
+
+.connectly-post-image-shimmer {
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(90deg, transparent, rgba(255,255,255,0.06), transparent);
+    transform: translateX(-100%);
+    pointer-events: none;
+}
+
+.connectly-post-image-wrap:hover .connectly-post-image-shimmer {
+    animation: imageShimmerFeed 0.8s ease;
+}
+
+@keyframes imageShimmerFeed {
+    from { transform: translateX(-100%); }
+    to { transform: translateX(100%); }
+}
+
+/* Action Bar */
+.connectly-post-actions-bar {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    margin-top: 0.1rem;
+}
+
+/* Reaction Summary */
+.connectly-reaction-summary {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.4rem;
+    margin-top: 0.6rem;
+    padding-top: 0.6rem;
+    border-top: 1px solid var(--feed-border-light);
+}
+
+/* Responsive overrides for updated classes */
+@media (max-width: 576px) {
+    .connectly-post-avatar {
+        width: 40px;
+        height: 40px;
+    }
+}
+
+@media (max-width: 480px) {
+    .connectly-post-avatar {
+        width: 36px;
+        height: 36px;
+    }
+}
+
 </style>
 
 <script>

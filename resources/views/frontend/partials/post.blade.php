@@ -12,42 +12,44 @@
                             $postImages = $post->images ?? [];
                             $imageCount = count($postImages);
                         @endphp
-                        <article class="chatbox-feed-post-card connectly-post-card" data-pinned="{{ $post->is_pinned ? 'true' : 'false' }}">
+                        <article class="connectly-post-card" data-pinned="{{ $post->is_pinned ? 'true' : 'false' }}">
                             <div class="d-flex align-items-start gap-3">
                                 @if($post->user->avatar_path)
                                     <img src="{{ route('media.show', ['path' => $post->user->avatar_path]) }}"
                                          alt="{{ $post->user->name }} avatar"
-                                         class="chatbox-feed-avatar chatbox-feed-avatar-image connectly-feed-avatar connectly-feed-avatar-image">
+                                         class="connectly-post-avatar connectly-feed-avatar-image"
+                                         loading="lazy">
                                 @else
-                                    <div class="chatbox-feed-avatar chatbox-feed-avatar-alt connectly-feed-avatar connectly-feed-avatar-alt">
+                                    <div class="connectly-post-avatar connectly-post-avatar-fallback">
                                         {{ strtoupper(substr($post->user->name, 0, 1)) }}
                                     </div>
                                 @endif
 
-                                <div class="flex-grow-1">
+                                <div class="flex-grow-1" style="min-width:0;">
+                                    {{-- Post Header --}}
                                     <div class="d-flex justify-content-between align-items-start gap-2 mb-2">
                                         <div class="d-flex flex-wrap gap-2 align-items-center">
-                                            <h6 class="mb-0 fw-bold">
-                                                <a href="{{ route('profile.show', $post->user_id) }}" class="text-decoration-none chatbox-profile-link connectly-profile-link">{{ $post->user->name }}</a>
+                                            <h6 class="mb-0 fw-bold connectly-post-user-name">
+                                                <a href="{{ route('profile.show', $post->user_id) }}" class="text-decoration-none">{{ $post->user->name }}</a>
                                             </h6>
-                                            <span class="text-muted small">&middot;</span>
-                                            <span class="text-muted small">{{ $post->created_at->diffForHumans() }}</span>
+                                            <span class="connectly-post-time-dot">&middot;</span>
+                                            <span class="connectly-post-time">{{ $post->created_at->diffForHumans() }}</span>
                                             @if($post->is_pinned)
-                                                <span class="chatbox-pinned-badge connectly-pinned-badge">
+                                                <span class="connectly-post-pin-badge">
                                                     <i class="bi bi-pin-angle-fill"></i> Pinned
                                                 </span>
                                             @endif
                                         </div>
 
                                         @if ((int) $post->user_id === (int) auth()->id())
-                                            <div class="connectly-post-actions">
+                                            <div class="connectly-post-actions-dropdown">
                                                 <button
                                                     type="button"
                                                     class="connectly-post-actions-trigger"
                                                     data-bs-toggle="dropdown"
                                                     aria-expanded="false"
                                                 >
-                                                    <i class="bi bi-three-dots-vertical"></i>
+                                                    <i class="bi bi-three-dots"></i>
                                                 </button>
                                                 <ul class="dropdown-menu dropdown-menu-end connectly-post-dropdown">
                                                     @if(isset($showPinButton) && $showPinButton)
@@ -87,21 +89,24 @@
                                         @endif
                                     </div>
 
+                                    {{-- Post Content --}}
                                     @if (filled($post->content))
-                                        <p class="mb-3 chatbox-feed-post-text connectly-post-text">{!! nl2br(e($post->content)) !!}</p>
+                                        <p class="mb-3 connectly-post-text">{!! nl2br(e($post->content)) !!}</p>
                                     @endif
 
+                                    {{-- Post Images --}}
                                     @if ($imageCount > 0)
-                                        <div class="connectly-post-image-grid {{ $imageCount === 1 ? 'grid-1' : ($imageCount === 2 ? 'grid-2' : ($imageCount === 3 ? 'grid-3' : ($imageCount === 4 ? 'grid-4' : 'grid-many'))) }}">
+                                        <div class="connectly-post-images {{ $imageCount === 1 ? 'img-1' : ($imageCount === 2 ? 'img-2' : ($imageCount === 3 ? 'img-3' : ($imageCount === 4 ? 'img-4' : 'img-many'))) }}">
                                             @foreach ($postImages as $index => $imgPath)
                                                 @if ($index < 4 || ($index === 4 && $imageCount <= 4))
-                                                    <div class="connectly-post-image-item" style="{{ $imageCount === 1 ? 'max-height: 400px;' : '' }}" onclick="openImageModal('{{ route('media.show', ['path' => $imgPath]) }}')">
+                                                    <div class="connectly-post-image-wrap" onclick="openImageModal('{{ route('media.show', ['path' => $imgPath]) }}')">
                                                         <img src="{{ route('media.show', ['path' => $imgPath]) }}" alt="Post image {{ $index + 1 }}" loading="lazy">
+                                                        <div class="connectly-post-image-shimmer"></div>
                                                     </div>
                                                 @endif
                                             @endforeach
                                             @if ($imageCount > 4)
-                                                <div class="connectly-post-image-item" onclick="openImageModal('{{ route('media.show', ['path' => $postImages[4]]) }}')">
+                                                <div class="connectly-post-image-wrap" onclick="openImageModal('{{ route('media.show', ['path' => $postImages[4]]) }}')">
                                                     <img src="{{ route('media.show', ['path' => $postImages[4]]) }}" alt="Post image 5" loading="lazy">
                                                     <div class="connectly-post-image-overlay">+{{ $imageCount - 4 }}</div>
                                                 </div>
@@ -109,7 +114,9 @@
                                         </div>
                                     @endif
 
-                                    <div class="d-flex align-items-center gap-2">
+                                    {{-- Action Bar --}}
+                                    <div class="connectly-post-actions-bar">
+                                        {{-- Reaction Button --}}
                                         <div class="connectly-reaction-wrap" data-post-id="{{ $post->id }}">
                                             <form action="{{ route('feed.posts.react', $post->id) }}" method="POST" data-reaction-form="main">
                                                 @csrf
@@ -117,7 +124,9 @@
                                                 <button type="submit" class="connectly-react-btn {{ $currentReactionType ? 'is-reacted' : '' }}">
                                                     <span class="connectly-react-emoji">{{ $currentReactionEmoji }}</span>
                                                     <span class="connectly-react-label">{{ $currentReactionLabel }}</span>
-                                                    <span class="connectly-react-count">{{ $post->reactions_count }}</span>
+                                                    @if($post->reactions_count > 0)
+                                                        <span class="connectly-react-count">{{ $post->reactions_count }}</span>
+                                                    @endif
                                                 </button>
                                             </form>
 
@@ -149,38 +158,50 @@
                                             </div>
                                         </div>
 
+                                        {{-- Comment Button --}}
                                         <a
                                             href="{{ route('feed.posts.comments', $post->id) }}"
                                             class="connectly-comment-link"
                                         >
-                                            <i class="bi bi-chat-dots-fill"></i>
-                                            <span>Comments</span>
-                                            <span class="connectly-comment-count">{{ $post->comments_count }}</span>
+                                            <i class="bi bi-chat-dots"></i>
+                                            <span>Comment</span>
+                                            @if($post->comments_count > 0)
+                                                <span class="connectly-comment-count">{{ $post->comments_count }}</span>
+                                            @endif
                                         </a>
                                     </div>
 
-                                    <div class="d-flex flex-wrap gap-2 mt-2 chatbox-reaction-summary">
-                                        @foreach (array_keys($reactionTypes) as $reactionKey)
-                                            @php
-                                                $reactionCountField = $reactionKey . '_count';
-                                                $reactionCount = (int) ($post->{$reactionCountField} ?? 0);
-                                                $reactionEmoji = match ($reactionKey) {
-                                                    'love' => '❤️',
-                                                    'haha' => '😆',
-                                                    'wow' => '😮',
-                                                    'sad' => '😢',
-                                                    default => '👍',
-                                                };
-                                            @endphp
-                                            <span class="badge rounded-pill text-bg-light border connectly-reaction-badge {{ $reactionCount > 0 ? '' : 'd-none' }}" data-reaction-badge="{{ $reactionKey }}">
-                                                <span class="chatbox-reaction-badge-emoji">{{ $reactionEmoji }}</span>
-                                                <span class="chatbox-reaction-badge-count">{{ $reactionCount }}</span>
-                                            </span>
-                                        @endforeach
-                                    </div>
+                                    {{-- Reaction Summary --}}
+                                    @php
+                                        $hasReactions = false;
+                                        foreach (array_keys($reactionTypes) as $reactionKey) {
+                                            $reactionCountField = $reactionKey . '_count';
+                                            if ((int) ($post->{$reactionCountField} ?? 0) > 0) { $hasReactions = true; break; }
+                                        }
+                                    @endphp
+                                    @if ($hasReactions)
+                                        <div class="connectly-reaction-summary">
+                                            @foreach (array_keys($reactionTypes) as $reactionKey)
+                                                @php
+                                                    $reactionCountField = $reactionKey . '_count';
+                                                    $reactionCount = (int) ($post->{$reactionCountField} ?? 0);
+                                                    $reactionEmoji = match ($reactionKey) {
+                                                        'love' => '❤️',
+                                                        'haha' => '😆',
+                                                        'wow' => '😮',
+                                                        'sad' => '😢',
+                                                        default => '👍',
+                                                    };
+                                                @endphp
+                                                <span class="connectly-reaction-badge {{ $reactionCount > 0 ? '' : 'd-none' }}" data-reaction-badge="{{ $reactionKey }}">
+                                                    <span class="connectly-reaction-badge-emoji">{{ $reactionEmoji }}</span>
+                                                    <span class="connectly-reaction-badge-count">{{ $reactionCount }}</span>
+                                                </span>
+                                            @endforeach
+                                        </div>
+                                    @endif
                                 </div>
                             </div>
                         </article>
-
 
 
