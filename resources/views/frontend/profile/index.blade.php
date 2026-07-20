@@ -123,6 +123,12 @@
                                             <span class="cl-profile-upload-hint">JPEG, PNG, GIF, WebP (max 5MB)</span>
                                         </div>
                                     </label>
+                                    <div class="cl-profile-upload-preview" id="avatarPreview">
+                                        <img src="" alt="Preview" id="avatarPreviewImg">
+                                        <button type="button" class="cl-profile-upload-preview-remove" id="avatarPreviewRemove" title="Remove">
+                                            <i class="bi bi-x-lg"></i>
+                                        </button>
+                                    </div>
                                 </div>
                                 @error('avatar') <span class="cl-profile-field-error"><i class="bi bi-exclamation-circle"></i> {{ $message }}</span> @enderror
                             </div>
@@ -1184,6 +1190,63 @@
     margin-top: 2px;
 }
 
+/* Image Preview */
+.cl-profile-upload-preview {
+    display: none;
+    margin-top: 0.75rem;
+    position: relative;
+    border-radius: var(--cl-profile-radius-sm);
+    overflow: hidden;
+    border: 2px solid var(--cl-profile-border);
+    background: var(--cl-profile-bg);
+    animation: previewAppear 0.3s cubic-bezier(.16,1,.3,1);
+}
+
+.cl-profile-upload-preview.is-visible {
+    display: block;
+}
+
+.cl-profile-upload-preview img {
+    width: 100%;
+    max-height: 200px;
+    object-fit: contain;
+    display: block;
+    background: var(--cl-profile-bg);
+}
+
+.cl-profile-upload-preview-remove {
+    position: absolute;
+    top: 8px;
+    right: 8px;
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    border: none;
+    background: rgba(0,0,0,0.55);
+    color: #fff;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 0.75rem;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    backdrop-filter: blur(4px);
+}
+
+.cl-profile-upload-preview-remove:hover {
+    background: rgba(239,68,68,0.85);
+    transform: scale(1.1);
+}
+
+.cl-profile-upload-preview-remove:active {
+    transform: scale(0.95);
+}
+
+@keyframes previewAppear {
+    from { opacity: 0; transform: translateY(8px) scale(0.95); }
+    to { opacity: 1; transform: translateY(0) scale(1); }
+}
+
 /* Checkbox */
 .cl-profile-checkbox {
     display: inline-flex;
@@ -2032,19 +2095,58 @@ document.addEventListener('DOMContentLoaded', function () {
     }
 
     // ===== FILE INPUT LABEL UPDATE =====
-    // ===== FILE INPUT LABEL UPDATE =====
+    // ===== FILE INPUT LABEL + PREVIEW UPDATE =====
     document.addEventListener('change', function (e) {
         const input = e.target.closest('.cl-profile-upload-input');
         if (!input) return;
-        const titleEl = input.parentElement.querySelector('.cl-profile-upload-title');
-        const hintEl = input.parentElement.querySelector('.cl-profile-upload-hint');
+
+        const wrap = input.closest('.cl-profile-upload-wrap');
+        const titleEl = wrap?.querySelector('.cl-profile-upload-title');
+        const hintEl = wrap?.querySelector('.cl-profile-upload-hint');
+        const preview = wrap?.querySelector('.cl-profile-upload-preview');
+        const previewImg = wrap?.querySelector('.cl-profile-upload-preview img');
+
         if (input.files.length > 0) {
-            if (titleEl) titleEl.textContent = input.files[0].name;
-            if (hintEl) hintEl.textContent = `${(input.files[0].size / 1024 / 1024).toFixed(1)} MB`;
+            const file = input.files[0];
+            if (titleEl) titleEl.textContent = file.name;
+            if (hintEl) hintEl.textContent = `${(file.size / 1024 / 1024).toFixed(1)} MB`;
+
+            // Show image preview
+            if (preview && previewImg) {
+                const reader = new FileReader();
+                reader.onload = function (ev) {
+                    previewImg.src = ev.target.result;
+                    preview.classList.add('is-visible');
+                };
+                reader.readAsDataURL(file);
+            }
         } else {
             if (titleEl) titleEl.textContent = 'Choose an image';
             if (hintEl) hintEl.textContent = 'JPEG, PNG, GIF, WebP (max 5MB)';
+            if (preview) {
+                preview.classList.remove('is-visible');
+                if (previewImg) previewImg.src = '';
+            }
         }
+    });
+
+    // ===== AVATAR PREVIEW REMOVE =====
+    document.addEventListener('click', function (e) {
+        const removeBtn = e.target.closest('#avatarPreviewRemove');
+        if (!removeBtn) return;
+
+        const wrap = removeBtn.closest('.cl-profile-upload-wrap');
+        const input = wrap?.querySelector('.cl-profile-upload-input');
+        const preview = wrap?.querySelector('.cl-profile-upload-preview');
+        const previewImg = wrap?.querySelector('.cl-profile-upload-preview img');
+        const titleEl = wrap?.querySelector('.cl-profile-upload-title');
+        const hintEl = wrap?.querySelector('.cl-profile-upload-hint');
+
+        if (input) input.value = '';
+        if (preview) preview.classList.remove('is-visible');
+        if (previewImg) previewImg.src = '';
+        if (titleEl) titleEl.textContent = 'Choose an image';
+        if (hintEl) hintEl.textContent = 'JPEG, PNG, GIF, WebP (max 5MB)';
     });
 
     // ===== SWEET ALERT CONFIRMATIONS =====
