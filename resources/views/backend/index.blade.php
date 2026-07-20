@@ -32,7 +32,7 @@
                     <div class="db-admin-logo-dot"></div>
                 </div>
                 <div>
-                    <div class="db-greeting">
+                    <div class="db-greeting" aria-live="polite">
                         <span class="db-greeting-dot"></span>
                         Welcome back
                     </div>
