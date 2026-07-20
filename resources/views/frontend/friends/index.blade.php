@@ -676,7 +676,7 @@
 .connectly-fr-card:hover {
     transform: translateY(-5px) scale(1.01);
     box-shadow: var(--shadow-lg);
-    border-color: rgba(37, 99, 235, 0.12);
+    border-color: var(--cl-primary, #2563EB);
     background: rgba(255, 255, 255, 0.95);
 }
 
