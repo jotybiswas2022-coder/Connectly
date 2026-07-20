@@ -17,7 +17,7 @@
                 @if(auth()->user()->avatar_path)
                     <img src="{{ route('media.show', ['path' => auth()->user()->avatar_path]) }}"
                          alt="My avatar"
-                         class="connectly-edit-avatar">
+                         class="connectly-edit-avatar" loading="lazy">
                 @else
                     <div class="connectly-edit-avatar connectly-edit-avatar-alt">
                         {{ strtoupper(substr(auth()->user()->name, 0, 1)) }}
