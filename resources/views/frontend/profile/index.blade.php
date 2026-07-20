@@ -22,7 +22,7 @@
                             <img
                                 src="{{ route('media.show', ['path' => $user->avatar_path]) }}"
                                 alt="Profile picture"
-                                class="chatbox-profile-avatar mb-3 connectly-profile-avatar"
+                                class="chatbox-profile-avatar mb-3 connectly-profile-avatar" loading="lazy"
                             >
                         @else
                             <div class="chatbox-profile-avatar chatbox-profile-avatar-fallback mb-3 connectly-profile-avatar connectly-profile-avatar-fallback">
