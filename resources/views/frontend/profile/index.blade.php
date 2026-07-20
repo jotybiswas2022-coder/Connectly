@@ -172,67 +172,78 @@
         </div>
         @endunless
 
-        {{-- ===== EDIT FORM (OWNER ONLY) ===== --}}
+        {{-- ===== EDIT PROFILE BUTTON (OWNER ONLY) ===== --}}
         @if($isOwner)
         <div class="cl-profile-edit-section">
-            <div class="cl-profile-edit-header">
-                <div class="cl-profile-edit-header-icon">
+            {{-- Toggle Button --}}
+            <button type="button" class="cl-profile-edit-toggle" id="editToggleBtn" aria-expanded="false">
+                <div class="cl-profile-edit-toggle-icon">
                     <i class="bi bi-sliders2"></i>
                 </div>
-                <div>
-                    <span class="cl-profile-edit-header-title">Profile Settings</span>
-                    <span class="cl-profile-edit-header-sub">Manage your profile information</span>
+                <div class="cl-profile-edit-toggle-text">
+                    <span class="cl-profile-edit-toggle-title">Profile Settings</span>
+                    <span class="cl-profile-edit-toggle-sub">Manage your profile information</span>
+                </div>
+                <div class="cl-profile-edit-toggle-arrow">
+                    <i class="bi bi-chevron-down"></i>
+                </div>
+            </button>
+
+            {{-- Collapsible Form --}}
+            <div class="cl-profile-edit-collapse" id="editCollapse">
+                <div class="cl-profile-edit-collapse-inner">
+                    <div class="cl-profile-edit-divider"></div>
+
+                    <form action="{{ route('profile.update', $user->id) }}" method="POST" enctype="multipart/form-data">
+                        @csrf @method('PUT')
+
+                        <div class="cl-profile-edit-grid">
+                            <div class="cl-profile-edit-field">
+                                <label><i class="bi bi-person"></i> Display Name</label>
+                                <div class="cl-profile-input-wrap">
+                                    <input type="text" name="name" value="{{ old('name', $user->name) }}" maxlength="255" required placeholder="Enter your full name" class="@error('name') is-invalid @enderror">
+                                    <div class="cl-profile-input-focus-ring"></div>
+                                    @error('name') <span class="cl-profile-field-error"><i class="bi bi-exclamation-circle"></i> {{ $message }}</span> @enderror
+                                </div>
+                            </div>
+
+                            <div class="cl-profile-edit-field">
+                                <label><i class="bi bi-image"></i> Profile Picture</label>
+                                <div class="cl-profile-upload-wrap">
+                                    <input type="file" name="avatar" accept="image/*" id="avatarInput" class="cl-profile-upload-input">
+                                    <label for="avatarInput" class="cl-profile-upload-label">
+                                        <div class="cl-profile-upload-icon">
+                                            <i class="bi bi-cloud-arrow-up"></i>
+                                        </div>
+                                        <div class="cl-profile-upload-text">
+                                            <span class="cl-profile-upload-title">Choose an image</span>
+                                            <span class="cl-profile-upload-hint">JPEG, PNG, GIF, WebP (max 5MB)</span>
+                                        </div>
+                                    </label>
+                                </div>
+                                @error('avatar') <span class="cl-profile-field-error"><i class="bi bi-exclamation-circle"></i> {{ $message }}</span> @enderror
+                            </div>
+                        </div>
+
+                        @if ($user->avatar_path)
+                        <label class="cl-profile-checkbox">
+                            <input type="checkbox" name="remove_avatar" value="1">
+                            <span class="cl-profile-checkbox-mark">
+                                <i class="bi bi-trash3"></i>
+                            </span>
+                            <span>Remove current picture</span>
+                        </label>
+                        @endif
+
+                        <div class="cl-profile-edit-footer">
+                            <button type="submit" class="cl-profile-btn cl-profile-btn-primary">
+                                <i class="bi bi-check2"></i>
+                                <span>Update Profile</span>
+                            </button>
+                        </div>
+                    </form>
                 </div>
             </div>
-
-            <form action="{{ route('profile.update', $user->id) }}" method="POST" enctype="multipart/form-data">
-                @csrf @method('PUT')
-
-                <div class="cl-profile-edit-grid">
-                    <div class="cl-profile-edit-field">
-                        <label><i class="bi bi-person"></i> Display Name</label>
-                        <div class="cl-profile-input-wrap">
-                            <input type="text" name="name" value="{{ old('name', $user->name) }}" maxlength="255" required placeholder="Enter your full name" class="@error('name') is-invalid @enderror">
-                            <div class="cl-profile-input-focus-ring"></div>
-                            @error('name') <span class="cl-profile-field-error"><i class="bi bi-exclamation-circle"></i> {{ $message }}</span> @enderror
-                        </div>
-                    </div>
-
-                    <div class="cl-profile-edit-field">
-                        <label><i class="bi bi-image"></i> Profile Picture</label>
-                        <div class="cl-profile-upload-wrap">
-                            <input type="file" name="avatar" accept="image/*" id="avatarInput" class="cl-profile-upload-input">
-                            <label for="avatarInput" class="cl-profile-upload-label">
-                                <div class="cl-profile-upload-icon">
-                                    <i class="bi bi-cloud-arrow-up"></i>
-                                </div>
-                                <div class="cl-profile-upload-text">
-                                    <span class="cl-profile-upload-title">Choose an image</span>
-                                    <span class="cl-profile-upload-hint">JPEG, PNG, GIF, WebP (max 5MB)</span>
-                                </div>
-                            </label>
-                        </div>
-                        @error('avatar') <span class="cl-profile-field-error"><i class="bi bi-exclamation-circle"></i> {{ $message }}</span> @enderror
-                    </div>
-                </div>
-
-                @if ($user->avatar_path)
-                <label class="cl-profile-checkbox">
-                    <input type="checkbox" name="remove_avatar" value="1">
-                    <span class="cl-profile-checkbox-mark">
-                        <i class="bi bi-trash3"></i>
-                    </span>
-                    <span>Remove current picture</span>
-                </label>
-                @endif
-
-                <div class="cl-profile-edit-footer">
-                    <button type="submit" class="cl-profile-btn cl-profile-btn-primary">
-                        <i class="bi bi-check2"></i>
-                        <span>Update Profile</span>
-                    </button>
-                </div>
-            </form>
         </div>
         @endif
 
@@ -901,27 +912,42 @@
     background: var(--cl-profile-surface);
     border: 1px solid var(--cl-profile-border);
     border-radius: var(--cl-profile-radius);
-    padding: 1.5rem;
     margin-bottom: 1.5rem;
     box-shadow: var(--cl-profile-shadow);
-    animation: sectionSlideUp 0.5s ease-out;
+    overflow: hidden;
+    transition: box-shadow var(--cl-profile-transition);
 }
 
-@keyframes sectionSlideUp {
-    from { opacity: 0; transform: translateY(16px); }
-    to { opacity: 1; transform: translateY(0); }
+.cl-profile-edit-section.is-open {
+    box-shadow: var(--cl-profile-shadow-md);
+    border-color: rgba(37,99,235,0.15);
 }
 
-.cl-profile-edit-header {
+/* Toggle Button */
+.cl-profile-edit-toggle {
     display: flex;
     align-items: center;
     gap: 12px;
-    margin-bottom: 1.25rem;
-    padding-bottom: 0.75rem;
-    border-bottom: 1px solid var(--cl-profile-border);
+    width: 100%;
+    padding: 1.25rem 1.5rem;
+    border: none;
+    background: var(--cl-profile-surface);
+    cursor: pointer;
+    font-family: inherit;
+    text-align: left;
+    transition: background 0.25s ease;
+    position: relative;
 }
 
-.cl-profile-edit-header-icon {
+.cl-profile-edit-toggle:hover {
+    background: var(--cl-profile-surface-alt);
+}
+
+.cl-profile-edit-toggle:active {
+    transform: scale(0.998);
+}
+
+.cl-profile-edit-toggle-icon {
     width: 40px;
     height: 40px;
     display: flex;
@@ -932,9 +958,20 @@
     color: var(--cl-profile-primary);
     font-size: 1.1rem;
     flex-shrink: 0;
+    transition: all 0.3s ease;
 }
 
-.cl-profile-edit-header-title {
+.cl-profile-edit-toggle:hover .cl-profile-edit-toggle-icon {
+    background: rgba(37,99,235,0.12);
+    transform: scale(1.05);
+}
+
+.cl-profile-edit-toggle-text {
+    flex: 1;
+    min-width: 0;
+}
+
+.cl-profile-edit-toggle-title {
     display: block;
     font-size: 0.95rem;
     font-weight: 700;
@@ -942,11 +979,68 @@
     line-height: 1.3;
 }
 
-.cl-profile-edit-header-sub {
+.cl-profile-edit-toggle-sub {
     display: block;
     font-size: 0.75rem;
     color: var(--cl-profile-text-muted);
     font-weight: 400;
+    margin-top: 1px;
+}
+
+.cl-profile-edit-toggle-arrow {
+    width: 32px;
+    height: 32px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+    color: var(--cl-profile-text-muted);
+    font-size: 0.85rem;
+    flex-shrink: 0;
+    transition: all 0.4s cubic-bezier(.4,0,.2,1);
+    background: var(--cl-profile-bg);
+}
+
+.cl-profile-edit-toggle[aria-expanded="true"] .cl-profile-edit-toggle-arrow {
+    transform: rotate(180deg);
+    color: var(--cl-profile-primary);
+    background: var(--cl-profile-primary-subtle);
+}
+
+/* Collapsible Container */
+.cl-profile-edit-collapse {
+    display: grid;
+    grid-template-rows: 0fr;
+    transition: grid-template-rows 0.4s cubic-bezier(.4,0,.2,1);
+}
+
+.cl-profile-edit-collapse.is-open {
+    grid-template-rows: 1fr;
+}
+
+.cl-profile-edit-collapse-inner {
+    overflow: hidden;
+    min-height: 0;
+}
+
+.cl-profile-edit-divider {
+    height: 1px;
+    background: var(--cl-profile-border);
+    margin: 0 1.5rem;
+}
+
+.cl-profile-edit-collapse.is-open .cl-profile-edit-grid {
+    animation: editFadeIn 0.4s ease 0.1s backwards;
+}
+
+@keyframes editFadeIn {
+    from { opacity: 0; transform: translateY(-8px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes sectionSlideUp {
+    from { opacity: 0; transform: translateY(16px); }
+    to { opacity: 1; transform: translateY(0); }
 }
 
 .cl-profile-edit-grid {
@@ -954,6 +1048,7 @@
     grid-template-columns: 1fr 1fr;
     gap: 1rem;
     margin-bottom: 1rem;
+    padding: 1.25rem 1.5rem 0;
 }
 
 .cl-profile-edit-field label {
@@ -1138,12 +1233,16 @@
 .cl-profile-edit-footer {
     display: flex;
     justify-content: flex-end;
-    padding-top: 0.75rem;
-    border-top: 1px solid var(--cl-profile-border-light);
+    padding: 0 1.5rem 1.25rem;
 }
 
 .cl-profile-edit-footer .cl-profile-btn {
     max-width: 220px;
+}
+
+.cl-profile-edit-collapse .cl-profile-checkbox {
+    margin-left: 1.5rem;
+    margin-right: 1.5rem;
 }
 
 /* ===== POSTS SECTION ===== */
@@ -1326,7 +1425,11 @@
     .cl-profile-meta-item { font-size: 0.72rem; padding: 3px 10px; }
     .cl-profile-meta-dot { display: none; }
     .cl-profile-posts-list > .connectly-post-card { padding: 1rem; border-radius: var(--cl-profile-radius-sm); }
-    .cl-profile-edit-section { padding: 1.15rem; border-radius: var(--cl-profile-radius-sm); }
+    .cl-profile-edit-toggle { padding: 1rem 1.15rem; }
+    .cl-profile-edit-grid { padding: 1rem 1.15rem 0; }
+    .cl-profile-edit-divider { margin: 0 1.15rem; }
+    .cl-profile-edit-footer { padding: 0 1.15rem 1rem; }
+    .cl-profile-edit-collapse .cl-profile-checkbox { margin-left: 1.15rem; margin-right: 1.15rem; }
     .cl-profile-hero-grid { background-size: 40px 40px; }
 }
 
@@ -1906,6 +2009,29 @@ document.addEventListener('DOMContentLoaded', function () {
         }, stepTime);
     }
 
+    // ===== EDIT TOGGLE =====
+    const editToggle = document.getElementById('editToggleBtn');
+    const editCollapse = document.getElementById('editCollapse');
+
+    if (editToggle && editCollapse) {
+        // Open if there are validation errors
+        @if($errors->any())
+            editToggle.setAttribute('aria-expanded', 'true');
+            editCollapse.classList.add('is-open');
+            editToggle.closest('.cl-profile-edit-section').classList.add('is-open');
+        @endif
+
+        editToggle.addEventListener('click', function () {
+            const isOpen = editToggle.getAttribute('aria-expanded') === 'true';
+            const newState = !isOpen;
+
+            editToggle.setAttribute('aria-expanded', newState);
+            editCollapse.classList.toggle('is-open', newState);
+            editToggle.closest('.cl-profile-edit-section').classList.toggle('is-open', newState);
+        });
+    }
+
+    // ===== FILE INPUT LABEL UPDATE =====
     // ===== FILE INPUT LABEL UPDATE =====
     document.addEventListener('change', function (e) {
         const input = e.target.closest('.cl-profile-upload-input');
