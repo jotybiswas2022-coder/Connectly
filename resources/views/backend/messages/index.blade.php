@@ -34,7 +34,8 @@
                 <input id="messagesSearch" name="search" type="search"
                        placeholder="Search by sender…"
                        value="{{ request('search') }}"
-                       autocomplete="off">
+                       autocomplete="off"
+                       aria-label="Search messages">
                 <button type="submit" class="search-button">Search</button>
             </form>
         </div>
