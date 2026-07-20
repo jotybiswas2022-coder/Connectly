@@ -60,12 +60,11 @@
                         </div>
                         <div class="connectly-edit-existing-images">
                             @foreach ($postImages as $imgPath)
-                                <div class="connectly-edit-existing-item">
+                                <div class="connectly-edit-existing-item" data-path="{{ $imgPath }}">
                                     <img src="{{ route('media.show', ['path' => $imgPath]) }}" alt="Post image" loading="lazy">
-                                    <label class="connectly-edit-remove-check">
-                                        <input type="checkbox" name="remove_images[]" value="{{ $imgPath }}" onchange="this.parentElement.style.opacity=this.checked?'0.6':'1'">
+                                    <button type="button" class="connectly-edit-remove-btn" data-path="{{ $imgPath }}" title="Remove this image">
                                         <i class="bi bi-trash"></i>
-                                    </label>
+                                    </button>
                                 </div>
                             @endforeach
                         </div>
@@ -285,7 +284,7 @@
     object-fit: cover;
 }
 
-.connectly-edit-remove-check {
+.connectly-edit-remove-btn {
     position: absolute;
     inset: 0;
     background: rgba(0,0,0,0.45);
@@ -297,14 +296,22 @@
     transition: opacity 0.2s ease;
     color: #fff;
     font-size: 1rem;
+    border: none;
+    width: 100%;
+    padding: 0;
 }
 
-.connectly-edit-existing-item:hover .connectly-edit-remove-check {
+.connectly-edit-existing-item:hover .connectly-edit-remove-btn,
+.connectly-edit-remove-btn.marked {
     opacity: 1;
 }
 
-.connectly-edit-remove-check input {
-    display: none;
+.connectly-edit-remove-btn.marked {
+    background: rgba(220,38,38,0.6);
+}
+
+.connectly-edit-remove-btn.marked i {
+    color: #fff;
 }
 
 .connectly-edit-upload {
@@ -444,10 +451,37 @@
 document.addEventListener('DOMContentLoaded', function () {
     const textarea = document.querySelector('.connectly-edit-textarea');
     const charCount = document.querySelector('.connectly-edit-charcount');
+    const form = document.querySelector('.connectly-edit-card form');
 
     if (textarea && charCount) {
         textarea.addEventListener('input', function () {
             charCount.textContent = this.value.length + '/600';
+        });
+    }
+
+    if (form) {
+        const marked = new Set();
+        form.addEventListener('click', function (e) {
+            const btn = e.target.closest('.connectly-edit-remove-btn');
+            if (!btn) return;
+            e.preventDefault();
+            const path = btn.dataset.path;
+            if (marked.has(path)) {
+                marked.delete(path);
+                btn.classList.remove('marked');
+            } else {
+                marked.add(path);
+                btn.classList.add('marked');
+            }
+        });
+        form.addEventListener('submit', function () {
+            document.querySelectorAll('.connectly-edit-remove-btn.marked').forEach(function (btn) {
+                var input = document.createElement('input');
+                input.type = 'hidden';
+                input.name = 'remove_images[]';
+                input.value = btn.dataset.path;
+                form.appendChild(input);
+            });
         });
     }
 });
