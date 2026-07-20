@@ -26,8 +26,8 @@
     <div class="contact-card-wrap">
         <div class="contact-card">
             <div class="table-scroll-wrap">
-                <table class="contact-table">
-                    <thead>
+                    <table class="contact-table" aria-label="Contact messages list">
+                        <thead>
                         <tr>
                             <th style="width:50px;">#</th>
                             <th class="text-start"><i class="bi bi-person me-1"></i> Name</th>
