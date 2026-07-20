@@ -33,7 +33,7 @@
                 @if($post->user->avatar_path)
                     <img src="{{ route('media.show', ['path' => $post->user->avatar_path]) }}"
                          alt="{{ $post->user->name }} avatar"
-                         class="connectly-comments-post-avatar">
+                         class="connectly-comments-post-avatar" loading="lazy">
                 @else
                     <div class="connectly-comments-post-avatar connectly-comments-post-avatar-alt">
                         {{ strtoupper(substr($post->user->name, 0, 1)) }}
