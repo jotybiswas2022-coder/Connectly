@@ -44,7 +44,8 @@
                 <input id="postsSearch" name="search" type="search"
                        placeholder="Search by content or author…"
                        value="{{ request('search') }}"
-                       autocomplete="off">
+                       autocomplete="off"
+                       aria-label="Search posts">
                 <button type="submit" class="search-button">Search</button>
             </form>
         </div>
