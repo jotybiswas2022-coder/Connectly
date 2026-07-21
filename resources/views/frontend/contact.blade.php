@@ -28,40 +28,7 @@
         <button class="chatbox-toast-close" onclick="dismissToast()">&times;</button>
     </div>
 
-    {{-- ===== Hero Section ===== --}}
-    <section class="chatbox-hero">
-        <div class="chatbox-hero-bg">
-            <div class="chatbox-hero-shape chatbox-hero-shape-1"></div>
-            <div class="chatbox-hero-shape chatbox-hero-shape-2"></div>
-            <div class="chatbox-hero-shape chatbox-hero-shape-3"></div>
-        </div>
-        <div class="chatbox-hero-content">
-            <div class="chatbox-hero-badge chatbox-fade-up">
-                <i class="bi bi-envelope-fill"></i>
-                <span>Get in Touch</span>
-            </div>
-            <h1 class="chatbox-hero-title chatbox-fade-up">We'd Love to<br><span class="chatbox-hero-gradient-text">Hear From You</span></h1>
-            <p class="chatbox-hero-desc chatbox-fade-up">
-                Have a question, a project idea, or just want to say hello? Our team is ready to help. Drop us a message and we'll get back to you within 24 hours.
-            </p>
-            <div class="chatbox-hero-stats chatbox-fade-up">
-                <div class="chatbox-hero-stat">
-                    <span class="chatbox-hero-stat-num" data-target="24">&lt;24</span>
-                    <span class="chatbox-hero-stat-label">Response Time (hrs)</span>
-                </div>
-                <div class="chatbox-hero-stat-divider"></div>
-                <div class="chatbox-hero-stat">
-                    <span class="chatbox-hero-stat-num" data-target="98">98%</span>
-                    <span class="chatbox-hero-stat-label">Satisfaction Rate</span>
-                </div>
-                <div class="chatbox-hero-stat-divider"></div>
-                <div class="chatbox-hero-stat">
-                    <span class="chatbox-hero-stat-num" data-target="500">500+</span>
-                    <span class="chatbox-hero-stat-label">Happy Clients</span>
-                </div>
-            </div>
-        </div>
-    </section>
+
 
     {{-- ===== Main Contact Section ===== --}}
     <section class="chatbox-contact-section" id="contact">
@@ -178,31 +145,7 @@
         </div>
     </section>
 
-    {{-- ===== CTA Section ===== --}}
-    <section class="chatbox-cta-section chatbox-fade-up">
-        <div class="chatbox-cta-bg">
-            <div class="chatbox-cta-shape chatbox-cta-shape-1"></div>
-            <div class="chatbox-cta-shape chatbox-cta-shape-2"></div>
-        </div>
-        <div class="chatbox-cta-content">
-            <div class="chatbox-cta-badge">
-                <i class="bi bi-lightning-fill"></i>
-                <span>Fast Response</span>
-            </div>
-            <h2 class="chatbox-cta-title">Ready to Get Started?</h2>
-            <p class="chatbox-cta-desc">
-                Join thousands of satisfied customers who trust us. Let's build something amazing together.
-            </p>
-            <div class="chatbox-cta-buttons">
-                <a href="#contact" class="chatbox-cta-btn chatbox-cta-btn-primary">
-                    <i class="bi bi-send-fill"></i> Send a Message
-                </a>
-                <a href="tel:{{ $account->phone ?? '+15551234567' }}" class="chatbox-cta-btn chatbox-cta-btn-secondary">
-                    <i class="bi bi-telephone-fill"></i> Call Us
-                </a>
-            </div>
-        </div>
-    </section>
+
 
 </div>
 
@@ -382,54 +325,7 @@ document.querySelectorAll('a[href^="#"]').forEach(anchor => {
     });
 });
 
-// ===== Counter Animation for Hero Stats =====
-function animateCounters() {
-    const counters = document.querySelectorAll('.chatbox-hero-stat-num');
-    counters.forEach(counter => {
-        const target = counter.getAttribute('data-target');
-        const text = counter.textContent;
-        const hasPlus = text.includes('+');
-        const isPercent = text.includes('%');
-        const hasLessThan = text.includes('<');
-        const numStr = text.replace(/[<>+%]/g, '');
-        const targetNum = parseInt(numStr);
 
-        if (hasLessThan) {
-            counter.textContent = '<' + targetNum;
-            return;
-        }
-
-        let current = 0;
-        const increment = Math.max(1, Math.ceil(targetNum / 60));
-        let iterations = 0;
-        const maxIterations = 120;
-        const updateCounter = () => {
-            if (++iterations > maxIterations) {
-                counter.textContent = targetNum + (hasPlus ? '+' : '') + (isPercent ? '%' : '');
-                return;
-            }
-            current = Math.min(current + increment, targetNum);
-            counter.textContent = current + (hasPlus ? '+' : '') + (isPercent ? '%' : '');
-            if (current < targetNum) {
-                requestAnimationFrame(updateCounter);
-            }
-        };
-        updateCounter();
-    });
-}
-
-// Trigger counter animation when hero comes into view
-const heroObserver = new IntersectionObserver((entries) => {
-    entries.forEach(entry => {
-        if (entry.isIntersecting) {
-            animateCounters();
-            heroObserver.unobserve(entry.target);
-        }
-    });
-}, { threshold: 0.3 });
-
-const heroSection = document.querySelector('.chatbox-hero');
-if (heroSection) heroObserver.observe(heroSection);
 </script>
 
 <style>
