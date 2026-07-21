@@ -153,6 +153,16 @@
                                 <i class="bi bi-hourglass-split"></i> Request sent
                             </span>
                         </div>
+                        <div class="connectly-fr-actions">
+                            <form action="{{ route('friend-request.cancel', $request->id) }}" method="POST"
+                                  class="connectly-fr-cancel-form" data-type="cancel" data-receiver-name="{{ $sentTo->name }}">
+                                @csrf
+                                @method('DELETE')
+                                <button type="submit" class="connectly-fr-btn connectly-fr-btn-cancel" title="Cancel Request">
+                                    <i class="bi bi-x-lg"></i>
+                                </button>
+                            </form>
+                        </div>
                     </div>
                 @endforeach
             </div>
@@ -880,6 +890,13 @@
     box-shadow: 0 4px 12px rgba(71, 85, 105, 0.3);
 }
 
+.connectly-fr-btn-cancel:hover {
+    background: #EF4444;
+    border-color: #EF4444;
+    color: #fff;
+    box-shadow: 0 4px 16px rgba(239, 68, 68, 0.3);
+}
+
 /* ===== EMPTY STATE ===== */
 .connectly-fr-empty {
     text-align: center;
@@ -1148,15 +1165,15 @@ document.addEventListener('DOMContentLoaded', function () {
         });
     });
 
-    // ===== 4. Accept/Reject with SweetAlert2 confirmation =====
+    // ===== 4. Accept/Reject/Cancel with SweetAlert2 confirmation =====
     document.addEventListener('submit', function (e) {
-        const form = e.target.closest('.connectly-fr-action-form');
+        const form = e.target.closest('.connectly-fr-action-form, .connectly-fr-cancel-form');
         if (!form) return;
 
         e.preventDefault();
 
         const type = form.dataset.type;
-        const name = form.dataset.requesterName || 'this user';
+        const name = form.dataset.requesterName || form.dataset.receiverName || 'this user';
 
         if (type === 'accept') {
             Swal.fire({
@@ -1252,6 +1269,53 @@ document.addEventListener('DOMContentLoaded', function () {
                     handleRequestRejected(form, name);
                 }
             });
+        } else if (type === 'cancel') {
+            Swal.fire({
+                title: 'Cancel Request?',
+                text: `The friend request to ${name} will be cancelled.`,
+                icon: 'question',
+                showCancelButton: true,
+                confirmButtonColor: '#EF4444',
+                cancelButtonColor: '#64748B',
+                confirmButtonText: '<i class="bi bi-x-lg me-1"></i> Yes, Cancel',
+                cancelButtonText: 'Keep Request',
+                reverseButtons: true,
+                focusCancel: true,
+                customClass: {
+                    popup: 'connectly-fr-swal-popup',
+                    confirmButton: 'btn btn-danger px-4 py-2 rounded-3 fw-semibold d-inline-flex align-items-center gap-1',
+                    cancelButton: 'btn btn-light px-4 py-2 rounded-3 fw-semibold border'
+                },
+                buttonsStyling: false,
+                showLoaderOnConfirm: true,
+                preConfirm: async () => {
+                    try {
+                        const response = await fetch(form.action, {
+                            method: 'POST',
+                            headers: {
+                                'X-Requested-With': 'XMLHttpRequest',
+                                'Accept': 'application/json',
+                            },
+                            body: new FormData(form),
+                        });
+
+                        const data = await response.json();
+
+                        if (!response.ok || !data.success) {
+                            throw new Error(data.message || 'Failed to cancel request.');
+                        }
+
+                        return data;
+                    } catch (error) {
+                        Swal.showValidationMessage(error.message);
+                        throw error;
+                    }
+                }
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    handleRequestCancelled(form, name);
+                }
+            });
         }
     });
 
@@ -1304,6 +1368,20 @@ document.addEventListener('DOMContentLoaded', function () {
 
         updateRequestCountBadge();
         showToast('success', `Rejected ${name}'s request`);
+    }
+
+    // ===== Handle cancel =====
+    function handleRequestCancelled(form, name) {
+        const card = form.closest('.connectly-fr-card');
+        if (card) {
+            card.style.transition = 'all 0.4s cubic-bezier(0.34, 1.56, 0.64, 1)';
+            card.style.opacity = '0';
+            card.style.transform = 'scale(0.85) translateY(-10px)';
+            setTimeout(() => card.remove(), 400);
+        }
+
+        updateSentCountBadge();
+        showToast('success', `Cancelled request to ${name}`);
     }
 
     // ===== Update request count badge =====
@@ -1359,6 +1437,36 @@ document.addEventListener('DOMContentLoaded', function () {
         if (friendsBadge) {
             const current = parseInt(friendsBadge.textContent, 10) || 0;
             friendsBadge.textContent = current + 1;
+        }
+    }
+
+    // ===== Update sent count badge =====
+    function updateSentCountBadge() {
+        const sentTab = document.querySelector('.connectly-fr-tab[data-tab="sent"]');
+        if (sentTab) {
+            const badge = sentTab.querySelector('.connectly-fr-tab-badge');
+            if (badge) {
+                const current = parseInt(badge.textContent, 10) || 0;
+                const next = Math.max(0, current - 1);
+                badge.textContent = next;
+
+                if (next <= 0) {
+                    sentTab.remove();
+
+                    const panel = document.getElementById('sentPanel');
+                    if (panel) {
+                        panel.style.transition = 'all 0.3s ease';
+                        panel.style.opacity = '0';
+                        setTimeout(() => panel.remove(), 300);
+                    }
+
+                    const activeTab = document.querySelector('.connectly-fr-tab.active');
+                    if (!activeTab) {
+                        const friendsTab = document.querySelector('.connectly-fr-tab[data-tab="friends"]');
+                        if (friendsTab) friendsTab.click();
+                    }
+                }
+            }
         }
     }
 
