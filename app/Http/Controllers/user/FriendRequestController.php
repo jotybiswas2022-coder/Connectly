@@ -149,7 +149,7 @@ class FriendRequestController extends Controller
     /**
      * Accept a friend request.
      */
-    public function accept($request_id)
+    public function accept(Request $request, $request_id)
     {
         $friendRequest = FriendRequest::findOrFail((int) $request_id);
 
@@ -158,12 +158,14 @@ class FriendRequestController extends Controller
         }
 
         if ($friendRequest->status !== 'pending') {
-            return back()->with('success', 'This request is no longer pending.');
+            $msg = 'This request is no longer pending.';
+            return $request->expectsJson()
+                ? response()->json(['success' => false, 'message' => $msg])
+                : back()->with('success', $msg);
         }
 
         $friendRequest->update(['status' => 'accepted']);
 
-        // Notify the sender that their request was accepted
         Notification::create([
             'user_id' => (int) $friendRequest->sender_id,
             'from_user_id' => (int) Auth::id(),
@@ -172,13 +174,16 @@ class FriendRequestController extends Controller
             'link' => route('profile.show', Auth::id()),
         ]);
 
-        return back()->with('success', 'Friend request accepted!');
+        $msg = 'Friend request accepted!';
+        return $request->expectsJson()
+            ? response()->json(['success' => true, 'message' => $msg])
+            : back()->with('success', $msg);
     }
 
     /**
      * Reject a friend request.
      */
-    public function reject($request_id)
+    public function reject(Request $request, $request_id)
     {
         $friendRequest = FriendRequest::findOrFail((int) $request_id);
 
@@ -187,18 +192,24 @@ class FriendRequestController extends Controller
         }
 
         if ($friendRequest->status !== 'pending') {
-            return back()->with('success', 'This request is no longer pending.');
+            $msg = 'This request is no longer pending.';
+            return $request->expectsJson()
+                ? response()->json(['success' => false, 'message' => $msg])
+                : back()->with('success', $msg);
         }
 
         $friendRequest->update(['status' => 'rejected']);
 
-        return back()->with('success', 'Friend request rejected.');
+        $msg = 'Friend request rejected.';
+        return $request->expectsJson()
+            ? response()->json(['success' => true, 'message' => $msg])
+            : back()->with('success', $msg);
     }
 
     /**
      * Cancel a sent friend request.
      */
-    public function cancel($request_id)
+    public function cancel(Request $request, $request_id)
     {
         $friendRequest = FriendRequest::findOrFail((int) $request_id);
 
@@ -208,13 +219,16 @@ class FriendRequestController extends Controller
 
         $friendRequest->delete();
 
-        return back()->with('success', 'Friend request cancelled.');
+        $msg = 'Friend request cancelled.';
+        return $request->expectsJson()
+            ? response()->json(['success' => true, 'message' => $msg])
+            : back()->with('success', $msg);
     }
 
     /**
      * Unfriend a user.
      */
-    public function unfriend($user_id)
+    public function unfriend(Request $request, $user_id)
     {
         $userId = (int) $user_id;
         $authId = (int) Auth::id();
@@ -226,11 +240,17 @@ class FriendRequestController extends Controller
         })->where('status', 'accepted')->first();
 
         if (!$friendship) {
-            return back()->with('success', 'You are not friends with this user.');
+            $msg = 'You are not friends with this user.';
+            return $request->expectsJson()
+                ? response()->json(['success' => false, 'message' => $msg])
+                : back()->with('success', $msg);
         }
 
         $friendship->delete();
 
-        return back()->with('success', 'Unfriended successfully.');
+        $msg = 'Unfriended successfully.';
+        return $request->expectsJson()
+            ? response()->json(['success' => true, 'message' => $msg])
+            : back()->with('success', $msg);
     }
 }
