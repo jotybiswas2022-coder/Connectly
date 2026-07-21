@@ -90,6 +90,16 @@ class ProfileController extends Controller
         return view('frontend.profile.index', compact('user', 'posts', 'reactionTypes', 'isOwner', 'friendRequest', 'friendStatus', 'friendsCount'));
     }
 
+    public function showSettings($user_id)
+    {
+        $user = User::findOrFail((int) $user_id);
+        if ((int) Auth::id() !== (int) $user->id) {
+            abort(403);
+        }
+
+        return view('frontend.profile.settings', compact('user'));
+    }
+
     public function updateProfile(Request $request, $user_id)
     {
         if ((int) Auth::id() !== (int) $user_id) {
@@ -119,7 +129,11 @@ class ProfileController extends Controller
 
         $user->save();
 
-        return redirect()->route('profile.show', $user->id)->with('success', 'Profile updated successfully.');
+        $redirect = ($request->input('redirect_to') === 'settings')
+            ? route('profile.settings', $user->id)
+            : route('profile.show', $user->id);
+
+        return redirect($redirect)->with('success', 'Profile updated successfully.');
     }
 
     public function togglePinPost($user_id, Post $post)

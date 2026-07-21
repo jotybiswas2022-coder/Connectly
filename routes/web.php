@@ -50,6 +50,7 @@ Route::middleware('auth')->prefix('/feed')->controller(FeedController::class)->g
 // User profile routes
 Route::middleware('auth')->prefix('/{user_id}/profile')->controller(ProfileController::class)->group(function () {
     Route::get('/', 'showProfile')->name('profile.show');
+    Route::get('/settings', 'showSettings')->name('profile.settings');
     Route::put('/update', 'updateProfile')->name('profile.update');
     Route::put('/posts/{post}/pin', 'togglePinPost')->name('profile.posts.pin');
 });
