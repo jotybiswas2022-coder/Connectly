@@ -6,7 +6,7 @@ $activeUserId = request()->route('user_id') !== null ? (string) request()->route
 $isChatPage = request()->routeIs('message');
 $isLandingPage = request()->is('/') || request()->is('contact');
 $isProfilePage = request()->routeIs('profile.show');
-$isFeedOrProfile = request()->is('feed') || request()->routeIs('profile.show');
+$isFeedOrProfile = request()->is('feed') || request()->routeIs('profile.show') || request()->routeIs('profile.settings');
 $isPostEdit = request()->routeIs('feed.posts.edit');
 $isPostComments = request()->routeIs('feed.posts.comments');
 $isFriendsOrSearch = request()->routeIs('friends') || request()->routeIs('search');
