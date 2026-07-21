@@ -106,7 +106,10 @@
                 <div class="connectly-msg-form-inner">
                     <!-- Image preview -->
                     <div class="connectly-msg-preview" id="chatboxImagePreview" style="display:none;">
-                        <span class="connectly-msg-preview-text" id="chatboxFileName"></span>
+                        <div class="connectly-msg-preview-left">
+                            <img src="" alt="Preview" class="connectly-msg-preview-img" id="chatboxPreviewImg">
+                            <span class="connectly-msg-preview-text" id="chatboxFileName"></span>
+                        </div>
                         <button type="button" class="connectly-msg-preview-remove" id="chatboxRemoveImage">&times;</button>
                     </div>
 
@@ -470,35 +473,48 @@
 }
 
 .connectly-msg-preview {
-    padding: 10px 14px;
+    padding: 8px 14px;
     background: #eff6ff;
     border-bottom: 1px solid var(--clr-border);
     display: flex;
     align-items: center;
     justify-content: space-between;
+    gap: 8px;
     animation: slideDown 0.3s ease-out;
 }
 @keyframes slideDown {
     from { opacity: 0; max-height: 0; }
-    to { opacity: 1; max-height: 60px; }
+    to { opacity: 1; max-height: 80px; }
+}
+.connectly-msg-preview-left {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    min-width: 0;
+    flex: 1;
+}
+.connectly-msg-preview-img {
+    width: 44px;
+    height: 44px;
+    border-radius: 8px;
+    object-fit: cover;
+    border: 1.5px solid rgba(37,99,235,0.15);
+    background: #fff;
+    flex-shrink: 0;
 }
 .connectly-msg-preview-text {
     font-size: 13px;
     color: var(--clr-primary);
-    display: flex;
-    align-items: center;
-    gap: 8px;
     font-weight: 500;
-}
-.connectly-msg-preview-text::before {
-    content: '\F336';
-    font-family: 'bootstrap-icons';
-    font-size: 16px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
 }
 .connectly-msg-preview-remove {
     width: 26px; height: 26px; border: none; background: transparent;
     font-size: 20px; color: var(--clr-muted); cursor: pointer;
     border-radius: 50%; display: flex; align-items: center; justify-content: center;
+    flex-shrink: 0;
     transition: all 0.3s ease;
 }
 .connectly-msg-preview-remove:hover {
@@ -1116,13 +1132,27 @@ document.addEventListener('DOMContentLoaded', function () {
 
     var imgInput = document.getElementById('chatboxImageInput');
     var preview = document.getElementById('chatboxImagePreview');
+    var previewImg = document.getElementById('chatboxPreviewImg');
     var fname = document.getElementById('chatboxFileName');
     var rmBtn = document.getElementById('chatboxRemoveImage');
+    var previewUrl = null;
 
     imgInput.addEventListener('change', function() {
-        if (this.files.length) { fname.textContent = this.files[0].name; preview.style.display = 'flex'; }
+        if (this.files.length) {
+            var file = this.files[0];
+            fname.textContent = file.name;
+            if (previewUrl) URL.revokeObjectURL(previewUrl);
+            previewUrl = URL.createObjectURL(file);
+            previewImg.src = previewUrl;
+            preview.style.display = 'flex';
+        }
     });
-    rmBtn.addEventListener('click', function() { imgInput.value = ''; preview.style.display = 'none'; });
+    rmBtn.addEventListener('click', function() {
+        if (previewUrl) { URL.revokeObjectURL(previewUrl); previewUrl = null; }
+        imgInput.value = '';
+        previewImg.src = '';
+        preview.style.display = 'none';
+    });
 
     var lb = document.getElementById('chatboxImageLightbox');
     var lbImg = document.getElementById('chatboxLightboxImage');
@@ -1224,6 +1254,8 @@ document.addEventListener('DOMContentLoaded', function () {
             if (d.message_id) { lastId = Math.max(lastId, parseInt(d.message_id, 10)); area.dataset.lastId = String(lastId); }
             form.reset();
             imgInput.value = '';
+            if (previewUrl) { URL.revokeObjectURL(previewUrl); previewUrl = null; }
+            previewImg.src = '';
             preview.style.display = 'none';
             resize();
             scrollDown();
