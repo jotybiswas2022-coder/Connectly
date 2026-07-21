@@ -180,7 +180,7 @@
                                         }
                                     @endphp
                                     @if ($hasReactions)
-                                        <div class="connectly-reaction-summary">
+                                        <div class="connectly-reaction-summary" data-reactors-url="{{ route('feed.posts.reactors', $post->id) }}">
                                             @foreach (array_keys($reactionTypes) as $reactionKey)
                                                 @php
                                                     $reactionCountField = $reactionKey . '_count';
@@ -193,7 +193,7 @@
                                                         default => '👍',
                                                     };
                                                 @endphp
-                                                <span class="connectly-reaction-badge {{ $reactionCount > 0 ? '' : 'd-none' }}" data-reaction-badge="{{ $reactionKey }}">
+                                                <span class="connectly-reaction-badge {{ $reactionCount > 0 ? '' : 'd-none' }}" data-reaction-badge="{{ $reactionKey }}" data-reaction-type="{{ $reactionKey }}">
                                                     <span class="connectly-reaction-badge-emoji">{{ $reactionEmoji }}</span>
                                                     <span class="connectly-reaction-badge-count">{{ $reactionCount }}</span>
                                                 </span>

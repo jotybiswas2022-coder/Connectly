@@ -572,6 +572,38 @@ class FeedController extends Controller
         return redirect()->route('feed.posts.comments', $comment->post_id);
     }
 
+    public function getReactors(Post $post)
+    {
+        $reactions = PostReaction::where('post_id', $post->id)
+            ->with('user:id,name,avatar_path')
+            ->get();
+
+        $groups = [];
+        foreach (array_keys(self::REACTION_TYPES) as $key) {
+            $groups[$key] = ['count' => 0, 'users' => []];
+        }
+
+        foreach ($reactions as $reaction) {
+            $type = $reaction->reaction_type;
+            if (!isset($groups[$type])) continue;
+            $groups[$type]['count']++;
+            $groups[$type]['users'][] = [
+                'id' => (int) $reaction->user->id,
+                'name' => $reaction->user->name,
+                'avatar_url' => $reaction->user->avatar_path
+                    ? route('media.show', ['path' => $reaction->user->avatar_path])
+                    : null,
+            ];
+        }
+
+        return response()->json([
+            'success' => true,
+            'post_id' => (int) $post->id,
+            'total' => $reactions->count(),
+            'groups' => $groups,
+        ]);
+    }
+
     private function reactionCountsForPost(int $postId): array
     {
         $counts = array_fill_keys(array_keys(self::REACTION_TYPES), 0);

@@ -2345,7 +2345,7 @@ document.addEventListener('submit', async function (event) {
                 const badge = card.querySelector(`[data-reaction-badge="${reactionKey}"]`);
                 if (!badge) return;
                 const count = Number(data.reaction_counts[reactionKey] || 0);
-                const countEl = badge.querySelector('.chatbox-reaction-badge-count');
+                const countEl = badge.querySelector('.connectly-reaction-badge-count');
                 if (countEl) countEl.textContent = String(count);
                 badge.classList.toggle('d-none', count <= 0);
             });
@@ -2561,6 +2561,261 @@ document.addEventListener('change', function(e) {
         }
     }
 });
+</script>
+
+{{-- Reaction List Modal --}}
+<div class="modal fade" id="reactorsModal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-sm">
+        <div class="modal-content">
+            <div class="modal-header border-0 pb-0">
+                <h6 class="modal-title fw-bold">Reactions</h6>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body pt-2" id="reactorsModalBody">
+                <div class="text-center text-muted py-3">Loading...</div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+#reactorsModal .modal-content {
+    border-radius: 12px;
+    border: none;
+    box-shadow: 0 8px 32px rgba(0,0,0,0.12);
+}
+#reactorsModal .modal-header {
+    padding: 1rem 1.25rem 0 1.25rem;
+}
+#reactorsModal .modal-body {
+    padding: 0.75rem 0;
+    max-height: 400px;
+    overflow-y: auto;
+}
+.reactors-tab-row {
+    display: flex;
+    gap: 0.25rem;
+    padding: 0 1rem 0.75rem 1rem;
+    border-bottom: 1px solid var(--feed-border, #e9ecef);
+    overflow-x: auto;
+}
+.reactors-tab-btn {
+    flex-shrink: 0;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.3rem;
+    padding: 0.3rem 0.7rem;
+    border-radius: 999px;
+    border: 1.5px solid transparent;
+    background: transparent;
+    font-size: 0.8rem;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.15s ease;
+    color: var(--feed-muted, #6c757d);
+    font-family: inherit;
+}
+.reactors-tab-btn:hover {
+    border-color: var(--feed-border, #e9ecef);
+    background: var(--feed-input-bg, #f8f9fa);
+}
+.reactors-tab-btn.active {
+    border-color: var(--feed-primary, #0071e3);
+    background: var(--feed-primary-subtle, #e8f4fd);
+    color: var(--feed-primary, #0071e3);
+}
+.reactors-tab-count {
+    font-size: 0.75rem;
+    opacity: 0.7;
+}
+.reactors-list {
+    padding: 0.25rem 0;
+}
+.reactors-list-item {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    padding: 0.5rem 1rem;
+    text-decoration: none;
+    color: inherit;
+    transition: background 0.15s ease;
+}
+.reactors-list-item:hover {
+    background: var(--feed-input-bg, #f8f9fa);
+}
+.reactors-list-avatar {
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    object-fit: cover;
+    flex-shrink: 0;
+}
+.reactors-list-avatar-fallback {
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 600;
+    font-size: 0.85rem;
+    background: var(--feed-primary-subtle, #e8f4fd);
+    color: var(--feed-primary, #0071e3);
+    flex-shrink: 0;
+}
+.reactors-list-name {
+    font-size: 0.9rem;
+    font-weight: 500;
+    flex-grow: 1;
+    min-width: 0;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+.reactors-list-emoji {
+    font-size: 1.1rem;
+    flex-shrink: 0;
+}
+.reactors-empty {
+    text-align: center;
+    padding: 2rem 1rem;
+    color: var(--feed-muted, #6c757d);
+    font-size: 0.9rem;
+}
+.reactors-list-item-you {
+    background: var(--feed-primary-subtle, #e8f4fd);
+}
+.reactors-list-item-you:hover {
+    background: var(--feed-primary-subtle, #e8f4fd);
+}
+.reactors-you-badge {
+    display: inline-block;
+    font-size: 0.7rem;
+    font-weight: 600;
+    color: var(--feed-primary, #0071e3);
+    background: rgba(0,113,227,0.1);
+    padding: 0.05rem 0.45rem;
+    border-radius: 999px;
+    margin-left: 0.35rem;
+    vertical-align: middle;
+}
+</style>
+
+<script>
+var reactorsAuthId = {{ (int) auth()->id() }};
+var reactorsProfileRoute = @json(route('profile.show', ['user_id' => '__ID__']));
+
+document.addEventListener('click', function (event) {
+    var badge = event.target.closest('[data-reaction-type]');
+    var summary = badge ? null : event.target.closest('.connectly-reaction-summary');
+    if (!summary && !badge) return;
+
+    var container = badge ? badge.closest('.connectly-reaction-summary') : summary;
+    if (!container) return;
+
+    var url = container.dataset.reactorsUrl;
+    if (!url) return;
+
+    var defaultType = badge ? badge.dataset.reactionType : null;
+
+    var modal = new bootstrap.Modal('#reactorsModal');
+    var body = document.getElementById('reactorsModalBody');
+    body.innerHTML = '<div class="text-center text-muted py-3">Loading...</div>';
+    modal.show();
+
+    var csrfToken = document.querySelector('meta[name="csrf-token"]')?.getAttribute('content') || '';
+
+    fetch(url, {
+        headers: {
+            'Accept': 'application/json',
+            'X-Requested-With': 'XMLHttpRequest',
+            'X-CSRF-TOKEN': csrfToken,
+        }
+    })
+    .then(function (r) { if (!r.ok) throw new Error('Failed'); return r.json(); })
+    .then(function (data) {
+        if (!data.success) throw new Error('Invalid');
+        renderReactors(body, data, defaultType);
+    })
+    .catch(function () {
+        body.innerHTML = '<div class="text-center text-muted py-3">Could not load reactions.</div>';
+    });
+});
+
+function renderReactors(container, data, defaultType) {
+    var authId = reactorsAuthId;
+    var meta = {
+        like: { label: 'Like', emoji: '👍' },
+        love: { label: 'Love', emoji: '❤️' },
+        haha: { label: 'Haha', emoji: '😆' },
+        wow: { label: 'Wow', emoji: '😮' },
+        sad: { label: 'Sad', emoji: '😢' },
+    };
+
+    var types = Object.keys(meta).filter(function (k) { return data.groups[k] && data.groups[k].count > 0; });
+
+    if (types.length === 0) {
+        container.innerHTML = '<div class="text-center text-muted py-3">No reactions yet.</div>';
+        return;
+    }
+
+    var activeType = defaultType && types.indexOf(defaultType) !== -1 ? defaultType : types[0];
+
+    var html = '<div class="reactors-tab-row">';
+    types.forEach(function (type) {
+        html += '<button type="button" class="reactors-tab-btn' + (type === activeType ? ' active' : '') + '" data-reactor-tab="' + type + '">'
+            + meta[type].emoji + ' ' + meta[type].label
+            + ' <span class="reactors-tab-count">' + data.groups[type].count + '</span>'
+            + '</button>';
+    });
+    html += '</div>';
+
+    html += renderReactorList(data.groups[activeType], activeType);
+    container.innerHTML = html;
+
+    container.querySelectorAll('[data-reactor-tab]').forEach(function (btn) {
+        btn.addEventListener('click', function () {
+            var type = btn.dataset.reactorTab;
+            container.querySelectorAll('.reactors-tab-btn').forEach(function (b) { b.classList.remove('active'); });
+            btn.classList.add('active');
+
+            var existingList = container.querySelector('.reactors-list');
+            if (existingList) existingList.remove();
+
+            container.insertAdjacentHTML('beforeend', renderReactorList(data.groups[type], type));
+        });
+    });
+}
+
+function renderReactorList(group, type) {
+    var html = '<div class="reactors-list" data-reactor-list="' + type + '">';
+    group.users.forEach(function (user) {
+        html += renderReactorUser(user, type);
+    });
+    html += '</div>';
+    return html;
+}
+
+function renderReactorUser(user, type) {
+    var meta = {
+        like: { label: 'Like', emoji: '👍' },
+        love: { label: 'Love', emoji: '❤️' },
+        haha: { label: 'Haha', emoji: '😆' },
+        wow: { label: 'Wow', emoji: '😮' },
+        sad: { label: 'Sad', emoji: '😢' },
+    };
+    var isYou = user.id === reactorsAuthId;
+    var avatarHtml = user.avatar_url
+        ? '<img src="' + user.avatar_url + '" alt="" class="reactors-list-avatar" loading="lazy">'
+        : '<span class="reactors-list-avatar-fallback">' + user.name.charAt(0).toUpperCase() + '</span>';
+    var profileUrl = reactorsProfileRoute.replace('__ID__', user.id);
+    var youTag = isYou ? ' <span class="reactors-you-badge">You</span>' : '';
+    return '<a href="' + profileUrl + '" class="reactors-list-item' + (isYou ? ' reactors-list-item-you' : '') + '">'
+        + avatarHtml
+        + '<span class="reactors-list-name">' + user.name + youTag + '</span>'
+        + '<span class="reactors-list-emoji">' + meta[type].emoji + '</span>'
+        + '</a>';
+}
 </script>
 
 @endsection
