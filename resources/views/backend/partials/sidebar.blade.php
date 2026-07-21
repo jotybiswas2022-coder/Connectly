@@ -45,42 +45,49 @@ use Illuminate\Support\Str;
 
 <!-- Sidebar -->
 <aside class="sidebar">
-    <div class="sidebar-brand">
-        <i class="bi bi-layout-sidebar"></i>
-        <span>Navigation</span>
+    <div class="sidebar-header">
+        <div class="sidebar-brand">
+            <i class="bi bi-layout-sidebar"></i>
+            <span>Navigation</span>
+        </div>
+        <button class="sidebar-toggler" type="button" onclick="document.getElementById('sidebarMenuCollapse').classList.toggle('show')" aria-label="Toggle navigation menu">
+            <i class="bi bi-three-dots-vertical"></i>
+        </button>
     </div>
-    <ul class="sidebar-menu">
-        <li>
-            <a href="{{ url('/admin/account') }}"
-               class="{{ request()->is('admin/account') ? 'active' : '' }}">
-                <i class="bi bi-person-circle"></i>
-                <span>Account</span>
-            </a>
-        </li>
-        <li>
-            <a href="{{ url('/admin/posts') }}"
-               class="{{ request()->is('admin/posts') ? 'active' : '' }}">
-                <i class="bi bi-file-earmark-text"></i>
-                <span>Posts</span>
-            </a>
-        </li>
-        <li>
-            <a href="{{ url('/admin/messages') }}"
-               class="{{ request()->is('admin/messages') ? 'active' : '' }}">
-                <i class="bi bi-chat-dots"></i>
-                <span>Messages</span>
-            </a>
-        </li>
-        <li>
-            <a href="{{ url('/admin/contact') }}"
-               class="{{ request()->is('admin/contact') ? 'active' : '' }}">
-                <i class="bi bi-envelope-fill"></i>
-                <span>Contact</span>
-            </a>
-        </li>
-    </ul>
-    <div class="sidebar-footer">
-        <span class="sidebar-version">Connectly v1.0</span>
+    <div class="sidebar-collapse" id="sidebarMenuCollapse">
+        <ul class="sidebar-menu">
+            <li>
+                <a href="{{ url('/admin/account') }}"
+                   class="{{ request()->is('admin/account') ? 'active' : '' }}">
+                    <i class="bi bi-person-circle"></i>
+                    <span>Account</span>
+                </a>
+            </li>
+            <li>
+                <a href="{{ url('/admin/posts') }}"
+                   class="{{ request()->is('admin/posts') ? 'active' : '' }}">
+                    <i class="bi bi-file-earmark-text"></i>
+                    <span>Posts</span>
+                </a>
+            </li>
+            <li>
+                <a href="{{ url('/admin/messages') }}"
+                   class="{{ request()->is('admin/messages') ? 'active' : '' }}">
+                    <i class="bi bi-chat-dots"></i>
+                    <span>Messages</span>
+                </a>
+            </li>
+            <li>
+                <a href="{{ url('/admin/contact') }}"
+                   class="{{ request()->is('admin/contact') ? 'active' : '' }}">
+                    <i class="bi bi-envelope-fill"></i>
+                    <span>Contact</span>
+                </a>
+            </li>
+        </ul>
+        <div class="sidebar-footer">
+            <span class="sidebar-version">Connectly v1.0</span>
+        </div>
     </div>
 </aside>
 
@@ -243,6 +250,28 @@ use Illuminate\Support\Str;
     border: 1px solid rgba(37,99,235,0.12);
     box-shadow: 0 2px 8px rgba(37,99,235,0.08);
 }
+.sidebar-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+.sidebar-toggler {
+    display: none;
+    background: transparent;
+    border: none;
+    color: #94a3b8;
+    font-size: 1.2rem;
+    padding: 4px 8px;
+    cursor: pointer;
+    border-radius: 6px;
+    transition: all 0.2s ease;
+}
+.sidebar-toggler:hover {
+    background: rgba(255,255,255,0.08);
+    color: #f1f5f9;
+}
+.sidebar-toggler:focus { outline: none; }
+
 .sidebar-footer {
     padding: 14px 20px;
     border-top: 1px solid rgba(255,255,255,0.04);
@@ -281,20 +310,24 @@ use Illuminate\Support\Str;
     .top-nav-links.show {
         display: flex;
     }
-    .sidebar { width: 100%; min-width: 100%; max-height: none; flex-direction: row; flex-wrap: wrap; border-right: none; border-top: 1px solid rgba(255,255,255,0.05); }
-    .sidebar-brand { display: none; }
-    .sidebar-menu { display: flex; flex-wrap: wrap; padding: 6px; gap: 3px; justify-content: center; }
+    .sidebar { width: 100%; min-width: 100%; max-height: none; flex-direction: column; border-right: none; border-top: 1px solid rgba(255,255,255,0.05); }
+    .sidebar-header { padding: 8px 12px; border-bottom: 1px solid rgba(255,255,255,0.04); }
+    .sidebar-toggler { display: flex; align-items: center; justify-content: center; }
+    .sidebar-brand { margin: 0; padding: 0; border: none; font-size: 0.7rem; }
+    .sidebar-collapse { display: none; }
+    .sidebar-collapse.show { display: block; }
+    .sidebar-menu { flex-direction: column; padding: 4px 8px; gap: 1px; }
     .sidebar-menu li { margin-bottom: 0; }
-    .sidebar-menu a { font-size: 0.78rem; padding: 8px 10px; gap: 6px; border-radius: 8px; }
-    .sidebar-menu a i { font-size: 0.9rem; width: 16px; }
-    .sidebar-footer { display: none; }
+    .sidebar-menu a { font-size: 0.85rem; padding: 10px 14px; gap: 10px; border-radius: 8px; }
+    .sidebar-menu a i { font-size: 1rem; width: 20px; }
+    .sidebar-footer { display: block; padding: 10px 16px; }
 }
 @media (max-width: 480px) {
     .top-navbar { padding: 8px 12px; }
     .top-nav-brand { font-size: 0.85rem; gap: 6px; }
     .top-nav-brand i { font-size: 1.1rem; }
-    .sidebar-menu a { font-size: 0.72rem; padding: 6px 8px; gap: 4px; }
-    .sidebar-menu a i { font-size: 0.8rem; width: 14px; }
+    .sidebar-menu a { font-size: 0.82rem; padding: 8px 12px; }
     .nav-link-custom, .nav-link-btn { font-size: 0.8rem; padding: 6px 10px; }
+    .sidebar-header { padding: 6px 10px; }
 }
 </style>
