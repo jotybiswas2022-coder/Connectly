@@ -96,6 +96,12 @@ use Illuminate\Support\Str;
 <div class="sidebar-dropdown" id="sidebarMenuCollapse">
     <ul class="sidebar-menu">
         <li>
+            <a href="{{ url('/') }}">
+                <i class="bi bi-house-door"></i>
+                <span>Home</span>
+            </a>
+        </li>
+        <li>
             <a href="{{ url('/admin/account') }}"
                class="{{ request()->is('admin/account') ? 'active' : '' }}">
                 <i class="bi bi-person-circle"></i>
@@ -122,6 +128,16 @@ use Illuminate\Support\Str;
                 <i class="bi bi-envelope-fill"></i>
                 <span>Contact</span>
             </a>
+        </li>
+        <li class="sidebar-dropdown-divider"></li>
+        <li>
+            <form action="{{ route('logout') }}" method="POST">
+                @csrf
+                <button type="submit" class="sidebar-logout-btn">
+                    <i class="bi bi-box-arrow-right"></i>
+                    <span>Logout</span>
+                </button>
+            </form>
         </li>
     </ul>
     <div class="sidebar-footer">
@@ -380,6 +396,39 @@ function closeSidebarMenu() {
 }
 .sidebar-dropdown .sidebar-footer {
     padding: 10px 16px;
+}
+.sidebar-dropdown-divider {
+    height: 1px;
+    background: rgba(255,255,255,0.06);
+    margin: 6px 12px;
+    list-style: none;
+}
+.sidebar-logout-btn {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    width: 100%;
+    padding: 12px 14px;
+    font-size: 0.88rem;
+    font-weight: 500;
+    color: #f87171;
+    background: transparent;
+    border: none;
+    border-radius: 10px;
+    cursor: pointer;
+    font-family: inherit;
+    transition: all 0.2s ease;
+    text-align: left;
+}
+.sidebar-logout-btn i {
+    font-size: 1.05rem;
+    width: 20px;
+    text-align: center;
+    flex-shrink: 0;
+}
+.sidebar-logout-btn:hover {
+    background: rgba(248,113,113,0.1);
+    color: #ef4444;
 }
 
 .sidebar-backdrop {
