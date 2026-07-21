@@ -81,12 +81,16 @@ main.content-area {
         grid-template-columns: 1fr;
         grid-template-areas:
             "navbar"
-            "sidebar"
-            "content";
+            "content"
+            "sidebar";
+    }
+    aside.sidebar {
+        order: 3;
     }
     main.content-area {
         max-height: none;
         overflow: visible;
+        min-height: calc(100vh - 57px);
     }
 }
 

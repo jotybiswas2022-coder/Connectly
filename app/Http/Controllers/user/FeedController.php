@@ -205,7 +205,7 @@ class FeedController extends Controller
     public function storePost(Request $request)
     {
         $validated = $request->validate([
-            'content' => 'nullable|string|max:600',
+            'content' => 'required_without:images|nullable|string|max:600',
             'images' => 'sometimes|nullable|array',
             'images.*' => 'image|mimes:jpeg,png,jpg,gif,webp|max:10240',
         ]);
@@ -219,12 +219,6 @@ class FeedController extends Controller
                     $imagePaths[] = $image->store('posts', 'public');
                 }
             }
-        }
-
-        if ($content === '' && empty($imagePaths)) {
-            return back()->withErrors([
-                'content' => 'Please write something or upload at least one image.',
-            ])->withInput();
         }
 
         Post::create([

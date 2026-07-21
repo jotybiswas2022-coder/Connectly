@@ -262,6 +262,7 @@ use Illuminate\Support\Str;
 /* ─── Responsive ─── */
 @media (max-width: 768px) {
     .nav-toggler { display: block; }
+    .top-nav-inner { position: relative; }
     .top-nav-links {
         display: none;
         flex-direction: column;
@@ -275,15 +276,25 @@ use Illuminate\Support\Str;
         background: #0f172a;
         border-bottom: 1px solid rgba(255,255,255,0.06);
         z-index: 99;
+        box-shadow: 0 8px 24px rgba(0,0,0,0.4);
     }
     .top-nav-links.show {
         display: flex;
     }
-    .sidebar { width: 100%; min-width: 100%; max-height: none; flex-direction: row; flex-wrap: wrap; }
+    .sidebar { width: 100%; min-width: 100%; max-height: none; flex-direction: row; flex-wrap: wrap; border-right: none; border-top: 1px solid rgba(255,255,255,0.05); }
     .sidebar-brand { display: none; }
-    .sidebar-menu { display: flex; flex-wrap: wrap; padding: 8px; gap: 4px; }
+    .sidebar-menu { display: flex; flex-wrap: wrap; padding: 6px; gap: 3px; justify-content: center; }
     .sidebar-menu li { margin-bottom: 0; }
-    .sidebar-menu a { font-size: 0.82rem; padding: 8px 12px; }
+    .sidebar-menu a { font-size: 0.78rem; padding: 8px 10px; gap: 6px; border-radius: 8px; }
+    .sidebar-menu a i { font-size: 0.9rem; width: 16px; }
     .sidebar-footer { display: none; }
+}
+@media (max-width: 480px) {
+    .top-navbar { padding: 8px 12px; }
+    .top-nav-brand { font-size: 0.85rem; gap: 6px; }
+    .top-nav-brand i { font-size: 1.1rem; }
+    .sidebar-menu a { font-size: 0.72rem; padding: 6px 8px; gap: 4px; }
+    .sidebar-menu a i { font-size: 0.8rem; width: 14px; }
+    .nav-link-custom, .nav-link-btn { font-size: 0.8rem; padding: 6px 10px; }
 }
 </style>

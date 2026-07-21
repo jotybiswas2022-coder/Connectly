@@ -373,22 +373,41 @@
 }
 
 @media (max-width: 768px) {
-    .account-page { padding: 24px 20px 40px; }
-    .acc-card { padding: 32px 28px; }
-    .acc-profile { gap: 28px; }
-    .acc-avatar-ring { width: 110px; height: 110px; }
+    .account-page { padding: 20px 16px 36px; }
+    .acc-card { padding: 28px 24px; }
+    .acc-profile { gap: 24px; }
+    .acc-avatar-ring { width: 100px; height: 100px; }
+    .page-header h1 { font-size: 1.4rem; }
+    .page-header h1::before { height: 22px; }
 }
 @media (max-width: 640px) {
-    .account-page { padding: 20px 16px 36px; }
-    .page-header h1 { font-size: 1.35rem; }
-    .acc-card { padding: 28px 20px; }
-    .acc-profile { flex-direction: column; align-items: center; gap: 24px; }
-    .acc-avatar-ring { width: 100px; height: 100px; }
-    .acc-avatar-fallback { font-size: 2.2rem; }
-    .acc-name { text-align: center; font-size: 1.25rem; }
+    .account-page { padding: 16px 12px 28px; }
+    .page-header h1 { font-size: 1.25rem; }
+    .page-header .sub { font-size: 0.8rem; padding-left: 12px; }
+    .acc-card { padding: 24px 16px; border-radius: 14px; }
+    .acc-profile { flex-direction: column; align-items: center; gap: 20px; }
+    .acc-avatar-ring { width: 90px; height: 90px; padding: 3px; }
+    .acc-avatar-fallback { font-size: 2rem; }
+    .acc-name { text-align: center; font-size: 1.15rem; margin-bottom: 18px; }
+    .acc-detail-grid { gap: 10px; margin-bottom: 20px; }
+    .acc-detail-item { padding: 10px 12px; gap: 10px; }
     .acc-detail-item:hover { transform: none; }
+    .acc-detail-icon { width: 32px; height: 32px; }
+    .acc-detail-icon svg { width: 14px; height: 14px; }
+    .acc-detail-value { font-size: 0.82rem; }
     .acc-actions { justify-content: center; }
-    .acc-btn { width: 100%; justify-content: center; }
+    .acc-btn { width: 100%; justify-content: center; padding: 10px 20px; font-size: 0.8rem; }
+    .acc-online-dot { width: 14px; height: 14px; bottom: 4px; right: 4px; border-width: 2px; }
+}
+@media (max-width: 400px) {
+    .account-page { padding: 12px 8px 24px; }
+    .page-header { margin-bottom: 20px; }
+    .page-header h1 { font-size: 1.1rem; }
+    .page-header h1::before { height: 18px; width: 3px; }
+    .acc-card { padding: 18px 12px; border-radius: 12px; }
+    .acc-avatar-ring { width: 76px; height: 76px; }
+    .acc-avatar-fallback { font-size: 1.6rem; }
+    .acc-name { font-size: 1rem; }
 }
 
 ::-webkit-scrollbar { width: 6px; }

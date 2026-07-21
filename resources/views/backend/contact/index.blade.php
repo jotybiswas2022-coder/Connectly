@@ -194,24 +194,33 @@
 .empty-title { font-weight: 600; font-size: 16px; color: var(--cmuted); }
 .empty-sub { font-size: 13px; color: var(--csub); }
 @media (max-width: 992px) {
-    .contact-page { padding: 20px 22px; }
+    .contact-page { padding: 20px 18px; }
     .contact-table td, .contact-table th { padding: 12px 14px; font-size: 13px; }
 }
 @media (max-width: 768px) {
-    .contact-page { padding: 16px; }
-    .contact-table td, .contact-table th { padding: 10px 12px; font-size: 13px; }
-    .contact-header { padding: 14px 16px; }
-    .contact-header-title { font-size: 16px; }
-    .contact-modal-body { padding: 18px; }
+    .contact-page { padding: 14px; }
+    .contact-table td, .contact-table th { padding: 10px 10px; font-size: 12px; }
+    .contact-header { padding: 12px 14px; }
+    .contact-header-title { font-size: 15px; }
+    .contact-modal-body { padding: 16px; }
+    .contact-table th:nth-child(4), .contact-table td:nth-child(4),
     .contact-table th:nth-child(5), .contact-table td:nth-child(5),
-    .contact-table th:nth-child(6), .contact-table td:nth-child(6) { display: none; } /* hide date + time */
-    .btn-view-msg { padding: 5px 10px; font-size: 12px; }
+    .contact-table th:nth-child(6), .contact-table td:nth-child(6) { display: none; } /* hide message, date + time */
+    .btn-view-msg { padding: 5px 10px; font-size: 11px; white-space: nowrap; }
+    .contact-header-sub { font-size: 12px; }
+    .idx { font-size: 11px; }
 }
 @media (max-width: 480px) {
-    .contact-page { padding: 12px; }
-    .contact-table td, .contact-table th { padding: 8px 8px; font-size: 12px; }
-    .contact-header-inner { flex-direction: column; align-items: flex-start; gap: 8px; }
-    .contact-header-badge { font-size: 12px; padding: 6px 12px; }
+    .contact-page { padding: 10px; }
+    .contact-table td, .contact-table th { padding: 6px 6px; font-size: 11px; }
+    .contact-header-inner { flex-direction: column; align-items: flex-start; gap: 6px; }
+    .contact-header-badge { font-size: 11px; padding: 5px 10px; }
+    .contact-header-title { font-size: 14px; }
+    .contact-header { padding: 10px 12px; }
+    .contact-table th:nth-child(3), .contact-table td:nth-child(3) { display: none; } /* hide email on very tiny */
+}
+@media (max-width: 380px) {
+    .contact-table th:nth-child(1), .contact-table td:nth-child(1) { display: none; } /* hide index on tiny */
 }
 </style>
 

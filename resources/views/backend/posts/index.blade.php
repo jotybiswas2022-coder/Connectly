@@ -72,12 +72,13 @@
                 <tbody>
                 @forelse($posts as $post)
 
-                @php
-                    $authorName = optional($post->user)->name ?? '—';
-                    $authorInitial = strtoupper(substr($authorName, 0, 1));
-                    $contentPreview = strip_tags($post->content ?? '');
-                    $hasImage = !empty($post->image_path);
-                @endphp
+@php
+    $authorName = optional($post->user)->name ?? '—';
+    $authorInitial = strtoupper(substr($authorName, 0, 1));
+    $contentPreview = strip_tags($post->content ?? '');
+    $postImages = $post->images ?? [];
+    $firstImage = !empty($postImages) ? $postImages[0] : null;
+@endphp
 
                 <tr class="{{ $post->is_pinned ? 'pinned-row' : '' }}">
                     <td>
@@ -110,8 +111,8 @@
 
                     {{-- Image --}}
                     <td>
-                        @if($hasImage)
-                            <img src="{{ config('app.storage_url') }}{{ $post->image_path }}"
+                        @if($firstImage)
+                            <img src="{{ config('app.storage_url') }}{{ $firstImage }}"
                                  alt="Post image"
                                  class="post-thumb"
                                  loading="lazy">
@@ -157,7 +158,7 @@
                                 data-author="{{ $authorName }}"
                                 data-email="{{ optional($post->user)->email }}"
                                 data-content="{{ $post->content }}"
-                                data-image="{{ $post->image_path ? config('app.storage_url') . $post->image_path : '' }}"
+                                data-image="{{ $firstImage ? config('app.storage_url') . $firstImage : '' }}"
                                 data-pinned="{{ $post->is_pinned ? 'true' : 'false' }}"
                                 data-reactions="{{ $post->reactions_count ?? 0 }}"
                                 data-comments="{{ $post->comments_count ?? 0 }}"
@@ -1007,38 +1008,57 @@
         .search-wrap { max-width: 320px; }
         .user-email { display: none; }
         thead th, tbody td { padding: 12px 14px; }
-        .content-preview { max-width: 240px; }
+        .content-preview { max-width: 180px; }
     }
     @media (max-width: 768px) {
-        .posts-page { padding: 20px 14px 36px; }
-        .page-header h1 { font-size: 1.35rem; }
-        .page-header h1::before { height: 22px; }
-        .page-header { flex-direction: column; gap: 12px; }
-        .card-toolbar { padding: 14px 16px; flex-wrap: wrap; gap: 10px; }
+        .posts-page { padding: 18px 12px 32px; }
+        .page-header h1 { font-size: 1.25rem; }
+        .page-header h1::before { height: 20px; }
+        .page-header { flex-direction: column; gap: 10px; }
+        .card-toolbar { padding: 12px 14px; flex-wrap: wrap; gap: 8px; }
         .search-wrap { max-width: 100%; }
-        thead th, tbody td { padding: 10px 10px; }
-        .user-cell { gap: 8px; }
-        .avatar { width: 30px; height: 30px; font-size: .65rem; border-radius: 7px; }
-        .content-preview { max-width: 140px; }
-        .post-thumb { width: 32px; height: 32px; }
-        .stats-cell { gap: 6px; }
-        .table-footer { flex-direction: column; align-items: flex-start; padding: 14px 16px; }
-        .stats-strip { gap: 8px; }
-        .stat-pill { padding: 8px 14px; font-size: .75rem; }
+        .search-wrap input { font-size: 0.8rem; padding: 8px 10px; }
+        .search-button { padding: 6px 14px; font-size: 0.75rem; }
+        thead th, tbody td { padding: 8px 8px; font-size: 0.78rem; }
+        .user-cell { gap: 6px; }
+        .avatar { width: 28px; height: 28px; font-size: .6rem; border-radius: 6px; }
+        .user-name { font-size: 0.78rem; }
+        .content-preview { max-width: 120px; }
+        .content-text { font-size: 0.75rem; }
+        .post-thumb { width: 28px; height: 28px; }
+        .post-thumb:hover { transform: scale(1.4); }
+        .stats-cell { gap: 4px; }
+        .stat-item { font-size: 0.7rem; }
+        .status-badge { font-size: 0.65rem; padding: 2px 8px; }
+        .time-badge { font-size: 0.65rem; padding: 3px 8px; }
+        .table-footer { flex-direction: column; align-items: flex-start; padding: 12px 14px; gap: 8px; font-size: 0.72rem; }
+        .stats-strip { gap: 6px; }
+        .stat-pill { padding: 6px 12px; font-size: .7rem; }
+        .btn-icon { width: 36px; height: 36px; }
         .detail-grid { grid-template-columns: 1fr; gap: 4px 0; }
-        .detail-label { padding-top: 8px; }
-        .btn-icon { width: 38px; height: 38px; } /* bigger touch target */
+        .detail-label { padding-top: 6px; }
+        thead th:nth-child(4), tbody td:nth-child(4) { display: none; } /* hide image column on mobile */
+        .modal-header { padding: 14px 16px; }
+        .modal-body { padding: 14px 16px !important; }
+        .modal-footer { padding: 12px 16px; flex-direction: column-reverse; gap: 6px; }
+        .btn-secondary-custom, .btn-primary-custom { width: 100%; justify-content: center; }
+        .edit-pinned-wrap { margin-top: 12px; }
     }
     @media (max-width: 480px) {
-        .posts-page { padding: 14px 10px 28px; }
-        .page-header h1 { font-size: 1.15rem; }
-        .stat-pill { padding: 6px 10px; font-size: .7rem; }
-        thead th { font-size: .65rem; padding: 8px 6px; }
-        tbody td { padding: 8px 6px; }
+        .posts-page { padding: 12px 8px 24px; }
+        .page-header h1 { font-size: 1.1rem; }
+        .page-header .sub { font-size: 0.78rem; padding-left: 12px; }
+        .stat-pill { padding: 5px 8px; font-size: .65rem; }
+        thead th { font-size: .6rem; padding: 6px 4px; }
+        tbody td { padding: 6px 4px; font-size: 0.72rem; }
         thead th:nth-child(6), tbody td:nth-child(6) { display: none; } /* hide stats on tiny */
         thead th:nth-child(5), tbody td:nth-child(5) { display: none; } /* hide status on tiny */
-        .content-preview { max-width: 120px; }
-        .btn-icon { width: 36px; height: 36px; }
+        .content-preview { max-width: 80px; }
+        .btn-icon { width: 32px; height: 32px; font-size: 0.8rem; }
+        .stats-strip { gap: 4px; }
+        thead th:nth-child(1), tbody td:nth-child(1) { display: none; } /* hide # on tiny */
+        .pagination { gap: 2px; }
+        .pagination .page-item .page-link { min-width: 28px; height: 28px; font-size: 0.65rem; padding: 0 6px; }
     }
 
     /* ── Scrollbar ── */

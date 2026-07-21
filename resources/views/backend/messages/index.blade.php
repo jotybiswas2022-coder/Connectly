@@ -979,33 +979,48 @@
         .search-wrap { max-width: 320px; }
         .user-email { display: none; }
         thead th, tbody td { padding: 12px 14px; }
-        .msg-preview { max-width: 280px; }
+        .msg-preview { max-width: 220px; }
     }
     @media (max-width: 768px) {
-        .inbox-page { padding: 20px 14px 36px; }
-        .page-header h1 { font-size: 1.35rem; }
-        .page-header h1::before { height: 22px; }
-        .page-header { flex-direction: column; gap: 12px; }
-        .card-toolbar { padding: 14px 16px; flex-wrap: wrap; gap: 10px; }
+        .inbox-page { padding: 18px 12px 32px; }
+        .page-header h1 { font-size: 1.25rem; }
+        .page-header h1::before { height: 20px; }
+        .page-header { flex-direction: column; gap: 10px; }
+        .card-toolbar { padding: 12px 14px; flex-wrap: wrap; gap: 8px; }
         .search-wrap { max-width: 100%; }
-        thead th, tbody td { padding: 10px 10px; }
-        .user-cell { gap: 8px; }
-        .avatar { width: 30px; height: 30px; font-size: .65rem; border-radius: 7px; }
-        .msg-preview { max-width: 160px; }
-        .table-footer { flex-direction: column; align-items: flex-start; padding: 14px 16px; }
-        .stats-strip { gap: 8px; }
-        .stat-pill { padding: 8px 14px; font-size: .75rem; }
-        .btn-icon { width: 38px; height: 38px; }
+        .search-wrap input { font-size: 0.8rem; padding: 8px 10px; }
+        .search-button { padding: 6px 14px; font-size: 0.75rem; }
+        thead th, tbody td { padding: 8px 8px; font-size: 0.78rem; }
+        .user-cell { gap: 6px; }
+        .avatar { width: 28px; height: 28px; font-size: .6rem; border-radius: 6px; }
+        .user-name { font-size: 0.78rem; }
+        .msg-preview { max-width: 120px; }
+        .msg-text { font-size: 0.75rem; }
+        .time-badge { font-size: 0.65rem; padding: 3px 8px; }
+        .table-footer { flex-direction: column; align-items: flex-start; padding: 12px 14px; gap: 8px; font-size: 0.72rem; }
+        .stats-strip { gap: 6px; }
+        .stat-pill { padding: 6px 12px; font-size: .7rem; }
+        .btn-icon { width: 36px; height: 36px; font-size: 0.9rem; }
+        thead th:nth-child(4), tbody td:nth-child(4) { display: none; } /* hide message preview on mobile */
+        .detail-grid { grid-template-columns: 1fr; gap: 4px 0; }
+        .detail-label { padding-top: 6px; }
+        .modal-header { padding: 14px 16px; }
+        .modal-body { padding: 14px 16px !important; }
+        .modal-footer { padding: 12px 16px; flex-direction: column-reverse; gap: 6px; }
+        .btn-secondary-custom, .btn-primary-custom { width: 100%; justify-content: center; }
     }
     @media (max-width: 480px) {
-        .inbox-page { padding: 14px 10px 28px; }
-        .page-header h1 { font-size: 1.15rem; }
-        .stat-pill { padding: 6px 10px; font-size: .7rem; }
-        thead th { font-size: .65rem; padding: 8px 6px; }
-        tbody td { padding: 8px 6px; }
-        .msg-preview { max-width: 120px; }
-        .btn-icon { width: 36px; height: 36px; }
+        .inbox-page { padding: 12px 8px 24px; }
+        .page-header h1 { font-size: 1.1rem; }
+        .page-header .sub { font-size: 0.78rem; padding-left: 12px; }
+        .stat-pill { padding: 5px 8px; font-size: .65rem; }
+        thead th { font-size: .6rem; padding: 6px 4px; }
+        tbody td { padding: 6px 4px; font-size: 0.72rem; }
+        .msg-preview { max-width: 80px; }
+        .btn-icon { width: 32px; height: 32px; font-size: 0.8rem; }
         thead th:nth-child(3), tbody td:nth-child(3) { display: none; } /* hide receiver on tiny */
+        .stats-strip { gap: 4px; }
+        thead th:nth-child(1), tbody td:nth-child(1) { display: none; } /* hide # on tiny */
     }
 
         /* ── Scrollbar ── */

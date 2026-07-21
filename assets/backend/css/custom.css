@@ -1,6 +1,6 @@
 .sidebar{
     background: linear-gradient(180deg, #212529, #343a40);
-    min-height: 130vh;
+    min-height: 100%;
     padding-top: 20px;
 }
 
@@ -43,3 +43,9 @@
     border-left: 4px solid #0d6efd;
 }
 
+@media (max-width: 768px) {
+    .sidebar{
+        min-height: auto;
+        padding-top: 0;
+    }
+}

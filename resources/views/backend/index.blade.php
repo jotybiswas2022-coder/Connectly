@@ -608,20 +608,47 @@
     .db-header-right { width:100%; justify-content:space-around; }
     .db-header-stat { min-width:0; flex:1; }
     .db-th-email, .db-td-email { display:none; }
+    .db-admin-logo-img, .db-admin-logo-fallback { width: 52px; height: 52px; }
+    .db-admin-logo-fallback { font-size: 1.2rem; }
+    .db-header-title { font-size: 1.35rem; }
 }
 @media (max-width: 640px) {
     .db-page { padding:16px 12px; }
     .db-header { padding:20px 18px; border-radius:16px; }
-    .db-header-title { font-size:1.25rem; }
-    .db-header-right { gap:8px; }
-    .db-header-stat { padding:8px 12px; }
-    .db-header-stat-num { font-size:1.1rem; }
+    .db-header-title { font-size: 1.1rem; }
+    .db-header-left { gap: 12px; }
+    .db-header-right { gap:6px; flex-wrap: wrap; }
+    .db-header-stat { padding:6px 10px; min-width: 70px; }
+    .db-header-stat-num { font-size: 1rem; }
+    .db-header-stat-label { font-size: 0.6rem; }
     .db-stats { grid-template-columns:1fr; gap:12px; }
     .db-messages-header { flex-direction:column; align-items:flex-start; }
     .db-th-date, .db-td-date { display:none; }
     .db-th-time, .db-td-time { display:none; }
     .db-messages { border-radius:14px; }
     .db-stat-card { padding:16px 18px; }
+    .db-greeting { font-size: 0.72rem; }
+    .db-header-sub { font-size: 0.78rem; }
+    .db-admin-logo-img, .db-admin-logo-fallback { width: 44px; height: 44px; }
+    .db-admin-logo-fallback { font-size: 1rem; }
+    .db-admin-logo-dot { width: 10px; height: 10px; bottom: 0; right: 0; }
+    .db-stat-icon { width: 40px; height: 40px; font-size: 1.1rem; }
+    .db-stat-value { font-size: 1.2rem; }
+}
+@media (max-width: 400px) {
+    .db-page { padding: 12px 8px; }
+    .db-header { padding: 14px 12px; }
+    .db-header-right { gap: 4px; }
+    .db-header-stat { padding: 4px 6px; min-width: 60px; }
+    .db-header-stat-num { font-size: 0.85rem; }
+    .db-header-title { font-size: 1rem; }
+    .db-messages-header { padding: 14px 16px; }
+    .db-messages-title { font-size: 0.95rem; }
+    .db-messages-sub { font-size: 0.7rem; }
+    .db-view-btn { font-size: 0.7rem; padding: 4px 8px; }
+    .db-action-btn { width: 30px; height: 30px; font-size: 0.8rem; }
+    .db-td, .db-th { padding: 8px 8px; font-size: 0.75rem; }
+    .db-avatar { width: 26px; height: 26px; font-size: 0.65rem; }
 }
 </style>
 
