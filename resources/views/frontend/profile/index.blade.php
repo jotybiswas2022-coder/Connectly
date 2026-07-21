@@ -1734,6 +1734,12 @@
     margin-top: 0.1rem;
 }
 
+.connectly-reaction-wrap {
+    position: relative;
+    display: inline-flex;
+    align-items: center;
+}
+
 .connectly-react-btn {
     display: inline-flex;
     align-items: center;
