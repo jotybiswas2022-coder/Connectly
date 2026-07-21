@@ -27,7 +27,6 @@
 
             <form action="{{ route('profile.update', $user->id) }}" method="POST" enctype="multipart/form-data">
                 @csrf @method('PUT')
-                <input type="hidden" name="redirect_to" value="settings">
 
                 <div class="cl-settings-grid">
                     <div class="cl-settings-field">
@@ -36,6 +35,15 @@
                             <input type="text" name="name" value="{{ old('name', $user->name) }}" maxlength="255" required placeholder="Enter your full name" class="@error('name') is-invalid @enderror">
                             <div class="cl-settings-input-focus-ring"></div>
                             @error('name') <span class="cl-settings-field-error"><i class="bi bi-exclamation-circle"></i> {{ $message }}</span> @enderror
+                        </div>
+                    </div>
+
+                    <div class="cl-settings-field">
+                        <label><i class="bi bi-chat-quote"></i> Bio</label>
+                        <div class="cl-settings-input-wrap">
+                            <textarea name="bio" rows="3" maxlength="500" placeholder="Tell us about yourself..." class="cl-settings-textarea @error('bio') is-invalid @enderror">{{ old('bio', $user->bio) }}</textarea>
+                            <div class="cl-settings-input-focus-ring"></div>
+                            @error('bio') <span class="cl-settings-field-error"><i class="bi bi-exclamation-circle"></i> {{ $message }}</span> @enderror
                         </div>
                     </div>
 
@@ -295,6 +303,38 @@
 
 .cl-settings-input-wrap input:focus ~ .cl-settings-input-focus-ring {
     opacity: 0.3;
+}
+
+.cl-settings-textarea {
+    width: 100%;
+    padding: 0.65rem 0.85rem;
+    border: 1.5px solid var(--cl-settings-border);
+    border-radius: var(--cl-settings-radius-xs);
+    background: var(--cl-settings-bg);
+    color: var(--cl-settings-text);
+    font-size: 0.88rem;
+    transition: all 0.25s ease;
+    outline: none;
+    font-family: inherit;
+    box-sizing: border-box;
+    position: relative;
+    z-index: 1;
+    resize: vertical;
+    line-height: 1.5;
+}
+
+.cl-settings-textarea:focus {
+    border-color: var(--cl-settings-primary);
+    background: var(--cl-settings-surface);
+}
+
+.cl-settings-textarea:focus ~ .cl-settings-input-focus-ring {
+    opacity: 0.3;
+}
+
+.cl-settings-textarea.is-invalid {
+    border-color: var(--cl-settings-danger);
+    background: #fef2f2;
 }
 
 .cl-settings-input-wrap input.is-invalid {

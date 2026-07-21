@@ -108,12 +108,14 @@ class ProfileController extends Controller
 
         $validated = $request->validate([
             'name' => 'required|string|max:255',
+            'bio' => 'nullable|string|max:500',
             'avatar' => 'sometimes|nullable|image|mimes:jpeg,png,jpg,gif,webp|max:5120',
             'remove_avatar' => 'nullable|boolean',
         ]);
 
         $user = User::findOrFail((int) $user_id);
         $user->name = trim((string) $validated['name']);
+        $user->bio = $validated['bio'] ? trim((string) $validated['bio']) : null;
 
         $removeAvatar = (bool) ($validated['remove_avatar'] ?? false);
 
@@ -129,11 +131,7 @@ class ProfileController extends Controller
 
         $user->save();
 
-        $redirect = ($request->input('redirect_to') === 'settings')
-            ? route('profile.settings', $user->id)
-            : route('profile.show', $user->id);
-
-        return redirect($redirect)->with('success', 'Profile updated successfully.');
+        return redirect()->route('profile.show', $user->id)->with('success', 'Profile updated successfully.');
     }
 
     public function togglePinPost($user_id, Post $post)

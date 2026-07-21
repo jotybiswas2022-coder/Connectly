@@ -68,11 +68,13 @@
                 </span>
             </div>
 
-            {{-- Bio / About placeholder --}}
+            {{-- Bio / About --}}
+            @if($user->bio)
             <p class="cl-profile-bio">
                 <i class="bi bi-quote"></i>
-                Exploring ideas, sharing moments, building connections.
+                {{ $user->bio }}
             </p>
+            @endif
         </div>
 
         {{-- ===== SETTINGS GEAR (OWNER ONLY) ===== --}}
