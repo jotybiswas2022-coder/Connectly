@@ -1100,7 +1100,11 @@ document.addEventListener('DOMContentLoaded', function () {
                 if (entry.isIntersecting) {
                     const card = entry.target;
                     const delay = parseInt(card.dataset.delay) || 0;
+                    card.style.animation = 'none';
+                    card.offsetHeight;
+                    card.style.animation = '';
                     card.style.animationDelay = delay + 'ms';
+                    card.style.opacity = '';
                     observer.unobserve(card);
                 }
             });
@@ -1114,6 +1118,7 @@ document.addEventListener('DOMContentLoaded', function () {
         cards.forEach(card => {
             const delay = parseInt(card.dataset.delay) || 0;
             card.style.animationDelay = delay + 'ms';
+            card.style.opacity = '';
         });
     }
 
