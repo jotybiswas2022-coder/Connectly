@@ -10,9 +10,14 @@ use Illuminate\Support\Str;
             <span>Admin Dashboard</span>
         </a>
 
-        <button class="nav-toggler" type="button" onclick="document.getElementById('navbarTopNav').classList.toggle('show')">
-            <span class="navbar-toggler-icon"></span>
-        </button>
+        <div class="nav-toggler-group">
+            <button class="nav-toggler" type="button" onclick="document.getElementById('navbarTopNav').classList.toggle('show')" aria-label="Toggle user menu">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <button class="sidebar-nav-toggler" type="button" onclick="document.getElementById('sidebarMenuCollapse').classList.toggle('show')" aria-label="Toggle navigation menu">
+                <i class="bi bi-three-dots-vertical"></i>
+            </button>
+        </div>
 
         <div class="top-nav-links" id="navbarTopNav">
             <a class="nav-link-custom {{ request()->is('/') ? 'active' : '' }}" href="/">
@@ -45,14 +50,9 @@ use Illuminate\Support\Str;
 
 <!-- Sidebar -->
 <aside class="sidebar">
-    <div class="sidebar-header">
-        <div class="sidebar-brand">
-            <i class="bi bi-layout-sidebar"></i>
-            <span>Navigation</span>
-        </div>
-        <button class="sidebar-toggler" type="button" onclick="document.getElementById('sidebarMenuCollapse').classList.toggle('show')" aria-label="Toggle navigation menu">
-            <i class="bi bi-three-dots-vertical"></i>
-        </button>
+    <div class="sidebar-brand">
+        <i class="bi bi-layout-sidebar"></i>
+        <span>Navigation</span>
     </div>
     <div class="sidebar-collapse" id="sidebarMenuCollapse">
         <ul class="sidebar-menu">
@@ -122,6 +122,11 @@ use Illuminate\Support\Str;
     font-size: 1.3rem;
     color: #60A5FA;
 }
+.nav-toggler-group {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+}
 .nav-toggler {
     display: none;
     background: transparent;
@@ -132,6 +137,22 @@ use Illuminate\Support\Str;
     cursor: pointer;
 }
 .nav-toggler:focus { outline: none; }
+.sidebar-nav-toggler {
+    display: none;
+    background: transparent;
+    border: none;
+    color: #94a3b8;
+    font-size: 1.2rem;
+    padding: 4px 8px;
+    cursor: pointer;
+    border-radius: 6px;
+    transition: all 0.2s ease;
+}
+.sidebar-nav-toggler:hover {
+    background: rgba(255,255,255,0.08);
+    color: #f1f5f9;
+}
+.sidebar-nav-toggler:focus { outline: none; }
 
 .top-nav-links {
     display: flex;
@@ -250,28 +271,6 @@ use Illuminate\Support\Str;
     border: 1px solid rgba(37,99,235,0.12);
     box-shadow: 0 2px 8px rgba(37,99,235,0.08);
 }
-.sidebar-header {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-}
-.sidebar-toggler {
-    display: none;
-    background: transparent;
-    border: none;
-    color: #94a3b8;
-    font-size: 1.2rem;
-    padding: 4px 8px;
-    cursor: pointer;
-    border-radius: 6px;
-    transition: all 0.2s ease;
-}
-.sidebar-toggler:hover {
-    background: rgba(255,255,255,0.08);
-    color: #f1f5f9;
-}
-.sidebar-toggler:focus { outline: none; }
-
 .sidebar-footer {
     padding: 14px 20px;
     border-top: 1px solid rgba(255,255,255,0.04);
@@ -291,6 +290,7 @@ use Illuminate\Support\Str;
 /* ─── Responsive ─── */
 @media (max-width: 768px) {
     .nav-toggler { display: block; }
+    .sidebar-nav-toggler { display: flex; align-items: center; justify-content: center; }
     .top-nav-inner { position: relative; }
     .top-nav-links {
         display: none;
@@ -311,9 +311,7 @@ use Illuminate\Support\Str;
         display: flex;
     }
     .sidebar { width: 100%; min-width: 100%; max-height: none; flex-direction: column; border-right: none; border-top: 1px solid rgba(255,255,255,0.05); }
-    .sidebar-header { padding: 8px 12px; border-bottom: 1px solid rgba(255,255,255,0.04); }
-    .sidebar-toggler { display: flex; align-items: center; justify-content: center; }
-    .sidebar-brand { margin: 0; padding: 0; border: none; font-size: 0.7rem; }
+    .sidebar-brand { display: none; }
     .sidebar-collapse { display: none; }
     .sidebar-collapse.show { display: block; }
     .sidebar-menu { flex-direction: column; padding: 4px 8px; gap: 1px; }
@@ -328,6 +326,5 @@ use Illuminate\Support\Str;
     .top-nav-brand i { font-size: 1.1rem; }
     .sidebar-menu a { font-size: 0.82rem; padding: 8px 12px; }
     .nav-link-custom, .nav-link-btn { font-size: 0.8rem; padding: 6px 10px; }
-    .sidebar-header { padding: 6px 10px; }
 }
 </style>
