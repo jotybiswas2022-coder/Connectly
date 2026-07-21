@@ -75,82 +75,84 @@
             </p>
         </div>
 
-        {{-- ===== EDIT PROFILE BUTTON (OWNER ONLY) ===== --}}
+        {{-- ===== SETTINGS GEAR (OWNER ONLY) ===== --}}
         @if($isOwner)
-        <div class="cl-profile-edit-section">
-            {{-- Toggle Button --}}
-            <button type="button" class="cl-profile-edit-toggle" id="editToggleBtn" aria-expanded="false">
-                <div class="cl-profile-edit-toggle-icon">
-                    <i class="bi bi-sliders2"></i>
-                </div>
-                <div class="cl-profile-edit-toggle-text">
-                    <span class="cl-profile-edit-toggle-title">Profile Settings</span>
-                    <span class="cl-profile-edit-toggle-sub">Manage your profile information</span>
-                </div>
-                <div class="cl-profile-edit-toggle-arrow">
-                    <i class="bi bi-chevron-down"></i>
-                </div>
-            </button>
+        <button type="button" class="cl-profile-settings-btn" data-bs-toggle="modal" data-bs-target="#profileSettingsModal" title="Profile Settings">
+            <i class="bi bi-gear-fill"></i>
+        </button>
+        @endif
 
-            {{-- Collapsible Form --}}
-            <div class="cl-profile-edit-collapse" id="editCollapse">
-                <div class="cl-profile-edit-collapse-inner">
-                    <div class="cl-profile-edit-divider"></div>
-
-                    <form action="{{ route('profile.update', $user->id) }}" method="POST" enctype="multipart/form-data">
-                        @csrf @method('PUT')
-
-                        <div class="cl-profile-edit-grid">
-                            <div class="cl-profile-edit-field">
-                                <label><i class="bi bi-person"></i> Display Name</label>
-                                <div class="cl-profile-input-wrap">
-                                    <input type="text" name="name" value="{{ old('name', $user->name) }}" maxlength="255" required placeholder="Enter your full name" class="@error('name') is-invalid @enderror">
-                                    <div class="cl-profile-input-focus-ring"></div>
-                                    @error('name') <span class="cl-profile-field-error"><i class="bi bi-exclamation-circle"></i> {{ $message }}</span> @enderror
-                                </div>
+        {{-- ===== SETTINGS MODAL (OWNER ONLY) ===== --}}
+        @if($isOwner)
+        <div class="modal fade" id="profileSettingsModal" tabindex="-1" aria-labelledby="profileSettingsModalLabel" aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered">
+                <div class="cl-profile-modal-content">
+                    <div class="cl-profile-modal-header">
+                        <div class="cl-profile-modal-header-left">
+                            <div class="cl-profile-modal-icon"><i class="bi bi-sliders2"></i></div>
+                            <div>
+                                <h5 class="cl-profile-modal-title" id="profileSettingsModalLabel">Profile Settings</h5>
+                                <span class="cl-profile-modal-sub">Manage your profile information</span>
                             </div>
+                        </div>
+                        <button type="button" class="cl-profile-modal-close" data-bs-dismiss="modal"><i class="bi bi-x-lg"></i></button>
+                    </div>
+                    <div class="cl-profile-modal-body">
+                        <form action="{{ route('profile.update', $user->id) }}" method="POST" enctype="multipart/form-data">
+                            @csrf @method('PUT')
 
-                            <div class="cl-profile-edit-field">
-                                <label><i class="bi bi-image"></i> Profile Picture</label>
-                                <div class="cl-profile-upload-wrap">
-                                    <input type="file" name="avatar" accept="image/*" id="avatarInput" class="cl-profile-upload-input">
-                                    <label for="avatarInput" class="cl-profile-upload-label">
-                                        <div class="cl-profile-upload-icon">
-                                            <i class="bi bi-cloud-arrow-up"></i>
-                                        </div>
-                                        <div class="cl-profile-upload-text">
-                                            <span class="cl-profile-upload-title">Choose an image</span>
-                                            <span class="cl-profile-upload-hint">JPEG, PNG, GIF, WebP (max 5MB)</span>
-                                        </div>
-                                    </label>
-                                    <div class="cl-profile-upload-preview" id="avatarPreview">
-                                        <img src="" alt="Preview" id="avatarPreviewImg">
-                                        <button type="button" class="cl-profile-upload-preview-remove" id="avatarPreviewRemove" title="Remove">
-                                            <i class="bi bi-x-lg"></i>
-                                        </button>
+                            <div class="cl-profile-edit-grid">
+                                <div class="cl-profile-edit-field">
+                                    <label><i class="bi bi-person"></i> Display Name</label>
+                                    <div class="cl-profile-input-wrap">
+                                        <input type="text" name="name" value="{{ old('name', $user->name) }}" maxlength="255" required placeholder="Enter your full name" class="@error('name') is-invalid @enderror">
+                                        <div class="cl-profile-input-focus-ring"></div>
+                                        @error('name') <span class="cl-profile-field-error"><i class="bi bi-exclamation-circle"></i> {{ $message }}</span> @enderror
                                     </div>
                                 </div>
-                                @error('avatar') <span class="cl-profile-field-error"><i class="bi bi-exclamation-circle"></i> {{ $message }}</span> @enderror
+
+                                <div class="cl-profile-edit-field">
+                                    <label><i class="bi bi-image"></i> Profile Picture</label>
+                                    <div class="cl-profile-upload-wrap">
+                                        <input type="file" name="avatar" accept="image/*" id="avatarInput" class="cl-profile-upload-input">
+                                        <label for="avatarInput" class="cl-profile-upload-label">
+                                            <div class="cl-profile-upload-icon">
+                                                <i class="bi bi-cloud-arrow-up"></i>
+                                            </div>
+                                            <div class="cl-profile-upload-text">
+                                                <span class="cl-profile-upload-title">Choose an image</span>
+                                                <span class="cl-profile-upload-hint">JPEG, PNG, GIF, WebP (max 5MB)</span>
+                                            </div>
+                                        </label>
+                                        <div class="cl-profile-upload-preview" id="avatarPreview">
+                                            <img src="" alt="Preview" id="avatarPreviewImg">
+                                            <button type="button" class="cl-profile-upload-preview-remove" id="avatarPreviewRemove" title="Remove">
+                                                <i class="bi bi-x-lg"></i>
+                                            </button>
+                                        </div>
+                                    </div>
+                                    @error('avatar') <span class="cl-profile-field-error"><i class="bi bi-exclamation-circle"></i> {{ $message }}</span> @enderror
+                                </div>
                             </div>
-                        </div>
 
-                        @if ($user->avatar_path)
-                        <label class="cl-profile-checkbox">
-                            <input type="checkbox" name="remove_avatar" value="1">
-                            <span class="cl-profile-checkbox-mark">
-                                <i class="bi bi-trash3"></i>
-                            </span>
-                            <span>Remove current picture</span>
-                        </label>
-                        @endif
+                            @if ($user->avatar_path)
+                            <label class="cl-profile-checkbox">
+                                <input type="checkbox" name="remove_avatar" value="1">
+                                <span class="cl-profile-checkbox-mark">
+                                    <i class="bi bi-trash3"></i>
+                                </span>
+                                <span>Remove current picture</span>
+                            </label>
+                            @endif
 
-                        <div class="cl-profile-edit-footer">
-                            <button type="submit" class="cl-profile-btn cl-profile-btn-primary">
-                                <i class="bi bi-check2"></i>
-                                <span>Update Profile</span>
-                            </button>
-                        </div>
-                    </form>
+                            <div class="cl-profile-edit-footer">
+                                <button type="submit" class="cl-profile-btn cl-profile-btn-primary">
+                                    <i class="bi bi-check2"></i>
+                                    <span>Update Profile</span>
+                                </button>
+                            </div>
+                        </form>
+                    </div>
                 </div>
             </div>
         </div>
@@ -533,6 +535,7 @@
 .cl-profile-header {
     text-align: center;
     padding: 0.5rem 1.5rem 0;
+    position: relative;
 }
 
 .cl-profile-avatar-wrap {
@@ -685,6 +688,99 @@
     font-size: 0.9rem;
     margin-right: 4px;
     opacity: 0.6;
+}
+
+/* ===== SETTINGS GEAR BUTTON ===== */
+.cl-profile-settings-btn {
+    position: absolute;
+    top: 1rem;
+    right: 1rem;
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    border: none;
+    background: var(--cl-profile-surface);
+    color: var(--cl-profile-text-secondary);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.15rem;
+    cursor: pointer;
+    box-shadow: var(--cl-profile-shadow);
+    transition: all var(--cl-profile-spring);
+    z-index: 10;
+}
+.cl-profile-settings-btn:hover {
+    background: var(--cl-profile-primary);
+    color: #fff;
+    transform: rotate(60deg) scale(1.05);
+    box-shadow: 0 4px 16px rgba(37,99,235,0.3);
+}
+
+/* ===== SETTINGS MODAL ===== */
+.cl-profile-modal-content {
+    background: var(--cl-profile-surface);
+    border: 1px solid var(--cl-profile-border);
+    border-radius: var(--cl-profile-radius);
+    box-shadow: var(--cl-profile-shadow-lg);
+    overflow: hidden;
+}
+.cl-profile-modal-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 1.25rem 1.5rem;
+    border-bottom: 1px solid var(--cl-profile-border);
+}
+.cl-profile-modal-header-left {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+.cl-profile-modal-icon {
+    width: 40px;
+    height: 40px;
+    border-radius: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: var(--cl-profile-primary-subtle);
+    color: var(--cl-profile-primary);
+    font-size: 1.05rem;
+    flex-shrink: 0;
+}
+.cl-profile-modal-title {
+    font-size: 1rem;
+    font-weight: 700;
+    color: var(--cl-profile-text);
+    margin: 0;
+}
+.cl-profile-modal-sub {
+    display: block;
+    font-size: 0.75rem;
+    color: var(--cl-profile-text-muted);
+    margin-top: 1px;
+}
+.cl-profile-modal-close {
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    border: none;
+    background: var(--cl-profile-bg);
+    color: var(--cl-profile-text-muted);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 0.8rem;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+.cl-profile-modal-close:hover {
+    background: var(--cl-profile-danger-subtle);
+    color: var(--cl-profile-danger);
+}
+.cl-profile-modal-body {
+    padding: 1.25rem 1.5rem;
 }
 
 /* ===== STATS ===== */
@@ -1488,12 +1584,10 @@
     .cl-profile-meta-item { font-size: 0.72rem; padding: 3px 10px; }
     .cl-profile-meta-dot { display: none; }
     .cl-profile-posts-list > .connectly-post-card { padding: 1rem; border-radius: var(--cl-profile-radius-sm); }
-    .cl-profile-edit-toggle { padding: 1rem 1.15rem; }
-    .cl-profile-edit-grid { padding: 1rem 1.15rem 0; }
-    .cl-profile-edit-divider { margin: 0 1.15rem; }
-    .cl-profile-edit-footer { padding: 0 1.15rem 1rem; }
-    .cl-profile-edit-collapse .cl-profile-checkbox { margin-left: 1.15rem; margin-right: 1.15rem; }
     .cl-profile-hero-grid { background-size: 40px 40px; }
+    .cl-profile-settings-btn { top: 0.75rem; right: 0.75rem; width: 34px; height: 34px; font-size: 1rem; }
+    .cl-profile-modal-body { padding: 1rem; }
+    .cl-profile-modal-header { padding: 1rem; }
 }
 
 /* ============================================================
@@ -2072,27 +2166,13 @@ document.addEventListener('DOMContentLoaded', function () {
         }, stepTime);
     }
 
-    // ===== EDIT TOGGLE =====
-    const editToggle = document.getElementById('editToggleBtn');
-    const editCollapse = document.getElementById('editCollapse');
-
-    if (editToggle && editCollapse) {
-        // Open if there are validation errors
-        @if($errors->any())
-            editToggle.setAttribute('aria-expanded', 'true');
-            editCollapse.classList.add('is-open');
-            editToggle.closest('.cl-profile-edit-section').classList.add('is-open');
-        @endif
-
-        editToggle.addEventListener('click', function () {
-            const isOpen = editToggle.getAttribute('aria-expanded') === 'true';
-            const newState = !isOpen;
-
-            editToggle.setAttribute('aria-expanded', newState);
-            editCollapse.classList.toggle('is-open', newState);
-            editToggle.closest('.cl-profile-edit-section').classList.toggle('is-open', newState);
-        });
-    }
+    // ===== SETTINGS MODAL: auto-open on validation errors =====
+    @if($errors->any())
+    document.addEventListener('DOMContentLoaded', function () {
+        const modal = new bootstrap.Modal(document.getElementById('profileSettingsModal'));
+        modal.show();
+    });
+    @endif
 
     // ===== FILE INPUT LABEL UPDATE =====
     // ===== FILE INPUT LABEL + PREVIEW UPDATE =====
