@@ -1460,7 +1460,6 @@
     position: relative;
     transition: all 0.3s cubic-bezier(.4,0,.2,1);
     box-shadow: var(--cl-profile-shadow);
-    overflow: hidden;
 }
 
 .connectly-post-card::before {
