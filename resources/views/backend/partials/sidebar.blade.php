@@ -14,7 +14,7 @@ use Illuminate\Support\Str;
             <button class="nav-toggler" type="button" onclick="document.getElementById('navbarTopNav').classList.toggle('show')" aria-label="Toggle user menu">
                 <span class="navbar-toggler-icon"></span>
             </button>
-            <button class="sidebar-nav-toggler" type="button" onclick="document.getElementById('sidebarMenuCollapse').classList.toggle('show')" aria-label="Toggle navigation menu">
+            <button class="sidebar-nav-toggler" type="button" onclick="toggleSidebarMenu()" aria-label="Toggle navigation menu">
                 <i class="bi bi-three-dots-vertical"></i>
             </button>
         </div>
@@ -48,13 +48,13 @@ use Illuminate\Support\Str;
     </div>
 </nav>
 
-<!-- Sidebar -->
+<!-- Sidebar (desktop only) -->
 <aside class="sidebar">
     <div class="sidebar-brand">
         <i class="bi bi-layout-sidebar"></i>
         <span>Navigation</span>
     </div>
-    <div class="sidebar-collapse" id="sidebarMenuCollapse">
+    <div class="sidebar-menu-wrap">
         <ul class="sidebar-menu">
             <li>
                 <a href="{{ url('/admin/account') }}"
@@ -90,6 +90,55 @@ use Illuminate\Support\Str;
         </div>
     </div>
 </aside>
+
+<!-- Mobile dropdown menu + backdrop -->
+<div class="sidebar-backdrop" id="sidebarBackdrop" onclick="closeSidebarMenu()"></div>
+<div class="sidebar-dropdown" id="sidebarMenuCollapse">
+    <ul class="sidebar-menu">
+        <li>
+            <a href="{{ url('/admin/account') }}"
+               class="{{ request()->is('admin/account') ? 'active' : '' }}">
+                <i class="bi bi-person-circle"></i>
+                <span>Account</span>
+            </a>
+        </li>
+        <li>
+            <a href="{{ url('/admin/posts') }}"
+               class="{{ request()->is('admin/posts') ? 'active' : '' }}">
+                <i class="bi bi-file-earmark-text"></i>
+                <span>Posts</span>
+            </a>
+        </li>
+        <li>
+            <a href="{{ url('/admin/messages') }}"
+               class="{{ request()->is('admin/messages') ? 'active' : '' }}">
+                <i class="bi bi-chat-dots"></i>
+                <span>Messages</span>
+            </a>
+        </li>
+        <li>
+            <a href="{{ url('/admin/contact') }}"
+               class="{{ request()->is('admin/contact') ? 'active' : '' }}">
+                <i class="bi bi-envelope-fill"></i>
+                <span>Contact</span>
+            </a>
+        </li>
+    </ul>
+    <div class="sidebar-footer">
+        <span class="sidebar-version">Connectly v1.0</span>
+    </div>
+</div>
+
+<script>
+function toggleSidebarMenu() {
+    document.getElementById('sidebarMenuCollapse').classList.toggle('show');
+    document.getElementById('sidebarBackdrop').classList.toggle('show');
+}
+function closeSidebarMenu() {
+    document.getElementById('sidebarMenuCollapse').classList.remove('show');
+    document.getElementById('sidebarBackdrop').classList.remove('show');
+}
+</script>
 
 <style>
 /* ─── Top Navbar (Dark Theme) ─── */
@@ -236,6 +285,12 @@ use Illuminate\Support\Str;
     font-size: 0.9rem;
     color: #475569;
 }
+.sidebar-menu-wrap {
+    display: flex;
+    flex-direction: column;
+    flex: 1;
+    overflow-y: auto;
+}
 .sidebar-menu {
     list-style: none;
     padding: 12px 10px;
@@ -287,6 +342,64 @@ use Illuminate\Support\Str;
 .sidebar::-webkit-scrollbar-track { background: transparent; }
 .sidebar::-webkit-scrollbar-thumb { background: rgba(148,163,184,0.12); border-radius: 10px; }
 
+/* ─── Mobile Dropdown + Backdrop ─── */
+.sidebar-dropdown {
+    display: none;
+    position: fixed;
+    top: 57px;
+    left: 0;
+    right: 0;
+    z-index: 99;
+    background: #0f172a;
+    border-bottom: 1px solid rgba(255,255,255,0.06);
+    box-shadow: 0 8px 32px rgba(0,0,0,0.5);
+    max-height: calc(100vh - 57px);
+    overflow-y: auto;
+}
+.sidebar-dropdown.show {
+    display: block;
+    animation: sdDrop 0.2s ease;
+}
+@keyframes sdDrop {
+    from { opacity: 0; transform: translateY(-8px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+.sidebar-dropdown .sidebar-menu {
+    padding: 8px 12px;
+    flex: none;
+}
+.sidebar-dropdown .sidebar-menu a {
+    font-size: 0.88rem;
+    padding: 12px 14px;
+    gap: 12px;
+    border-radius: 10px;
+}
+.sidebar-dropdown .sidebar-menu a i {
+    font-size: 1.05rem;
+    width: 20px;
+}
+.sidebar-dropdown .sidebar-footer {
+    padding: 10px 16px;
+}
+
+.sidebar-backdrop {
+    display: none;
+    position: fixed;
+    inset: 0;
+    background: rgba(0,0,0,0.5);
+    backdrop-filter: blur(4px);
+    -webkit-backdrop-filter: blur(4px);
+    z-index: 98;
+}
+.sidebar-backdrop.show {
+    display: block;
+    animation: sdFade 0.2s ease;
+}
+@keyframes sdFade {
+    from { opacity: 0; }
+    to { opacity: 1; }
+}
+
 /* ─── Responsive ─── */
 @media (max-width: 768px) {
     .nav-toggler { display: block; }
@@ -310,21 +423,13 @@ use Illuminate\Support\Str;
     .top-nav-links.show {
         display: flex;
     }
-    .sidebar { width: 100%; min-width: 100%; max-height: none; flex-direction: column; border-right: none; border-top: 1px solid rgba(255,255,255,0.05); }
-    .sidebar-brand { display: none; }
-    .sidebar-collapse { display: none; }
-    .sidebar-collapse.show { display: block; }
-    .sidebar-menu { flex-direction: column; padding: 4px 8px; gap: 1px; }
-    .sidebar-menu li { margin-bottom: 0; }
-    .sidebar-menu a { font-size: 0.85rem; padding: 10px 14px; gap: 10px; border-radius: 8px; }
-    .sidebar-menu a i { font-size: 1rem; width: 20px; }
-    .sidebar-footer { display: block; padding: 10px 16px; }
+    .sidebar { display: none; }
 }
 @media (max-width: 480px) {
     .top-navbar { padding: 8px 12px; }
     .top-nav-brand { font-size: 0.85rem; gap: 6px; }
     .top-nav-brand i { font-size: 1.1rem; }
-    .sidebar-menu a { font-size: 0.82rem; padding: 8px 12px; }
     .nav-link-custom, .nav-link-btn { font-size: 0.8rem; padding: 6px 10px; }
+    .sidebar-dropdown { top: 53px; }
 }
 </style>
