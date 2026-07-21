@@ -812,6 +812,25 @@
     display: inline;
 }
 
+.connectly-msg-swal-popup {
+    border-radius: 14px !important;
+    box-shadow: 0 16px 48px rgba(15,23,42,0.15) !important;
+    font-family: inherit !important;
+}
+.connectly-msg-swal-popup .swal2-title {
+    font-size: 1.05rem !important;
+    font-weight: 700 !important;
+    color: #0f172a !important;
+}
+.connectly-msg-swal-popup .swal2-html-container {
+    font-size: 0.88rem !important;
+    color: #64748b !important;
+}
+.connectly-msg-swal-popup .swal2-timer-progress-bar {
+    background: linear-gradient(135deg, #2563eb, #1e40af) !important;
+    height: 3px !important;
+}
+
 .connectly-msg-edit-form {
     margin-top: 8px;
     animation: fadeIn 0.3s ease-out;
@@ -1219,6 +1238,88 @@ document.addEventListener('DOMContentLoaded', function () {
     resize();
     setInterval(poll, 2500);
     document.addEventListener('visibilitychange', function() { if (!document.hidden) poll(); });
+
+    // ===== Unsend / Delete with SweetAlert =====
+    document.addEventListener('submit', function (e) {
+        var form = e.target.closest('.connectly-msg-action-form');
+        if (!form) return;
+        e.preventDefault();
+
+        var isUnsend = form.action.indexOf('/delete-for-me') === -1;
+        var title = isUnsend ? 'Unsend Message?' : 'Delete for You?';
+        var text = isUnsend
+            ? 'The message will be removed for both you and the recipient.'
+            : 'The message will be deleted only for you.';
+        var confirmText = isUnsend ? '<i class="bi bi-x-circle me-1"></i> Yes, Unsend' : '<i class="bi bi-trash me-1"></i> Yes, Delete';
+
+        Swal.fire({
+            title: title,
+            text: text,
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#dc2626',
+            cancelButtonColor: '#64748b',
+            confirmButtonText: confirmText,
+            cancelButtonText: 'Cancel',
+            reverseButtons: true,
+            focusCancel: true,
+            customClass: {
+                popup: 'connectly-msg-swal-popup',
+                confirmButton: 'btn btn-danger px-4 py-2 rounded-3 fw-semibold d-inline-flex align-items-center gap-1',
+                cancelButton: 'btn btn-light px-4 py-2 rounded-3 fw-semibold border'
+            },
+            buttonsStyling: false,
+            showLoaderOnConfirm: true,
+            preConfirm: async function () {
+                try {
+                    var r = await fetch(form.action, {
+                        method: 'POST',
+                        headers: {
+                            'X-Requested-With': 'XMLHttpRequest',
+                            'Accept': 'application/json',
+                        },
+                        body: new FormData(form),
+                    });
+                    var d = await r.json();
+                    if (!r.ok || d.success === false) throw new Error(d.message || 'Failed.');
+                    return d;
+                } catch (err) {
+                    Swal.showValidationMessage(err.message);
+                    throw err;
+                }
+            }
+        }).then(function (result) {
+            if (!result.isConfirmed) return;
+
+            var row = form.closest('.connectly-msg-row');
+            if (!row) return;
+
+            if (isUnsend) {
+                // Replace bubble with "Unsent" text
+                var bubble = row.querySelector('.connectly-msg-bubble');
+                if (bubble) {
+                    var textEl = bubble.querySelector('.connectly-msg-text');
+                    var imgEl = bubble.querySelector('.connectly-msg-img');
+                    if (textEl) textEl.outerHTML = '<p class="connectly-msg-text connectly-msg-text-unsent"><i class="bi bi-slash-circle me-1"></i>Unsent</p>';
+                    if (imgEl) imgEl.remove();
+                }
+                // Remove action buttons
+                var actions = row.querySelector('.connectly-msg-actions');
+                if (actions) actions.remove();
+                // Remove edit form
+                var editForm = row.querySelector('.connectly-msg-edit-form');
+                if (editForm) editForm.remove();
+            } else {
+                // Remove the entire row with animation
+                row.style.transition = 'all 0.4s cubic-bezier(0.34, 1.56, 0.64, 1)';
+                row.style.opacity = '0';
+                row.style.transform = 'scale(0.85) translateY(-10px)';
+                setTimeout(function () { if (row.parentNode) row.remove(); }, 400);
+            }
+
+            Swal.fire({ toast: true, position: 'top-end', icon: 'success', title: result.message || (isUnsend ? 'Message unsent' : 'Message deleted'), showConfirmButton: false, timer: 3000, timerProgressBar: true, customClass: { popup: 'connectly-msg-swal-popup' } });
+        });
+    });
 });
 </script>
 
