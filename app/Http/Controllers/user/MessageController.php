@@ -190,7 +190,11 @@ class MessageController extends Controller
             'image_path' => null,
         ]);
 
-        return back()->with('success', 'Message unsent successfully!');
+        $msg = 'Message unsent successfully!';
+        if (request()->expectsJson() || request()->ajax()) {
+            return response()->json(['success' => true, 'message' => $msg]);
+        }
+        return back()->with('success', $msg);
     }
 
     public function deleteMessageForMe($user_id, $message_id)
@@ -218,7 +222,11 @@ class MessageController extends Controller
             $message->update(['deleted_for_recipients' => $deletedFor]);
         }
 
-        return back()->with('success', 'Message deleted for you!');
+        $msg = 'Message deleted for you!';
+        if (request()->expectsJson() || request()->ajax()) {
+            return response()->json(['success' => true, 'message' => $msg]);
+        }
+        return back()->with('success', $msg);
     }
 
     private function conversationMessages(int $user_id): Collection
