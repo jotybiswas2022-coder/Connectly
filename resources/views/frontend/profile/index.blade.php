@@ -2516,6 +2516,85 @@ function renderReactorUser(user, type) {
         + '<span class="reactors-list-emoji">' + meta[type].emoji + '</span>'
         + '</a>';
 }
+
+// ===== Live Reaction AJAX handler =====
+document.addEventListener('submit', async function (event) {
+    const form = event.target;
+    if (!form.matches('[data-reaction-form]')) {
+        return;
+    }
+
+    event.preventDefault();
+
+    const wrap = form.closest('.connectly-reaction-wrap');
+    if (!wrap) return;
+
+    const card = wrap.closest('.connectly-post-card');
+    const csrfToken = document.querySelector('meta[name="csrf-token"]')?.getAttribute('content') || '';
+    const buttons = wrap.querySelectorAll('button');
+    buttons.forEach((button) => { button.disabled = true; });
+
+    try {
+        const response = await fetch(form.action, {
+            method: 'POST',
+            headers: {
+                'Accept': 'application/json',
+                'X-Requested-With': 'XMLHttpRequest',
+                'X-CSRF-TOKEN': csrfToken,
+            },
+            body: new FormData(form),
+        });
+
+        if (!response.ok) throw new Error('Failed to submit reaction');
+        const data = await response.json();
+        if (!data.success) throw new Error('Invalid reaction response');
+
+        const reactionMeta = {
+            like: { label: 'Like', emoji: '👍' },
+            love: { label: 'Love', emoji: '❤️' },
+            haha: { label: 'Haha', emoji: '😆' },
+            wow: { label: 'Wow', emoji: '😮' },
+            sad: { label: 'Sad', emoji: '😢' },
+        };
+
+        const currentReaction = data.current_reaction;
+        const mainInput = wrap.querySelector('.connectly-react-input');
+        const mainButton = wrap.querySelector('.connectly-react-btn');
+        const mainEmoji = wrap.querySelector('.connectly-react-emoji');
+        const mainLabel = wrap.querySelector('.connectly-react-label');
+        const mainCount = wrap.querySelector('.connectly-react-count');
+
+        if (mainInput) mainInput.value = currentReaction || 'like';
+        if (mainButton) {
+            mainButton.classList.toggle('is-reacted', !!currentReaction);
+        }
+
+        const meta = reactionMeta[currentReaction] || reactionMeta.like;
+        if (mainEmoji) mainEmoji.textContent = currentReaction ? meta.emoji : reactionMeta.like.emoji;
+        if (mainLabel) mainLabel.textContent = currentReaction ? meta.label : 'Like';
+        if (mainCount) mainCount.textContent = String(data.total_reactions ?? 0);
+
+        wrap.querySelectorAll('.connectly-react-emojibtn').forEach((optionButton) => {
+            optionButton.classList.toggle('active', optionButton.dataset.reactionKey === currentReaction);
+        });
+
+        if (card && data.reaction_counts) {
+            Object.keys(reactionMeta).forEach((reactionKey) => {
+                const badge = card.querySelector(`[data-reaction-badge="${reactionKey}"]`);
+                if (!badge) return;
+                const count = Number(data.reaction_counts[reactionKey] || 0);
+                const countEl = badge.querySelector('.connectly-reaction-badge-count');
+                if (countEl) countEl.textContent = String(count);
+                badge.classList.toggle('d-none', count <= 0);
+            });
+        }
+    } catch (error) {
+        console.error(error);
+        chatboxToast('error', 'Could not update reaction. Please try again.');
+    } finally {
+        buttons.forEach((button) => { button.disabled = false; });
+    }
+});
 </script>
 
 @endsection
